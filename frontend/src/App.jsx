@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 
 import Navbar         from './components/layout/Navbar'
 import Footer         from './components/layout/Footer'
 import PageTransition from './components/ui/PageTransition'
+import SplashScreen   from './components/ui/SplashScreen'
 
 import Home          from './pages/Home'
 import Shop          from './pages/Shop'
@@ -45,9 +46,14 @@ function AppInner() {
 }
 
 export default function App() {
+  const [splash, setSplash] = useState(true)
+
   return (
-    <BrowserRouter>
-      <AppInner />
-    </BrowserRouter>
+    <>
+      {splash && <SplashScreen onDone={() => setSplash(false)} />}
+      <BrowserRouter>
+        <AppInner />
+      </BrowserRouter>
+    </>
   )
 }

@@ -1579,6 +1579,86 @@ section.tight { padding: var(--s7) 0; }
 .modal-btn-online:disabled { opacity: .55; cursor: default; }
 
 /* ═══════════════════════════════════════════════════════
+   SPLASH SCREEN
+   ═══════════════════════════════════════════════════════ */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* exit transition */
+  transition: opacity .38s ease, transform .38s var(--ease-out);
+}
+
+/* Lift-off exit */
+.splash-out {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* Centre column */
+.splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  animation: splashIn .55s var(--ease-out) both;
+}
+@keyframes splashIn {
+  from { opacity: 0; transform: translateY(18px) scale(.92); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+/* Logo */
+.splash-logo {
+  width: clamp(110px, 18vw, 160px);
+  height: auto;
+  /* make it white on dark background */
+  filter: brightness(0) invert(1);
+  animation: splashPulse 1.8s ease-in-out infinite;
+}
+@keyframes splashPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .7; }
+}
+
+/* Loading track + fill */
+.splash-track {
+  width: 100px;
+  height: 2px;
+  background: rgba(255,255,255,.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.splash-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 999px;
+  animation: splashBar 1.55s cubic-bezier(.4,0,.2,1) forwards .15s;
+  width: 0;
+}
+@keyframes splashBar {
+  0%   { width: 0%;   opacity: 1; }
+  80%  { width: 100%; opacity: 1; }
+  100% { width: 100%; opacity: .6; }
+}
+
+/* Tiny hint text */
+.splash-hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.28);
+  animation: splashIn .55s var(--ease-out) .3s both;
+}
+
+/* ═══════════════════════════════════════════════════════
    BLOG POST — Article page layout
    ═══════════════════════════════════════════════════════ */
 
