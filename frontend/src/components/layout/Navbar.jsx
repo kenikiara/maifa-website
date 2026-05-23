@@ -11,7 +11,7 @@ export default function Navbar() {
     { to: '/shop',     label: 'Shop' },
     { to: '/#finder',  label: 'Battery Finder', ext: true },
     { to: '/about',    label: 'About' },
-    { to: '/#locations', label: 'Locations', ext: true },
+    { to: '/locations',  label: 'Locations' },
     { to: '/warranty', label: 'Warranty' },
     { to: '/blog',     label: 'Blog' },
   ]
