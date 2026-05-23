@@ -295,7 +295,7 @@ export default function Home() {
             {CATEGORIES.map((c,i) => (
               <Link key={c.key} to={`/shop?category=${encodeURIComponent(c.key)}`}
                 className="reveal"
-                style={{ '--delay':`${i*.07}s`, transitionDelay:`${i*.07}s`, background:'var(--white)', border:'1px solid var(--line)', borderRadius:'var(--r)', padding:'var(--s5)', aspectRatio:'4/5', display:'flex', flexDirection:'column', justifyContent:'space-between', transition:'all .2s var(--ease-out)', cursor:'pointer', position:'relative', overflow:'hidden', textDecoration:'none', color:'inherit' }}
+                style={{ '--delay':`${i*.07}s`, transitionDelay:`${i*.07}s`, background:'var(--white)', border:'1px solid var(--line)', borderRadius:'var(--r)', padding:'var(--s5)', display:'flex', flexDirection:'column', justifyContent:'space-between', minHeight:260, transition:'all .2s var(--ease-out)', cursor:'pointer', position:'relative', textDecoration:'none', color:'inherit' }}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--ink)';e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow='var(--shadow-2)'}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='none'}}
               >
@@ -304,11 +304,11 @@ export default function Home() {
                   <h4 style={{ fontFamily:'var(--serif)', fontSize:24, lineHeight:1.05, margin:'var(--s3) 0 var(--s2)' }}>{c.label}</h4>
                   <p style={{ fontSize:12, color:'var(--muted)', lineHeight:1.45 }}>{c.blurb}</p>
                 </div>
-                <div style={{ position:'relative', marginTop:'var(--s4)' }}>
+                <div style={{ position:'relative', marginTop:'var(--s4)', flex:1, minHeight:120, display:'flex', alignItems:'flex-end' }}>
                   <img
                     src={c.img}
                     alt={c.label}
-                    style={{ width:'100%', height:110, objectFit:'contain', objectPosition:'bottom center', display:'block', filter:'drop-shadow(0 4px 12px rgba(0,0,0,.13))' }}
+                    style={{ width:'100%', maxHeight:160, objectFit:'contain', objectPosition:'bottom center', display:'block', filter:'drop-shadow(0 4px 12px rgba(0,0,0,.13))' }}
                   />
                   <span style={{ position:'absolute', bottom:0, right:0, fontSize:18 }}>→</span>
                 </div>
