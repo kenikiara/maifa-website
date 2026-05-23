@@ -59,7 +59,11 @@ jobs:
           HASHED=$(php -r "echo password_hash('${{ secrets.ADMIN_PASS }}', PASSWORD_DEFAULT);")
           sed -i "s|password_hash('change_this_password', PASSWORD_DEFAULT)|'$HASHED'|g" backend/config/config.php
 
-      # 5. Upload React build → public_html/
+      # 5. Copy .htaccess into dist so it deploys with the frontend
+      - name: Copy .htaccess into dist
+        run: cp .htaccess frontend/dist/.htaccess
+
+      # 6. Upload React build + .htaccess → public_html/
       - name: Deploy frontend to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -72,7 +76,7 @@ jobs:
             **/.git*
             **/.git*/**
 
-      # 6. Upload PHP backend → public_html/backend/
+      # 7. Upload PHP backend → public_html/backend/
       - name: Deploy backend to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -84,15 +88,3 @@ jobs:
           exclude: |
             **/.git*
             **/.git*/**
-
-      # 7. Upload .htaccess
-      - name: Deploy .htaccess
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: public_html/
-          include: |
-            .htaccess
