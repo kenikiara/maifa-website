@@ -40,6 +40,31 @@ const MAKES  = ['Toyota','Nissan','Honda','Mercedes','BMW','Subaru','Mazda','Mit
 const MODELS = { Toyota:['Axio','Premio','Fielder','Land Cruiser','Vitz','Harrier','RAV4'], Nissan:['Note','March','X-Trail','Navara','Patrol'], Honda:['Fit','CRV','Accord'], Mercedes:['C-Class','E-Class','GLE'], BMW:['3 Series','5 Series','X5'], Subaru:['Forester','Outback','Impreza'], Mazda:['Demio','CX-5','Atenza'], Mitsubishi:['Pajero','Outlander','L200'], Volkswagen:['Golf','Touareg','Polo'], Isuzu:['D-Max','MUX'] }
 const YEARS  = Array.from({length:20}, (_,i)=>(2024-i).toString())
 
+// Battery category matching — model takes priority over make
+const MAKE_CAT  = { Mercedes:'European', BMW:'European', Volkswagen:'European' }
+const MODEL_CAT = {
+  // Heavy Duty
+  'Land Cruiser':'Heavy Duty', 'Navara':'Heavy Duty', 'Patrol':'Heavy Duty',
+  'D-Max':'Heavy Duty', 'MUX':'Heavy Duty', 'L200':'Heavy Duty', 'Pajero':'Heavy Duty',
+  // Large Car
+  'RAV4':'Large Car', 'Harrier':'Large Car', 'X-Trail':'Large Car', 'CRV':'Large Car',
+  'Forester':'Large Car', 'Outback':'Large Car', 'Outlander':'Large Car',
+  'CX-5':'Large Car', 'GLE':'Large Car', 'X5':'Large Car', 'Touareg':'Large Car',
+  // EFB (idle stop-start)
+  'Note':'EFB',
+  // European (by model)
+  '3 Series':'European', '5 Series':'European', 'C-Class':'European',
+  'E-Class':'European', 'Golf':'European', 'Polo':'European',
+  // Standard
+  'Vitz':'Standard', 'Axio':'Standard', 'Premio':'Standard', 'Fielder':'Standard',
+  'Fit':'Standard', 'Accord':'Standard', 'Demio':'Standard', 'Atenza':'Standard',
+  'March':'Standard', 'Impreza':'Standard',
+}
+
+function matchCategory(make, model) {
+  return MODEL_CAT[model] || MAKE_CAT[make] || 'Standard'
+}
+
 export default function Home() {
   useScrollReveal()
 
@@ -50,14 +75,29 @@ export default function Home() {
   const { data: filteredData } = useApi(activeCat === 'All' ? '/api/products.php' : `/api/products.php?category=${encodeURIComponent(activeCat)}`)
   const featured = (filteredData?.products || []).slice(0, 4)
 
-  const [make, setMake]   = useState('')
-  const [model, setModel] = useState('')
-  const [year, setYear]   = useState('')
+  const [make, setMake]         = useState('')
+  const [model, setModel]       = useState('')
+  const [year, setYear]         = useState('')
+  const [finderResult, setFinderResult] = useState(null) // null | { category, picks, carLabel }
   const models = make ? (MODELS[make] || []) : []
+
+  const { data: allProducts } = useApi('/api/products.php?limit=100')
 
   function handleFinder(e) {
     e.preventDefault()
-    const msg = `Hi! I'm looking for a battery for my ${year} ${make} ${model}. Please advise.`
+    const category = matchCategory(make, model)
+    const pool = allProducts?.products || []
+    const picks = pool.filter(p => p.category === category).slice(0, 3)
+    setFinderResult({ category, picks, carLabel: [year, make, model].filter(Boolean).join(' ') })
+  }
+
+  function resetFinder() {
+    setFinderResult(null)
+    setMake(''); setModel(''); setYear('')
+  }
+
+  function waConsult() {
+    const msg = `Hi! I need help finding a battery for my ${finderResult?.carLabel || [year, make, model].filter(Boolean).join(' ')}. Can you advise?`
     window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank')
   }
 
@@ -133,29 +173,111 @@ export default function Home() {
       {/* Battery Finder */}
       <section id="finder" style={{ background:'rgb(13,40,8)', padding:'var(--s8) 0' }}>
         <div className="container">
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 2fr', gap:'var(--s7)', alignItems:'center' }}>
-            <div>
-              <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · 60 seconds</span>
-              <h3 style={{ color:'#fff', marginTop:'var(--s3)' }}>Tell us your car. We'll match the right battery.</h3>
-              <p style={{ color:'rgba(255,255,255,.55)', fontSize:14, marginTop:'var(--s2)' }}>Over 240 vehicle fitments mapped to in-stock SKUs.</p>
+
+          {!finderResult ? (
+            /* ── Form ── */
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 2fr', gap:'var(--s7)', alignItems:'center' }}>
+              <div>
+                <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · 60 seconds</span>
+                <h3 style={{ color:'#fff', marginTop:'var(--s3)' }}>Tell us your car. We'll match the right battery.</h3>
+                <p style={{ color:'rgba(255,255,255,.55)', fontSize:14, marginTop:'var(--s2)' }}>Over 240 vehicle fitments mapped to in-stock SKUs.</p>
+              </div>
+              <form onSubmit={handleFinder} style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'var(--s3)', alignItems:'end' }}>
+                {[
+                  { label:'Make',  value:make,  onChange:e=>{setMake(e.target.value);setModel('')}, options:MAKES },
+                  { label:'Model', value:model, onChange:e=>setModel(e.target.value), options:models },
+                  { label:'Year',  value:year,  onChange:e=>setYear(e.target.value),  options:YEARS },
+                ].map(f=>(
+                  <div key={f.label} style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                    <label style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.45)' }}>{f.label}</label>
+                    <select value={f.value} onChange={f.onChange} required={f.label!=='Model'} style={{ background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.16)', color:'#fff', padding:'13px 15px', borderRadius:'var(--r)', fontFamily:'var(--sans)', fontSize:14, appearance:'none', backgroundImage:'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'><path fill=\'%2333d930\' d=\'M5 6L0 0h10z\'/></svg>")', backgroundRepeat:'no-repeat', backgroundPosition:'right 14px center' }}>
+                      <option value="">Select {f.label}</option>
+                      {f.options.map(o=><option key={o} value={o} style={{ background:'#1a1a1a' }}>{o}</option>)}
+                    </select>
+                  </div>
+                ))}
+                <button type="submit" className="btn btn-primary" style={{ height:50 }}>Find match →</button>
+              </form>
             </div>
-            <form onSubmit={handleFinder} style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'var(--s3)', alignItems:'end' }}>
-              {[
-                { label:'Make', value:make, onChange:e=>{setMake(e.target.value);setModel('')}, options:MAKES },
-                { label:'Model', value:model, onChange:e=>setModel(e.target.value), options:models },
-                { label:'Year',  value:year,  onChange:e=>setYear(e.target.value),  options:YEARS },
-              ].map(f=>(
-                <div key={f.label} style={{ display:'flex', flexDirection:'column', gap:6 }}>
-                  <label style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.45)' }}>{f.label}</label>
-                  <select value={f.value} onChange={f.onChange} required={f.label!=='Model'} style={{ background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.16)', color:'#fff', padding:'13px 15px', borderRadius:'var(--r)', fontFamily:'var(--sans)', fontSize:14, appearance:'none', backgroundImage:'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'><path fill=\'%2333d930\' d=\'M5 6L0 0h10z\'/></svg>")', backgroundRepeat:'no-repeat', backgroundPosition:'right 14px center' }}>
-                    <option value="">Select {f.label}</option>
-                    {f.options.map(o=><option key={o} value={o} style={{ background:'#1a1a1a' }}>{o}</option>)}
-                  </select>
+          ) : (
+            /* ── Results ── */
+            <div>
+              {/* Header row */}
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'var(--s6)', flexWrap:'wrap', gap:'var(--s3)' }}>
+                <div>
+                  <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · results</span>
+                  <h3 style={{ color:'#fff', marginTop:'var(--s3)' }}>
+                    Best matches for your <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>{finderResult.carLabel}</em>
+                  </h3>
+                  <p style={{ color:'rgba(255,255,255,.5)', fontSize:13, marginTop:'var(--s2)', fontFamily:'var(--mono)', letterSpacing:'.06em', textTransform:'uppercase' }}>
+                    Category · {finderResult.category}
+                  </p>
                 </div>
-              ))}
-              <button type="submit" className="btn btn-primary" style={{ height:50 }}>Find match →</button>
-            </form>
-          </div>
+                <button onClick={resetFinder} style={{ background:'transparent', border:'1px solid rgba(255,255,255,.2)', color:'rgba(255,255,255,.7)', padding:'10px 18px', borderRadius:'var(--r)', fontSize:13, cursor:'pointer', whiteSpace:'nowrap' }}>
+                  ← Search again
+                </button>
+              </div>
+
+              {finderResult.picks.length > 0 ? (
+                <>
+                  {/* Product cards */}
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'var(--s4)', marginBottom:'var(--s6)' }}>
+                    {finderResult.picks.map((p, i) => (
+                      <div key={p.id} style={{ background: i === 0 ? 'rgba(15,122,61,.18)' : 'rgba(255,255,255,.05)', border: i === 0 ? '1px solid rgba(15,122,61,.5)' : '1px solid rgba(255,255,255,.1)', borderRadius:'var(--r)', padding:'var(--s5)', display:'flex', flexDirection:'column', gap:'var(--s3)' }}>
+                        {i === 0 && (
+                          <span style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--green-bright)', marginBottom:'var(--s1)' }}>● Best match</span>
+                        )}
+                        <div>
+                          <h4 style={{ color:'#fff', fontSize:16, fontFamily:'var(--serif)', lineHeight:1.2 }}>{p.name}</h4>
+                          <p style={{ color:'rgba(255,255,255,.5)', fontSize:12, marginTop:4, lineHeight:1.45 }}>{p.short_desc}</p>
+                        </div>
+                        <div style={{ display:'flex', gap:'var(--s4)', fontFamily:'var(--mono)', fontSize:11, color:'rgba(255,255,255,.45)', letterSpacing:'.06em' }}>
+                          {p.ah  && <span>{p.ah}Ah</span>}
+                          {p.cca && <span>{p.cca} CCA</span>}
+                          <span style={{ marginLeft:'auto', color:'var(--green-bright)', fontSize:14, fontWeight:600 }}>{p.price_label}</span>
+                        </div>
+                        <div style={{ display:'flex', gap:'var(--s2)', marginTop:'var(--s1)' }}>
+                          <Link to={`/shop/${toSlug(p.name)}-${p.id}`} style={{ flex:1, textAlign:'center', padding:'10px 12px', background:'var(--green)', color:'#fff', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+                            View details →
+                          </Link>
+                          <a
+                            href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi! I'd like to order the ${p.name} (${p.price_label}) for my ${finderResult.carLabel}. Please confirm availability.`)}`}
+                            target="_blank" rel="noopener noreferrer"
+                            style={{ padding:'10px 14px', background:'#25d366', color:'#fff', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:600, textDecoration:'none', whiteSpace:'nowrap' }}
+                          >
+                            Order
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* WhatsApp consultation strip */}
+                  <div style={{ borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s5)', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'var(--s4)' }}>
+                    <div>
+                      <p style={{ color:'rgba(255,255,255,.7)', fontSize:14 }}>Not sure which one is right? Our team can confirm the exact fit.</p>
+                    </div>
+                    <button onClick={waConsult} style={{ display:'flex', alignItems:'center', gap:10, background:'#25d366', color:'#fff', border:'none', padding:'12px 22px', borderRadius:'var(--r)', fontSize:14, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                      Talk to an expert
+                    </button>
+                  </div>
+                </>
+              ) : (
+                /* No match — straight to WhatsApp */
+                <div style={{ textAlign:'center', padding:'var(--s7) 0' }}>
+                  <p style={{ color:'rgba(255,255,255,.6)', fontSize:15, marginBottom:'var(--s5)' }}>
+                    We don't have an automatic match for that vehicle yet — but our team can find the right battery for you in minutes.
+                  </p>
+                  <button onClick={waConsult} style={{ display:'inline-flex', alignItems:'center', gap:10, background:'#25d366', color:'#fff', border:'none', padding:'14px 28px', borderRadius:'var(--r)', fontSize:15, fontWeight:600, cursor:'pointer' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    WhatsApp consultation for my {finderResult.carLabel}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
       </section>
 
