@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useScrollReveal } from '../hooks/useScrollReveal'
-
-const WA = '254791899602'
+import OrderModal from '../components/ui/OrderModal'
 
 const CATEGORIES = [
   { label: 'Standard',    count: 5 },
@@ -30,8 +29,7 @@ function BatteryPlaceholder({ label = 'M' }) {
   )
 }
 
-function ProductCard({ product }) {
-  const waMsg = product.whatsapp_message || `Hi! I'm interested in the ${product.name}.`
+function ProductCard({ product, onOrder }) {
   return (
     <div className="product-card">
       <Link to={`/shop/${product.id}`} style={{ display: 'contents' }}>
@@ -65,15 +63,13 @@ function ProductCard({ product }) {
         </div>
       </Link>
       <div style={{ padding: '0 var(--s4) var(--s4)' }}>
-        <a
-          href={`https://wa.me/${WA}?text=${encodeURIComponent(waMsg)}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => onOrder(product)}
           className="btn btn-primary"
-          style={{ width: '100%', height: 40, fontSize: 13 }}
+          style={{ width: '100%', height: 40, fontSize: 13, cursor: 'pointer' }}
         >
-          Order on WhatsApp →
-        </a>
+          Order Now →
+        </button>
       </div>
     </div>
   )
@@ -88,6 +84,7 @@ export default function Shop() {
   const [total, setTotal]           = useState(0)
   const [page, setPage]             = useState(1)
   const [sort, setSort]             = useState('featured')
+  const [orderProduct, setOrderProduct] = useState(null)
 
   const [selectedCats, setSelectedCats] = useState(() => {
     const cat = searchParams.get('category')
@@ -254,7 +251,7 @@ export default function Shop() {
               </div>
             ) : (
               <div className="product-grid-shop">
-                {products.map(p => <ProductCard key={p.id} product={p} />)}
+                {products.map(p => <ProductCard key={p.id} product={p} onOrder={setOrderProduct} />)}
               </div>
             )}
 
@@ -270,6 +267,10 @@ export default function Shop() {
           </main>
         </div>
       </div>
+
+      {orderProduct && (
+        <OrderModal product={orderProduct} onClose={() => setOrderProduct(null)} />
+      )}
     </>
   )
 }
