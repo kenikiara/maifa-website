@@ -95,11 +95,21 @@ export default function Warranty() {
         primary_use:     form.primary_use,
       }
 
-      const res  = await fetch('/api/warranty.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
+      /* Use multipart when a file is attached (so PHP can read $_FILES),
+         plain JSON otherwise — backend handles both. */
+      let res
+      if (file) {
+        const fd = new FormData()
+        Object.entries(payload).forEach(([k, v]) => fd.append(k, String(v)))
+        fd.append('receipt_file', file)
+        res = await fetch('/api/warranty.php', { method: 'POST', body: fd })
+      } else {
+        res = await fetch('/api/warranty.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+      }
       const data = await res.json()
       if (data.success) {
         setWarrantyCode(data.warranty_code || '')

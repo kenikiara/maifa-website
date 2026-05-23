@@ -287,6 +287,30 @@ $statuses = ['active','claimed','expired','voided'];
             <div class="detail-row"><span class="dk">Notes</span><span class="dv muted">${r.notes || 'None'}</span></div>
           </div>
         </div>
+
+        ${r.receipt_file ? `
+        <div class="detail-section">
+          <div class="detail-section-head">Receipt / Invoice</div>
+          <div style="padding:16px 18px">
+            ${/\.(jpg|jpeg|png)$/i.test(r.receipt_file)
+              ? `<a href="${r.receipt_file}" target="_blank" rel="noopener">
+                   <img src="${r.receipt_file}" alt="Receipt" style="max-width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.1);display:block">
+                 </a>
+                 <a href="${r.receipt_file}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:#60a5fa;font-family:'JetBrains Mono',monospace">
+                   ↗ Open full image
+                 </a>`
+              : `<a href="${r.receipt_file}" target="_blank" rel="noopener"
+                   style="display:inline-flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;font-size:13px;text-decoration:none">
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                   View PDF receipt
+                 </a>`
+            }
+          </div>
+        </div>` : `
+        <div class="detail-section">
+          <div class="detail-section-head">Receipt / Invoice</div>
+          <div style="padding:16px 18px;font-size:13px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace">No receipt uploaded.</div>
+        </div>`}
       `;
       document.getElementById('drawerEditBtn').onclick = () => { closeDetail(); openEdit(r); };
       document.getElementById('detailBackdrop').classList.add('open');
