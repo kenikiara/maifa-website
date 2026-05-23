@@ -31,10 +31,10 @@ export default function Warranty() {
   const fileInputRef = useRef(null)
 
   const [form, setForm] = useState({
-    owner_name: '', id_number: '', phone: '', email: '',
+    full_name: '', national_id: '', phone: '', email: '',
     city: 'Nairobi', area: '',
     battery_model: BATTERY_MODELS[0], serial_number: '',
-    purchase_date: '', purchased_at: BRANCHES[0], receipt_number: '',
+    purchase_date: '', purchased_at: BRANCHES[0], invoice_number: '',
     fitted_by_maifa: 'yes', old_battery_returned: 'yes',
     vehicle_make: 'Toyota', vehicle_model: '', vehicle_year: '2018',
     number_plate: '', mileage: '', primary_use: 'personal',
@@ -69,17 +69,39 @@ export default function Warranty() {
   async function handleSubmit(e) {
     e.preventDefault()
     if (!form.consent_terms) { setError('Please agree to the warranty terms to continue.'); return }
-    if (!form.owner_name || !form.phone || !form.email) { setError('Please fill in all required fields.'); return }
+    if (!form.full_name || !form.phone || !form.email) { setError('Please fill in all required fields.'); return }
     setError('')
     setSubmitting(true)
     try {
-      const body = new FormData()
-      Object.entries(form).forEach(([k, v]) => body.append(k, v))
-      if (file) body.append('receipt_file', file)
+      const payload = {
+        full_name:       form.full_name,
+        national_id:     form.national_id,
+        phone:           form.phone,
+        email:           form.email,
+        city:            form.city,
+        area:            form.area,
+        battery_model:   form.battery_model,
+        serial_number:   form.serial_number,
+        purchase_date:   form.purchase_date,
+        purchased_at:    form.purchased_at,
+        invoice_number:  form.invoice_number,
+        fitted_by_maifa: form.fitted_by_maifa === 'yes' ? 1 : 0,
+        trade_in:        form.old_battery_returned === 'yes' ? 1 : 0,
+        vehicle_make:    form.vehicle_make,
+        vehicle_model:   form.vehicle_model,
+        vehicle_year:    form.vehicle_year,
+        number_plate:    form.number_plate,
+        mileage:         form.mileage,
+        primary_use:     form.primary_use,
+      }
 
-      const res = await fetch('/api/warranty.php', { method: 'POST', body })
+      const res  = await fetch('/api/warranty.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
       const data = await res.json()
-      if (data.ok) {
+      if (data.success) {
         setWarrantyCode(data.warranty_code || '')
         setSubmitted(true)
       } else {
@@ -100,7 +122,7 @@ export default function Warranty() {
     try {
       const res = await fetch(`/api/warranty.php?code=${encodeURIComponent(lookupCode.trim())}`)
       const data = await res.json()
-      if (data.ok && data.data) setLookupResult(data.data)
+      if (data.success && data.warranty) setLookupResult(data.warranty)
       else setLookupError(data.error || 'Code not found.')
     } catch {
       setLookupError('Network error.')
@@ -191,11 +213,11 @@ export default function Warranty() {
               <div className="row-2">
                 <div className="field">
                   <label>Full name <span className="req">*</span></label>
-                  <input type="text" placeholder="As it appears on your ID" value={form.owner_name} onChange={set('owner_name')} required />
+                  <input type="text" placeholder="As it appears on your ID" value={form.full_name} onChange={set('full_name')} required />
                 </div>
                 <div className="field">
                   <label>National ID / Passport <span className="opt">— optional</span></label>
-                  <input type="text" placeholder="e.g. 28456012" value={form.id_number} onChange={set('id_number')} />
+                  <input type="text" placeholder="e.g. 28456012" value={form.national_id} onChange={set('national_id')} />
                 </div>
               </div>
               <div className="row-2" style={{ marginTop: 'var(--s4)' }}>
@@ -264,7 +286,7 @@ export default function Warranty() {
                 </div>
                 <div className="field">
                   <label>Receipt / invoice no. <span className="req">*</span></label>
-                  <input type="text" placeholder="e.g. INV-082341" value={form.receipt_number} onChange={set('receipt_number')} required />
+                  <input type="text" placeholder="e.g. INV-082341" value={form.invoice_number} onChange={set('invoice_number')} required />
                 </div>
               </div>
               <div className="row-2" style={{ marginTop: 'var(--s4)' }}>
@@ -455,9 +477,10 @@ export default function Warranty() {
               </form>
               {lookupError && <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 12, marginTop: 8 }}>{lookupError}</p>}
               {lookupResult && (
-                <div style={{ marginTop: 'var(--s3)', background: 'rgba(255,255,255,.1)', borderRadius: 'var(--r)', padding: 'var(--s3)', fontSize: 13, color: '#fff' }}>
-                  <p><b>{lookupResult.owner_name}</b></p>
-                  <p style={{ color: 'rgba(255,255,255,.7)', marginTop: 4 }}>Status: {lookupResult.status}</p>
+                <div style={{ marginTop: 'var(--s3)', background: 'rgba(255,255,255,.1)', borderRadius: 'var(--r)', padding: 'var(--s3)', fontSize: 13, color: '#fff', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <p><b>{lookupResult.battery_model}</b></p>
+                  <p style={{ color: 'rgba(255,255,255,.7)' }}>Purchased: {lookupResult.purchase_date}</p>
+                  <p style={{ color: lookupResult.status === 'active' ? '#33d930' : 'rgba(255,255,255,.5)', fontFamily: 'var(--mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '.1em' }}>● {lookupResult.status}</p>
                 </div>
               )}
             </div>
