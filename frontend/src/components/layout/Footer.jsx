@@ -84,7 +84,14 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© {year} Maifa Ltd · Nairobi, Kenya</span>
-          <span>Power on.</span>
+          <div style={{ display:'flex', gap:'var(--s5)', alignItems:'center', flexWrap:'wrap' }}>
+            <Link to="/privacy-policy" style={{ fontSize:12, color:'rgba(255,255,255,.4)', fontFamily:'var(--mono)', letterSpacing:'.04em' }}>Privacy Policy</Link>
+            <Link to="/terms" style={{ fontSize:12, color:'rgba(255,255,255,.4)', fontFamily:'var(--mono)', letterSpacing:'.04em' }}>Terms of Use</Link>
+            <a href="https://kendesigners.com" target="_blank" rel="noopener noreferrer"
+              style={{ fontSize:12, color:'rgba(255,255,255,.28)', fontFamily:'var(--mono)', letterSpacing:'.04em' }}>
+              Made by kendesigners.com
+            </a>
+          </div>
         </div>
       </div>
     </footer>

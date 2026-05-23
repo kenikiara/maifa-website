@@ -15,6 +15,8 @@ import Contact       from './pages/Contact'
 import Locations     from './pages/Locations'
 import Blog          from './pages/Blog'
 import BlogPost      from './pages/BlogPost'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Terms         from './pages/Terms'
 import NotFound      from './pages/NotFound'
 
 function ScrollToTop() {
@@ -36,9 +38,11 @@ function AppInner() {
         <Route path="/about"      element={<PageTransition><About /></PageTransition>} />
         <Route path="/contact"    element={<PageTransition><Contact /></PageTransition>} />
         <Route path="/locations"  element={<PageTransition><Locations /></PageTransition>} />
-        <Route path="/blog"       element={<PageTransition><Blog /></PageTransition>} />
-        <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
-        <Route path="*"           element={<PageTransition><NotFound /></PageTransition>} />
+        <Route path="/blog"            element={<PageTransition><Blog /></PageTransition>} />
+        <Route path="/blog/:slug"      element={<PageTransition><BlogPost /></PageTransition>} />
+        <Route path="/privacy-policy"  element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+        <Route path="/terms"           element={<PageTransition><Terms /></PageTransition>} />
+        <Route path="*"                element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
       <Footer />
     </>
