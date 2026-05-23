@@ -36,12 +36,12 @@ export default function ProductDetail() {
       try {
         const res = await fetch(`/api/products.php?id=${slug}`)
         const data = await res.json()
-        if (data.ok && data.data) {
-          setProduct(data.data)
-          const rel = await fetch(`/api/products.php?category=${encodeURIComponent(data.data.category)}&per_page=4`)
+        if (data.success && data.product) {
+          setProduct(data.product)
+          const rel = await fetch(`/api/products.php?category=${encodeURIComponent(data.product.category)}`)
           const relData = await rel.json()
-          if (relData.ok) {
-            setRelated((relData.data || []).filter(p => p.id !== data.data.id).slice(0, 4))
+          if (relData.success) {
+            setRelated((relData.products || []).filter(p => p.id !== data.product.id).slice(0, 4))
           }
         }
       } catch {

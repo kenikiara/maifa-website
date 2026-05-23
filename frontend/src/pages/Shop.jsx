@@ -109,9 +109,9 @@ export default function Shop() {
 
       const res = await fetch(`/api/products.php?${params}`)
       const data = await res.json()
-      if (data.ok) {
-        setProducts(data.data || [])
-        setTotal(data.total || data.data?.length || 0)
+      if (data.success) {
+        setProducts(data.products || [])
+        setTotal(data.products?.length || 0)
       }
     } catch {
       setProducts([])
