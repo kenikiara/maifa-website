@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS products (
     whatsapp_message  TEXT,
     sort_order        TINYINT UNSIGNED NOT NULL DEFAULT 0,
     active            TINYINT(1)       NOT NULL DEFAULT 1,
+    UNIQUE KEY uq_sku (sku),
     created_at        DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -76,7 +77,7 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 -- Sample seed data — Amaron battery catalogue
 -- ═══════════════════════════════════════════════════════
 
-INSERT INTO products (name, sku, category, price_label, price_from, sale_price, short_desc, ah, cca, badge, whatsapp_message, sort_order) VALUES
+INSERT IGNORE INTO products (name, sku, category, price_label, price_from, sale_price, short_desc, ah, cca, badge, whatsapp_message, sort_order) VALUES
 ('Amaron Hi Life NS40 42B20L 35Ah',      'NS40-35A',    'Standard',   'KES 10,500', 10500, 11200, '12V maintenance-free starter battery for small sedans. High Heat Technology.', 35,  335,  '',           'Hi! I''m interested in the Amaron NS40 (35Ah) battery. Can I get more details?', 1),
 ('Amaron Hi Life 55B24L 45Ah',           'NS60-45A',    'Standard',   'KES 12,800', 12800, 13900, '12V 45Ah starter battery engineered for Kenyan weather. Factory charged.', 45,  380,  '',           'Hi! I''m interested in the Amaron 55B24L (45Ah) battery. Can I get more details?', 2),
 ('Amaron Hi Life NS70L 65Ah',            'NS70L-65A',   'Standard',   'KES 17,000', 17000, 18200, 'Kenya''s top-selling battery. 65Ah, 600 CCA. Fits Toyota, Nissan, Honda & more.', 65, 600,  'Best seller', 'Hi! I''m interested in the Amaron NS70L (65Ah) battery. Can I get more details?', 3),
