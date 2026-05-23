@@ -12,19 +12,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'save') {
-        $id      = (int) ($_POST['id'] ?? 0);
-        $title   = trim($_POST['title'] ?? '');
-        $slug    = make_slug($title, trim($_POST['slug'] ?? ''));
-        $fields  = [
+        $id    = (int) ($_POST['id'] ?? 0);
+        $title = trim($_POST['title'] ?? '');
+        $slug  = make_slug($title, trim($_POST['slug'] ?? ''));
+
+        /* Cover image: uploaded file takes priority over URL field */
+        $cover_image = htmlspecialchars(trim($_POST['cover_image'] ?? ''), ENT_QUOTES, 'UTF-8');
+        if (!empty($_FILES['cover_image_file']) && $_FILES['cover_image_file']['error'] === UPLOAD_ERR_OK) {
+            $ext     = strtolower(pathinfo($_FILES['cover_image_file']['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+            if (in_array($ext, $allowed) && $_FILES['cover_image_file']['size'] <= 8 * 1024 * 1024) {
+                $uploadDir = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/uploads/blog/';
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                $filename = 'cover_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+                if (move_uploaded_file($_FILES['cover_image_file']['tmp_name'], $uploadDir . $filename)) {
+                    $cover_image = '/uploads/blog/' . $filename;
+                }
+            }
+        }
+
+        $fields = [
             'title'       => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
             'slug'        => $slug,
             'excerpt'     => htmlspecialchars(trim($_POST['excerpt'] ?? ''), ENT_QUOTES, 'UTF-8'),
-            'content'     => $_POST['content'] ?? '',   // rich HTML from TinyMCE
+            'content'     => $_POST['content'] ?? '',
             'category'    => htmlspecialchars(trim($_POST['category'] ?? 'General'), ENT_QUOTES, 'UTF-8'),
             'tags'        => htmlspecialchars(trim($_POST['tags'] ?? ''), ENT_QUOTES, 'UTF-8'),
             'meta_title'  => htmlspecialchars(trim($_POST['meta_title'] ?? ''), ENT_QUOTES, 'UTF-8'),
             'meta_desc'   => htmlspecialchars(trim($_POST['meta_desc'] ?? ''), ENT_QUOTES, 'UTF-8'),
-            'cover_image' => htmlspecialchars(trim($_POST['cover_image'] ?? ''), ENT_QUOTES, 'UTF-8'),
+            'cover_image' => $cover_image,
             'author'      => htmlspecialchars(trim($_POST['author'] ?? 'Maifa Team'), ENT_QUOTES, 'UTF-8'),
             'published'   => isset($_POST['published']) ? 1 : 0,
         ];
@@ -57,8 +73,8 @@ if ($view === 'edit' && $edit_id) {
     $editing = $s->fetch();
 }
 
-$articles  = $db->query('SELECT id, title, slug, category, published, created_at FROM articles ORDER BY created_at DESC')->fetchAll();
-$cats      = ['General','Buying Guide','Brand Comparison','Car Tips','Service','EV & Modern Cars'];
+$articles = $db->query('SELECT id, title, slug, category, published, created_at FROM articles ORDER BY created_at DESC')->fetchAll();
+$cats     = ['General','Buying Guide','Brand Comparison','Car Tips','Service','EV & Modern Cars'];
 
 function make_slug(string $title, string $override = ''): string {
     if ($override) return preg_replace('/[^a-z0-9-]/', '', strtolower(trim($override)));
@@ -76,21 +92,43 @@ function make_slug(string $title, string $override = ''): string {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/admin.css">
   <?php if ($view !== 'list'): ?>
-  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-  <script>
-    tinymce.init({
-      selector: '#content',
-      plugins: 'lists link image table code fullscreen',
-      toolbar: 'undo redo | formatselect | bold italic underline | bullist numlist | link image | table | code fullscreen',
-      height: 500,
-      skin: 'oxide-dark',
-      content_css: 'dark',
-      menubar: false,
-      branding: false,
-      promotion: false,
-      content_style: 'body { font-family: Inter, sans-serif; font-size: 15px; line-height: 1.7; color: #e0e0e0; background: #1a1a1a; padding: 16px; } h2 { font-family: "DM Serif Display", serif; } table { border-collapse: collapse; width: 100%; } td, th { border: 1px solid #555; padding: 8px; }',
-    });
-  </script>
+  <style>
+    /* ── Simple editor ── */
+    .editor-wrap { border:1px solid rgba(255,255,255,.1); border-radius:8px; overflow:hidden; }
+    .editor-toolbar {
+      display:flex; flex-wrap:wrap; gap:2px; padding:8px 10px;
+      background:rgba(255,255,255,.04); border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .editor-toolbar button {
+      background:none; border:none; color:rgba(255,255,255,.6); cursor:pointer;
+      width:30px; height:30px; border-radius:5px; font-size:13px; font-weight:600;
+      display:flex; align-items:center; justify-content:center; transition:background .15s, color .15s;
+    }
+    .editor-toolbar button:hover { background:rgba(255,255,255,.1); color:#fff; }
+    .editor-toolbar .sep { width:1px; background:rgba(255,255,255,.1); margin:4px 4px; align-self:stretch; }
+    .editor-body {
+      min-height:420px; padding:20px; outline:none; color:#e0e0e0;
+      font-family:Inter,sans-serif; font-size:15px; line-height:1.75;
+      background:#1a1a1a;
+    }
+    .editor-body h2 { font-family:'DM Serif Display',serif; font-size:22px; margin:24px 0 10px; color:#fff; }
+    .editor-body h3 { font-family:'DM Serif Display',serif; font-size:17px; margin:18px 0 8px; color:#ddd; }
+    .editor-body a  { color:#33d930; }
+    .editor-body table { border-collapse:collapse; width:100%; margin:16px 0; }
+    .editor-body td, .editor-body th { border:1px solid #444; padding:8px 12px; }
+    .editor-body th { background:rgba(255,255,255,.06); font-weight:600; }
+    .editor-body ul, .editor-body ol { padding-left:22px; margin:10px 0; }
+    .editor-body blockquote { border-left:3px solid #0f7a3d; margin:16px 0; padding:8px 16px; color:rgba(255,255,255,.6); font-style:italic; }
+    /* Cover image upload */
+    .cover-upload-area {
+      border:2px dashed rgba(255,255,255,.15); border-radius:8px;
+      padding:20px; text-align:center; cursor:pointer; transition:border-color .2s;
+      position:relative; margin-bottom:12px;
+    }
+    .cover-upload-area:hover { border-color:rgba(15,122,61,.6); }
+    .cover-upload-area input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .cover-preview { width:100%; border-radius:6px; display:block; margin-bottom:8px; max-height:120px; object-fit:cover; }
+  </style>
   <?php endif; ?>
 </head>
 <body>
@@ -145,9 +183,10 @@ function make_slug(string $title, string $override = ''): string {
         <a href="articles.php" class="btn-sm outline">← Back</a>
       </div>
 
-      <form method="POST" id="article-form">
+      <form method="POST" id="article-form" enctype="multipart/form-data" onsubmit="syncContent()">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= $editing['id'] ?? 0 ?>">
+        <textarea name="content" id="content-hidden" style="display:none"></textarea>
 
         <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
 
@@ -169,7 +208,40 @@ function make_slug(string $title, string $override = ''): string {
 
             <div class="card">
               <label style="font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);display:block;margin-bottom:10px">Content *</label>
-              <textarea id="content" name="content"><?= htmlspecialchars($editing['content'] ?? '') ?></textarea>
+              <div class="editor-wrap">
+                <div class="editor-toolbar">
+                  <button type="button" onclick="fmt('undo')" title="Undo">↩</button>
+                  <button type="button" onclick="fmt('redo')" title="Redo">↪</button>
+                  <div class="sep"></div>
+                  <button type="button" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+                  <button type="button" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+                  <button type="button" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+                  <div class="sep"></div>
+                  <button type="button" onclick="fmtBlock('h2')" title="Heading 2" style="font-size:11px;font-family:'DM Serif Display',serif;width:auto;padding:0 8px">H2</button>
+                  <button type="button" onclick="fmtBlock('h3')" title="Heading 3" style="font-size:11px;font-family:'DM Serif Display',serif;width:auto;padding:0 8px">H3</button>
+                  <button type="button" onclick="fmtBlock('p')" title="Paragraph" style="font-size:11px;width:auto;padding:0 8px">¶</button>
+                  <div class="sep"></div>
+                  <button type="button" onclick="fmt('insertUnorderedList')" title="Bullet list">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+                  </button>
+                  <button type="button" onclick="fmt('insertOrderedList')" title="Numbered list">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><text x="2" y="9" font-size="8" fill="currentColor" stroke="none">1</text><text x="2" y="15" font-size="8" fill="currentColor" stroke="none">2</text><text x="2" y="21" font-size="8" fill="currentColor" stroke="none">3</text></svg>
+                  </button>
+                  <button type="button" onclick="fmt('formatBlock','blockquote')" title="Blockquote" style="font-size:16px;line-height:1">"</button>
+                  <div class="sep"></div>
+                  <button type="button" onclick="insertLink()" title="Insert link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </button>
+                  <button type="button" onclick="insertTable()" title="Insert table">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+                  </button>
+                  <button type="button" onclick="fmt('insertHorizontalRule')" title="Horizontal rule" style="font-size:16px">—</button>
+                </div>
+                <div id="editor"
+                  class="editor-body"
+                  contenteditable="true"
+                  spellcheck="true"><?= $editing['content'] ?? '' ?></div>
+              </div>
             </div>
           </div>
 
@@ -226,9 +298,22 @@ function make_slug(string $title, string $override = ''): string {
 
             <div class="card">
               <h4 style="font-size:13px;margin-bottom:12px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em">Cover Image</h4>
+
+              <?php if (!empty($editing['cover_image'])): ?>
+              <img src="<?= htmlspecialchars($editing['cover_image']) ?>" alt="Current cover" class="cover-preview" id="cover-preview">
+              <?php else: ?>
+              <img src="" alt="" class="cover-preview" id="cover-preview" style="display:none">
+              <?php endif; ?>
+
+              <div class="cover-upload-area" onclick="document.getElementById('cover-file').click()">
+                <input type="file" name="cover_image_file" id="cover-file" accept="image/jpeg,image/png,image/webp" onchange="previewCover(this)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p style="font-size:12px;color:rgba(255,255,255,.35);margin:0">Click to upload photo<br><span style="font-size:11px;color:rgba(255,255,255,.2)">JPG, PNG or WebP · max 8 MB</span></p>
+              </div>
+
               <div class="form-group" style="margin-bottom:0">
-                <label>Image URL</label>
-                <input type="text" name="cover_image" value="<?= htmlspecialchars($editing['cover_image'] ?? '') ?>" placeholder="https://... or /products/img.jpg">
+                <label style="color:rgba(255,255,255,.3);font-size:11px">Or paste an image URL</label>
+                <input type="text" name="cover_image" id="cover-url" value="<?= htmlspecialchars($editing['cover_image'] ?? '') ?>" placeholder="https://... or /products/img.jpg" oninput="previewUrl(this.value)">
               </div>
             </div>
 
@@ -242,21 +327,71 @@ function make_slug(string $title, string $override = ''): string {
   </main>
 
 <script>
+/* ── Slug helpers ── */
 function slugify(str) {
   return str.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s-]+/g, '-').replace(/^-|-$/g, '');
 }
 let slugEdited = <?= $editing && !empty($editing['slug']) ? 'true' : 'false' ?>;
 const slugField   = document.getElementById('slug-field');
 const slugPreview = document.getElementById('slug-preview');
-
 if (slugField) {
   slugField.addEventListener('input', () => { slugEdited = true; slugPreview.textContent = slugField.value || '...'; });
 }
-
 function autoSlug(title) {
   if (slugEdited) return;
   const s = slugify(title);
   if (slugField) { slugField.value = s; slugPreview.textContent = s || '...'; }
+}
+
+/* ── Editor helpers ── */
+function fmt(cmd, val) { document.execCommand(cmd, false, val || null); }
+function fmtBlock(tag) { document.execCommand('formatBlock', false, tag); }
+
+function insertLink() {
+  const sel = window.getSelection();
+  const text = sel && sel.toString() ? sel.toString() : prompt('Link text:');
+  if (!text) return;
+  const url = prompt('URL:', 'https://');
+  if (!url) return;
+  document.execCommand('insertHTML', false, `<a href="${url}">${text}</a>`);
+}
+
+function insertTable() {
+  const rows = parseInt(prompt('Rows:', '3'), 10) || 3;
+  const cols = parseInt(prompt('Columns:', '3'), 10) || 3;
+  let html = '<table>';
+  html += '<tr>' + '<th>Header</th>'.repeat(cols) + '</tr>';
+  for (let r = 1; r < rows; r++) {
+    html += '<tr>' + '<td>Cell</td>'.repeat(cols) + '</tr>';
+  }
+  html += '</table><p><br></p>';
+  document.execCommand('insertHTML', false, html);
+}
+
+/* Sync contenteditable → hidden textarea before submit */
+function syncContent() {
+  document.getElementById('content-hidden').value = document.getElementById('editor').innerHTML;
+}
+
+/* ── Cover image preview ── */
+function previewCover(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('cover-preview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('cover-url').value = '';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function previewUrl(url) {
+  const img = document.getElementById('cover-preview');
+  if (url) { img.src = url; img.style.display = 'block'; }
+  else { img.style.display = 'none'; }
+  // clear file input so URL takes priority
+  document.getElementById('cover-file').value = '';
 }
 </script>
 </body>
