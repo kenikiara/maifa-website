@@ -13,7 +13,20 @@ export function useScrollReveal() {
       },
       { threshold: 0.12 }
     )
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-    return () => observer.disconnect()
+
+    // Observe existing elements
+    const observe = () =>
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el))
+
+    observe()
+
+    // Also pick up elements added to DOM after initial render (async loads)
+    const mutation = new MutationObserver(observe)
+    mutation.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      observer.disconnect()
+      mutation.disconnect()
+    }
   }, [])
 }

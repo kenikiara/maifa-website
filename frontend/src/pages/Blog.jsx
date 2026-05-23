@@ -10,7 +10,7 @@ function ArticleCard({ article }) {
     day: 'numeric', month: 'long', year: 'numeric',
   })
   return (
-    <Link to={`/blog/${article.slug}`} className="article-card reveal">
+    <Link to={`/blog/${article.slug}`} className="article-card">
       <div className="article-cover">
         {article.cover_image
           ? <img src={article.cover_image} alt={article.title} loading="lazy" />
