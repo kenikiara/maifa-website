@@ -3,18 +3,18 @@ import { NavLink } from 'react-router-dom'
 
 const WA_NUMBER = '254791899602'
 
+const links = [
+  { to: '/',          label: 'Home' },
+  { to: '/shop',      label: 'Shop' },
+  { to: '/#finder',   label: 'Battery Finder', ext: true },
+  { to: '/about',     label: 'About' },
+  { to: '/locations', label: 'Locations' },
+  { to: '/warranty',  label: 'Warranty' },
+  { to: '/blog',      label: 'Blog' },
+]
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-
-  const links = [
-    { to: '/',         label: 'Home' },
-    { to: '/shop',     label: 'Shop' },
-    { to: '/#finder',  label: 'Battery Finder', ext: true },
-    { to: '/about',    label: 'About' },
-    { to: '/locations',  label: 'Locations' },
-    { to: '/warranty', label: 'Warranty' },
-    { to: '/blog',     label: 'Blog' },
-  ]
 
   return (
     <>
@@ -53,39 +53,71 @@ export default function Navbar() {
               onClick={() => setOpen(true)}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
               </svg>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile nav overlay */}
+      {/* Backdrop */}
+      <div
+        className={`mobile-nav-backdrop${open ? ' open' : ''}`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Mobile nav drawer */}
       <nav className={`mobile-nav${open ? ' open' : ''}`} aria-label="Mobile navigation">
+        {/* Header */}
         <div className="mobile-nav-head">
-          <img src="/maifa-logo.png" alt="Maifa" style={{ height: 32, objectFit: 'contain' }} />
+          <img src="/maifa-logo.png" alt="Maifa" style={{ height: 28, objectFit: 'contain' }} />
           <button
+            className="mobile-nav-close"
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            style={{ width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid var(--line)', cursor: 'pointer' }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
           </button>
         </div>
+
+        {/* Links */}
         <div className="mobile-nav-links">
-          {links.map(l => (
-            <NavLink key={l.to} to={l.to} onClick={() => setOpen(false)}>{l.label}</NavLink>
+          {links.map((l, i) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              style={{ '--i': i }}
+              className={({ isActive }) => `mobile-nav-link${isActive ? ' active' : ''}`}
+              end={l.to === '/'}
+              onClick={() => setOpen(false)}
+            >
+              <span className="mobile-nav-num">0{i + 1}</span>
+              {l.label}
+            </NavLink>
           ))}
+        </div>
+
+        {/* Footer strip */}
+        <div className="mobile-nav-foot">
           <a
             href={`https://wa.me/${WA_NUMBER}?text=Hi! I need help finding the right battery.`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
             className="btn btn-primary"
-            style={{ width: 'fit-content', marginTop: 8 }}
+            style={{ width: '100%', justifyContent: 'center', fontSize: 15, height: 50 }}
           >
             Find My Battery →
           </a>
+          <p style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--mono)', textAlign: 'center', letterSpacing: '.06em' }}>
+            Free fitting · Same-day Nairobi
+          </p>
         </div>
       </nav>
     </>
