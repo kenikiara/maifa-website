@@ -1476,9 +1476,18 @@ section.tight { padding: var(--s7) 0; }
 
 @media (max-width: 560px) {
   .footer-grid { grid-template-columns: 1fr; }
-  .product-grid-shop { grid-template-columns: 1fr; }
+  .product-grid-shop { grid-template-columns: repeat(2, 1fr); gap: var(--s3); }
   .related-grid { grid-template-columns: 1fr 1fr; }
   .stepper { grid-template-columns: 1fr; }
+
+  /* Tighter cards inside the 2-col grid on very small screens */
+  .product-card .body       { padding: var(--s2) var(--s3); gap: 4px; }
+  .product-card h4          { font-size: 12px; line-height: 1.2; }
+  .product-card .specs-mini { font-size: 10px; gap: var(--s2); }
+  .product-card .price      { font-size: 15px; }
+  .product-card .price .old { font-size: 10px; }
+  .product-card .add-btn    { width: 30px; height: 30px; font-size: 15px; }
+  .product-card .img        { aspect-ratio: 1/1; }
 }
 
 /* ═══════════════════════════════════════════════════════
