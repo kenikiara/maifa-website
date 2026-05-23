@@ -174,7 +174,7 @@ export default function Warranty() {
             </div>
 
             {error && (
-              <div style={{ background: '#fff0f0', border: '1.5px solid var(--red)', borderRadius: 'var(--r)', padding: 'var(--s4)', color: 'var(--red)', fontSize: 14 }}>
+              <div style={{ background: '#fefce8', border: '1.5px solid #d97706', borderRadius: 'var(--r)', padding: 'var(--s4)', color: '#92400e', fontSize: 14 }}>
                 {error}
               </div>
             )}

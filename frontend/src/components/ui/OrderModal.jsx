@@ -196,7 +196,7 @@ export default function OrderModal({ product, onClose }) {
             </div>
 
             {error && (
-              <p style={{ color: 'var(--red)', fontSize: 13, marginTop: 'var(--s3)', fontFamily: 'var(--mono)' }}>
+              <p style={{ color: '#92400e', fontSize: 13, marginTop: 'var(--s3)', fontFamily: 'var(--mono)', background: '#fefce8', border: '1px solid #d97706', borderRadius: 'var(--r)', padding: 'var(--s3) var(--s4)' }}>
                 ⚠ {error}
               </p>
             )}

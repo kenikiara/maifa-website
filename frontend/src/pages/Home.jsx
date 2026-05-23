@@ -103,7 +103,7 @@ export default function Home() {
             <div style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', justifyContent:'space-between', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
               <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 70% 30%, rgba(51,217,48,.15), transparent 50%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.02) 14px 15px)', pointerEvents:'none' }} />
               <div style={{ position:'relative', zIndex:1 }}>
-                <span style={{ position:'absolute', top:0, right:0, background:'var(--red)', color:'#fff', padding:'7px 13px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase' }}>● Best seller — Hi Life NS70L</span>
+                <span style={{ position:'absolute', top:0, right:0, background:'var(--green)', color:'#fff', padding:'7px 13px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase' }}>● Best seller — Hi Life NS70L</span>
                 <div className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.45)' }}>Featured product</div>
               </div>
               {/* Battery card */}
@@ -324,7 +324,7 @@ export default function Home() {
                 {/* Map placeholder */}
                 <div style={{ aspectRatio:'16/10', background:'var(--paper-2)', position:'relative', overflow:'hidden' }}>
                   <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(10,10,10,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.06) 1px,transparent 1px),linear-gradient(rgba(10,10,10,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.03) 1px,transparent 1px)', backgroundSize:'80px 80px,80px 80px,16px 16px,16px 16px' }} />
-                  <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:20, height:20, borderRadius:'50%', background:'var(--red)', boxShadow:'0 0 0 7px rgba(246,4,4,.15),0 0 0 16px rgba(246,4,4,.07)' }} />
+                  <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:20, height:20, borderRadius:'50%', background:'var(--green)', boxShadow:'0 0 0 7px rgba(15,122,61,.18),0 0 0 16px rgba(15,122,61,.08)' }} />
                 </div>
                 <div style={{ padding:'var(--s5)', display:'flex', flexDirection:'column', gap:'var(--s3)' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
@@ -361,7 +361,7 @@ export default function Home() {
           <div className="grid-3 reveal reveal-delay-1">
             {TESTIMONIALS.map((t,i)=>(
               <div key={i} style={{ background:'var(--white)', borderRadius:'var(--r)', padding:'var(--s6)', display:'flex', flexDirection:'column', gap:'var(--s4)' }}>
-                <div style={{ color:'var(--red)', letterSpacing:4, fontSize:14 }}>{'★'.repeat(t.stars)}</div>
+                <div style={{ color:'#d4a017', letterSpacing:4, fontSize:14 }}>{'★'.repeat(t.stars)}</div>
                 <p style={{ fontFamily:'var(--serif)', fontSize:21, lineHeight:1.35, color:'var(--ink)' }}>{t.quote}</p>
                 <div style={{ display:'flex', gap:'var(--s3)', alignItems:'center', marginTop:'auto' }}>
                   <div style={{ width:40, height:40, borderRadius:'50%', background:'var(--paper-2)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'var(--serif)', fontSize:16, color:'var(--ink)', flexShrink:0 }}>{t.name[0]}</div>
@@ -394,13 +394,13 @@ export default function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section id="cta-banner" style={{ background:'var(--red)', color:'#fff', padding:'var(--s9) 0', position:'relative', overflow:'hidden' }}>
+      <section id="cta-banner" style={{ background:'var(--green-deep)', color:'#fff', padding:'var(--s9) 0', position:'relative', overflow:'hidden' }}>
         <div style={{ position:'absolute', inset:0, background:'repeating-linear-gradient(45deg,transparent 0 30px,rgba(255,255,255,.03) 30px 31px)', pointerEvents:'none' }} />
         <div className="container">
           <div style={{ display:'grid', gridTemplateColumns:'1.4fr 1fr', alignItems:'center', gap:'var(--s7)', position:'relative' }}>
             <div>
               <span className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.8)', fontWeight:700 }}>Need it today?</span>
-              <h2 style={{ color:'#fff', fontSize:'clamp(38px,5vw,68px)', marginTop:'var(--s4)' }}>Same-day delivery + <em style={{ fontStyle:'italic', color:'var(--ink)' }}>free fitting</em> across Nairobi.</h2>
+              <h2 style={{ color:'#fff', fontSize:'clamp(38px,5vw,68px)', marginTop:'var(--s4)' }}>Same-day delivery + <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>free fitting</em> across Nairobi.</h2>
               <p style={{ color:'rgba(255,255,255,.82)', marginTop:'var(--s4)', fontSize:17 }}>Order before 4pm. We'll deliver, install, and take your old battery — usually within three hours.</p>
             </div>
             <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap', justifyContent:'flex-end' }}>

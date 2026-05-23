@@ -1,16 +1,19 @@
 /* ═══════════════════════════════════════════════════════
    MAIFA — Global Design System
-   Light / warm aesthetic. Green + Red accent.
+   Brand: Green + Black
    ═══════════════════════════════════════════════════════ */
 
 /* ── Design tokens ── */
 :root {
-  /* Brand */
+  /* Brand — green & black only */
   --green:        #0f7a3d;
   --green-deep:   #0a5a2c;
-  --green-bright: #33d930;
-  --red:          #f60404;
-  --red-deep:     #c40303;
+  --green-mid:    #148a45;
+  --green-bright: #1db954;
+  --green-light:  #e8f5ee;
+  /* Legacy alias — nothing is red anymore */
+  --red:          #0f7a3d;
+  --red-deep:     #0a5a2c;
 
   /* Neutrals */
   --ink:          #0a0a0a;
@@ -126,8 +129,8 @@ section.tight { padding: var(--s7) 0; }
 .btn:hover { transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
 
-.btn-primary   { background: var(--red); color: #fff; }
-.btn-primary:hover { background: var(--red-deep); box-shadow: 0 4px 16px rgba(246,4,4,.25); }
+.btn-primary   { background: var(--green); color: #fff; }
+.btn-primary:hover { background: var(--green-deep); box-shadow: 0 4px 16px rgba(15,122,61,.35); }
 
 .btn-dark      { background: var(--ink); color: #fff; }
 .btn-dark:hover { background: #222; }
@@ -145,7 +148,7 @@ section.tight { padding: var(--s7) 0; }
   font-weight: 500;
 }
 .btn-ghost::after { content: "→"; margin-left: 6px; transition: transform .15s; }
-.btn-ghost:hover { color: var(--red); }
+.btn-ghost:hover { color: var(--green); }
 .btn-ghost:hover::after { transform: translateX(4px); }
 .btn-ghost:hover { transform: none; }
 
@@ -165,7 +168,7 @@ section.tight { padding: var(--s7) 0; }
   white-space: nowrap;
 }
 .badge.green   { background: var(--green); color: #fff; }
-.badge.red     { background: var(--red); color: #fff; }
+.badge.red     { background: var(--ink); color: #fff; }
 .badge.outline { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
 .badge .dot    { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
@@ -230,7 +233,7 @@ section.tight { padding: var(--s7) 0; }
   padding: 4px 0;
   transition: color .15s;
 }
-.nav a:hover { color: var(--red); }
+.nav a:hover { color: var(--green); }
 .nav a.active::after {
   content: "";
   position: absolute;
@@ -260,7 +263,7 @@ section.tight { padding: var(--s7) 0; }
   top: -4px; right: -4px;
   width: 16px; height: 16px;
   border-radius: 50%;
-  background: var(--red);
+  background: var(--green);
   color: #fff;
   font-size: 9px;
   font-weight: 700;
@@ -816,7 +819,7 @@ section.tight { padding: var(--s7) 0; }
 
 .pdp-info h1 { font-size: clamp(32px, 4vw, 52px); margin-bottom: var(--s4); }
 .cat-line { display: flex; gap: var(--s4); align-items: center; margin-bottom: var(--s4); flex-wrap: wrap; }
-.stars { color: var(--red); letter-spacing: 4px; font-size: 14px; }
+.stars { color: #d4a017; letter-spacing: 4px; font-size: 14px; }
 .reviews-count { font-size: 13px; color: var(--muted); }
 .short-desc { font-size: 15px; color: #333; padding: var(--s4) 0; line-height: 1.65; }
 .price-row {
@@ -831,7 +834,7 @@ section.tight { padding: var(--s7) 0; }
 .price-row .price { font-family: var(--serif); font-size: 48px; line-height: 1; }
 .price-row .old-price { font-size: 15px; text-decoration: line-through; color: var(--muted); margin-bottom: 6px; }
 .price-row .save-tag {
-  background: var(--red);
+  background: var(--green);
   color: #fff;
   padding: 4px 10px;
   border-radius: var(--r-sm);
