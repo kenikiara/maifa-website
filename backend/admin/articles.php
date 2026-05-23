@@ -121,12 +121,11 @@ function make_slug(string $title, string $override = ''): string {
     .editor-body blockquote { border-left:3px solid #0f7a3d; margin:16px 0; padding:8px 16px; color:rgba(255,255,255,.6); font-style:italic; }
     /* Cover image upload */
     .cover-upload-area {
-      border:2px dashed rgba(255,255,255,.15); border-radius:8px;
+      display:block; border:2px dashed rgba(255,255,255,.15); border-radius:8px;
       padding:20px; text-align:center; cursor:pointer; transition:border-color .2s;
-      position:relative; margin-bottom:12px;
+      margin-bottom:12px;
     }
     .cover-upload-area:hover { border-color:rgba(15,122,61,.6); }
-    .cover-upload-area input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
     .cover-preview { width:100%; border-radius:6px; display:block; margin-bottom:8px; max-height:120px; object-fit:cover; }
   </style>
   <?php endif; ?>
@@ -305,11 +304,11 @@ function make_slug(string $title, string $override = ''): string {
               <img src="" alt="" class="cover-preview" id="cover-preview" style="display:none">
               <?php endif; ?>
 
-              <div class="cover-upload-area" onclick="document.getElementById('cover-file').click()">
-                <input type="file" name="cover_image_file" id="cover-file" accept="image/jpeg,image/png,image/webp" onchange="previewCover(this)">
+              <input type="file" name="cover_image_file" id="cover-file" accept="image/jpeg,image/png,image/webp" onchange="previewCover(this)" style="display:none">
+              <label for="cover-file" class="cover-upload-area" id="cover-drop">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <p style="font-size:12px;color:rgba(255,255,255,.35);margin:0">Click to upload photo<br><span style="font-size:11px;color:rgba(255,255,255,.2)">JPG, PNG or WebP · max 8 MB</span></p>
-              </div>
+                <p style="font-size:12px;color:rgba(255,255,255,.35);margin:0" id="cover-drop-text">Click to upload photo<br><span style="font-size:11px;color:rgba(255,255,255,.2)">JPG, PNG or WebP · max 8 MB</span></p>
+              </label>
 
               <div class="form-group" style="margin-bottom:0">
                 <label style="color:rgba(255,255,255,.3);font-size:11px">Or paste an image URL</label>
@@ -376,14 +375,17 @@ function syncContent() {
 /* ── Cover image preview ── */
 function previewCover(input) {
   if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
   const reader = new FileReader();
   reader.onload = e => {
     const img = document.getElementById('cover-preview');
     img.src = e.target.result;
     img.style.display = 'block';
     document.getElementById('cover-url').value = '';
+    document.getElementById('cover-drop-text').innerHTML =
+      `<strong style="color:#33d930">${file.name}</strong><br><span style="font-size:11px;color:rgba(255,255,255,.3)">Click to change</span>`;
   };
-  reader.readAsDataURL(input.files[0]);
+  reader.readAsDataURL(file);
 }
 
 function previewUrl(url) {
