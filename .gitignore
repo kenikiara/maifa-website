@@ -1,0 +1,16 @@
+# Dependencies
+frontend/node_modules/
+
+# Build output (GitHub Actions rebuilds this on the server)
+frontend/dist/
+
+# Environment / secrets — NEVER commit these
+backend/config/db.php
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
