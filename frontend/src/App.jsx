@@ -11,6 +11,8 @@ import ProductDetail from './pages/ProductDetail'
 import Warranty      from './pages/Warranty'
 import About         from './pages/About'
 import Contact       from './pages/Contact'
+import Blog          from './pages/Blog'
+import BlogPost      from './pages/BlogPost'
 import NotFound      from './pages/NotFound'
 
 function ScrollToTop() {
@@ -31,6 +33,8 @@ function AppInner() {
         <Route path="/warranty"   element={<PageTransition><Warranty /></PageTransition>} />
         <Route path="/about"      element={<PageTransition><About /></PageTransition>} />
         <Route path="/contact"    element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/blog"       element={<PageTransition><Blog /></PageTransition>} />
+        <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
         <Route path="*"           element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
       <Footer />
