@@ -314,18 +314,25 @@ export default function Home() {
           </div>
           <div className="grid-3 reveal reveal-delay-1">
             {[
-              {name:'Thika Road',   hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9'},
-              {name:'Kiambu Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA'},
-              {name:'Mombasa',      hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA'},
+              {name:'Thika Road',   hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', embed:'https://maps.google.com/maps?q=Thika+Road,+Nairobi,+Kenya&output=embed&z=14'},
+              {name:'Kiambu Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', embed:'https://maps.google.com/maps?q=Kiambu+Road,+Nairobi,+Kenya&output=embed&z=14'},
+              {name:'Mombasa',      hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', embed:'https://maps.google.com/maps?q=Mombasa,+Kenya&output=embed&z=13'},
             ].map(loc=>(
               <div key={loc.name} style={{ border:'1px solid var(--line)', borderRadius:'var(--r)', overflow:'hidden', display:'flex', flexDirection:'column', transition:'border-color .2s' }}
                 onMouseEnter={e=>e.currentTarget.style.borderColor='var(--ink)'}
                 onMouseLeave={e=>e.currentTarget.style.borderColor='var(--line)'}
               >
-                {/* Map placeholder */}
-                <div style={{ aspectRatio:'16/10', background:'var(--paper-2)', position:'relative', overflow:'hidden' }}>
-                  <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(10,10,10,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.06) 1px,transparent 1px),linear-gradient(rgba(10,10,10,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.03) 1px,transparent 1px)', backgroundSize:'80px 80px,80px 80px,16px 16px,16px 16px' }} />
-                  <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:20, height:20, borderRadius:'50%', background:'var(--green)', boxShadow:'0 0 0 7px rgba(15,122,61,.18),0 0 0 16px rgba(15,122,61,.08)' }} />
+                {/* Embedded Google Map */}
+                <div style={{ aspectRatio:'16/10', position:'relative', overflow:'hidden' }}>
+                  <iframe
+                    src={loc.embed}
+                    title={`Map — ${loc.name}`}
+                    width="100%" height="100%"
+                    style={{ position:'absolute', inset:0, border:0, filter:'grayscale(20%) contrast(1.05)' }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
                 </div>
                 <div style={{ padding:'var(--s5)', display:'flex', flexDirection:'column', gap:'var(--s3)' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
