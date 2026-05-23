@@ -911,56 +911,24 @@ section.tight { padding: var(--s7) 0; }
   cursor: pointer;
 }
 
-/* Mobile bottom-sheet drawer */
-.filter-drawer-backdrop {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(10,10,10,.45);
-  backdrop-filter: blur(2px);
-  z-index: 200;
+/* Inline collapsible filter panel — mobile only, sits between results bar and grid */
+.mobile-filter-panel {
+  display: none;               /* hidden on desktop */
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .35s cubic-bezier(0.25, 1, 0.5, 1), opacity .25s ease;
   opacity: 0;
-  transition: opacity .25s ease;
 }
-.filter-drawer-backdrop.open { display: block; opacity: 1; }
-
-.filter-drawer {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
+.mobile-filter-panel.open {
+  max-height: 600px;
+  opacity: 1;
+}
+.mobile-filter-inner {
   background: var(--white);
-  border-radius: 20px 20px 0 0;
-  z-index: 201;
-  display: flex;
-  flex-direction: column;
-  max-height: 82vh;
-  transform: translateY(100%);
-  transition: transform .35s cubic-bezier(0.25, 1, 0.5, 1);
-  box-shadow: 0 -8px 40px rgba(10,10,10,.12);
-}
-.filter-drawer.open { transform: translateY(0); }
-
-.filter-drawer-handle {
-  width: 36px; height: 4px;
-  background: var(--line);
-  border-radius: 2px;
-  margin: 12px auto 0;
-  flex-shrink: 0;
-}
-.filter-drawer-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: var(--s4) var(--s5) var(--s3);
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--line);
-}
-.filter-drawer-body {
-  overflow-y: auto;
-  flex: 1;
-  padding: 0 var(--s5);
-}
-.filter-drawer-foot {
+  border: 1px solid var(--line);
+  border-radius: var(--r);
   padding: var(--s4) var(--s5);
-  border-top: 1px solid var(--line);
-  display: flex;
-  flex-shrink: 0;
+  margin-bottom: var(--s4);
 }
 
 .product-grid-shop { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s5); }
@@ -1530,9 +1498,10 @@ section.tight { padding: var(--s7) 0; }
 
   /* Shop */
   .shop-layout           { grid-template-columns: 1fr; }
-  .shop-sidebar          { display: none; }            /* sidebar hidden → drawer instead */
-  .filter-toggle-btn     { display: inline-flex; }     /* show filter pill button */
+  .shop-sidebar          { display: none; }
+  .filter-toggle-btn     { display: inline-flex; }
   .active-filter-pills   { display: flex; }
+  .mobile-filter-panel   { display: block; }           /* inline collapsible panel */
   .product-grid-shop     { grid-template-columns: repeat(2, 1fr); }
 
   /* Product detail */
