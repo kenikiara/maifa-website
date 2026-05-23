@@ -33,8 +33,10 @@ export default function ProductDetail() {
   useEffect(() => {
     async function load() {
       setLoading(true)
+      // slug format: "amaron-hi-life-ns70l-65ah-3" — numeric ID is the last segment
+      const productId = slug.split('-').pop()
       try {
-        const res = await fetch(`/api/products.php?id=${slug}`)
+        const res = await fetch(`/api/products.php?id=${productId}`)
         const data = await res.json()
         if (data.success && data.product) {
           setProduct(data.product)
