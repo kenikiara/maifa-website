@@ -22,7 +22,6 @@ export default function Navbar() {
         <div className="header-inner">
           <NavLink to="/" className="logo" aria-label="Maifa home">
             <img src="/maifa-logo.png" alt="Maifa" onError={e => e.target.style.display = 'none'} />
-            <span>Maifa</span>
           </NavLink>
 
           <nav className="nav" aria-label="Main navigation">
@@ -64,7 +63,7 @@ export default function Navbar() {
       {/* Mobile nav overlay */}
       <nav className={`mobile-nav${open ? ' open' : ''}`} aria-label="Mobile navigation">
         <div className="mobile-nav-head">
-          <span style={{ fontFamily: 'var(--serif)', fontSize: 26 }}>Maifa</span>
+          <img src="/maifa-logo.png" alt="Maifa" style={{ height: 32, objectFit: 'contain' }} />
           <button
             aria-label="Close menu"
             onClick={() => setOpen(false)}
