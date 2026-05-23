@@ -11,11 +11,11 @@ function toSlug(name) {
 }
 
 const CATEGORIES = [
-  { num: '01', key: 'Standard',   label: 'Car Batteries Standard', blurb: 'Small-engine sedans. Lower electrical demand. Maintenance free.' },
-  { num: '02', key: 'Large Car',  label: 'Large Cars',             blurb: 'SUVs and big engines. Higher draw. Built to keep up.' },
-  { num: '03', key: 'EFB',        label: 'Start-Stop EFB',         blurb: 'Engineered for cars with idle-stop. Frequent restarts, no sweat.' },
-  { num: '04', key: 'Heavy Duty', label: 'Heavy Duty',             blurb: 'Maximum vibration resistance. Verified for Kenyan terrain.' },
-  { num: '05', key: 'European',   label: 'European',               blurb: 'High CCA. Long cycle life. For BMW, Mercedes, Audi & co.' },
+  { num: '01', key: 'Standard',   label: 'Car Batteries Standard', blurb: 'Small-engine sedans. Lower electrical demand. Maintenance free.', img: '/categories/regular-car.png' },
+  { num: '02', key: 'Large Car',  label: 'Large Cars',             blurb: 'SUVs and big engines. Higher draw. Built to keep up.',             img: '/categories/suv.png'         },
+  { num: '03', key: 'EFB',        label: 'Start-Stop EFB',         blurb: 'Engineered for cars with idle-stop. Frequent restarts, no sweat.', img: '/categories/efb.png'         },
+  { num: '04', key: 'Heavy Duty', label: 'Heavy Duty',             blurb: 'Maximum vibration resistance. Verified for Kenyan terrain.',       img: '/categories/heavy-duty.png'  },
+  { num: '05', key: 'European',   label: 'European',               blurb: 'High CCA. Long cycle life. For BMW, Mercedes, Audi & co.',         img: '/categories/euro-spec.png'   },
 ]
 
 const TESTIMONIALS = [
@@ -182,12 +182,13 @@ export default function Home() {
                   <h4 style={{ fontFamily:'var(--serif)', fontSize:24, lineHeight:1.05, margin:'var(--s3) 0 var(--s2)' }}>{c.label}</h4>
                   <p style={{ fontSize:12, color:'var(--muted)', lineHeight:1.45 }}>{c.blurb}</p>
                 </div>
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
-                  <div style={{ width:56, height:70, background:'linear-gradient(180deg,#1a1a1a,#000)', borderRadius:4, position:'relative' }}>
-                    <div style={{ position:'absolute', top:-5, left:7, width:12, height:7, background:'var(--green)', borderRadius:'1px 1px 0 0' }} />
-                    <div style={{ position:'absolute', top:-5, right:7, width:12, height:7, background:'var(--green)', borderRadius:'1px 1px 0 0' }} />
-                  </div>
-                  <span style={{ fontSize:18 }}>→</span>
+                <div style={{ position:'relative', marginTop:'var(--s4)' }}>
+                  <img
+                    src={c.img}
+                    alt={c.label}
+                    style={{ width:'100%', height:110, objectFit:'contain', objectPosition:'bottom center', display:'block', filter:'drop-shadow(0 4px 12px rgba(0,0,0,.13))' }}
+                  />
+                  <span style={{ position:'absolute', bottom:0, right:0, fontSize:18 }}>→</span>
                 </div>
               </Link>
             ))}
