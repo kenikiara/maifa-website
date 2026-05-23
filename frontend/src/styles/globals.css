@@ -311,6 +311,32 @@ section.tight { padding: var(--s7) 0; }
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .footer-grid ul { list-style: none; display: grid; gap: var(--s3); font-size: 14px; }
+
+/* Newsletter strip */
+.newsletter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s7);
+  align-items: center;
+}
+.newsletter-form {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: rgba(255,255,255,.07);
+  border-radius: var(--r);
+  border: 1px solid rgba(255,255,255,.1);
+}
+@media (max-width: 760px) {
+  .newsletter-grid {
+    grid-template-columns: 1fr;
+    gap: var(--s5);
+  }
+}
+@media (max-width: 400px) {
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form .btn { width: 100%; justify-content: center; }
+}
 .footer-bottom {
   display: flex;
   justify-content: space-between;

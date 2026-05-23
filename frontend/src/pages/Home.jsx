@@ -544,14 +544,14 @@ export default function Home() {
       {/* Newsletter */}
       <section id="newsletter" style={{ background:'var(--ink)', color:'#fff', padding:'var(--s8) 0' }}>
         <div className="container">
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--s7)', alignItems:'center' }}>
+          <div className="newsletter-grid">
             <div>
               <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Stay charged</span>
               <h3 style={{ color:'#fff', marginTop:'var(--s4)' }}>Battery tips, new arrivals, and the occasional discount.</h3>
             </div>
-            <form onSubmit={e=>e.preventDefault()} style={{ display:'flex', gap:6, padding:6, background:'rgba(255,255,255,.07)', borderRadius:'var(--r)', border:'1px solid rgba(255,255,255,.1)' }}>
-              <input type="email" placeholder="your@email.com" required style={{ flex:1, background:'transparent', border:'none', padding:'12px 16px', color:'#fff', fontFamily:'var(--sans)', fontSize:14, outline:'none' }} />
-              <button type="submit" className="btn btn-primary" style={{ height:46, padding:'0 20px' }}>Subscribe</button>
+            <form onSubmit={e=>e.preventDefault()} className="newsletter-form">
+              <input type="email" placeholder="your@email.com" required style={{ flex:1, background:'transparent', border:'none', padding:'12px 16px', color:'#fff', fontFamily:'var(--sans)', fontSize:14, outline:'none', minWidth:0 }} />
+              <button type="submit" className="btn btn-primary" style={{ height:46, padding:'0 20px', flexShrink:0 }}>Subscribe</button>
             </form>
           </div>
         </div>
