@@ -4,11 +4,11 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
 import OrderModal from '../components/ui/OrderModal'
 
 const CATEGORIES = [
-  { label: 'Standard',    count: 5 },
-  { label: 'Large Car',   count: 3 },
-  { label: 'EFB',         count: 3 },
-  { label: 'Heavy Duty',  count: 3 },
-  { label: 'European',    count: 2 },
+  { label: 'Standard',   count: 5 },
+  { label: 'Large Car',  count: 3 },
+  { label: 'EFB',        count: 3 },
+  { label: 'Heavy Duty', count: 3 },
+  { label: 'European',   count: 2 },
 ]
 
 const PER_PAGE = 12
@@ -75,16 +75,72 @@ function ProductCard({ product, onOrder }) {
   )
 }
 
+/* ── Shared filter controls (used in both sidebar & drawer) ── */
+function FilterControls({ selectedCats, toggleCat, minPrice, setMinPrice, maxPrice, setMaxPrice, setPage, onClear }) {
+  const hasFilters = selectedCats.length > 0 || minPrice || maxPrice
+  return (
+    <>
+      <div className="filter-block">
+        <h5>Category <span style={{ color: 'var(--muted)' }}>{CATEGORIES.length}</span></h5>
+        <ul>
+          {CATEGORIES.map(cat => (
+            <li key={cat.label}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={selectedCats.includes(cat.label)}
+                  onChange={() => toggleCat(cat.label)}
+                />
+                {cat.label}
+                <span className="count">{cat.count}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="filter-block">
+        <h5>Price (KES)</h5>
+        <div className="price-range">
+          <input
+            type="text" placeholder="Min"
+            value={minPrice}
+            onChange={e => { setMinPrice(e.target.value); setPage(1) }}
+          />
+          <span style={{ color: 'var(--muted)', flexShrink: 0 }}>—</span>
+          <input
+            type="text" placeholder="Max"
+            value={maxPrice}
+            onChange={e => { setMaxPrice(e.target.value); setPage(1) }}
+          />
+        </div>
+      </div>
+
+      {hasFilters && (
+        <div className="filter-block" style={{ border: 'none', paddingTop: 0 }}>
+          <button
+            onClick={onClear}
+            style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--muted)', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Clear filters
+          </button>
+        </div>
+      )}
+    </>
+  )
+}
+
 export default function Shop() {
   useScrollReveal()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [products, setProducts]     = useState([])
-  const [loading, setLoading]       = useState(true)
-  const [total, setTotal]           = useState(0)
-  const [page, setPage]             = useState(1)
-  const [sort, setSort]             = useState('featured')
+  const [products, setProducts]         = useState([])
+  const [loading, setLoading]           = useState(true)
+  const [total, setTotal]               = useState(0)
+  const [page, setPage]                 = useState(1)
+  const [sort, setSort]                 = useState('featured')
   const [orderProduct, setOrderProduct] = useState(null)
+  const [filterOpen, setFilterOpen]     = useState(false)
 
   const [selectedCats, setSelectedCats] = useState(() => {
     const cat = searchParams.get('category')
@@ -92,6 +148,8 @@ export default function Shop() {
   })
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
+
+  const activeCount = selectedCats.length + (minPrice ? 1 : 0) + (maxPrice ? 1 : 0)
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
@@ -136,6 +194,14 @@ export default function Shop() {
     })
   }
 
+  function clearAll() {
+    setSelectedCats([])
+    setMinPrice('')
+    setMaxPrice('')
+    setPage(1)
+    setSearchParams({})
+  }
+
   const totalPages = Math.ceil(total / PER_PAGE)
 
   return (
@@ -157,84 +223,68 @@ export default function Shop() {
       <div className="container">
         <div className="shop-layout">
 
-          {/* Sidebar */}
-          <aside>
-            <div className="filter-block">
-              <h5>Category <span style={{ color: 'var(--muted)' }}>{CATEGORIES.length}</span></h5>
-              <ul>
-                {CATEGORIES.map(cat => (
-                  <li key={cat.label}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={selectedCats.includes(cat.label)}
-                        onChange={() => toggleCat(cat.label)}
-                      />
-                      {cat.label}
-                      <span className="count">{cat.count}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="filter-block">
-              <h5>Price (KES)</h5>
-              <div className="price-range">
-                <input
-                  type="text"
-                  placeholder="Min"
-                  value={minPrice}
-                  onChange={e => { setMinPrice(e.target.value); setPage(1) }}
-                />
-                <span style={{ color: 'var(--muted)', flexShrink: 0 }}>—</span>
-                <input
-                  type="text"
-                  placeholder="Max"
-                  value={maxPrice}
-                  onChange={e => { setMaxPrice(e.target.value); setPage(1) }}
-                />
-              </div>
-            </div>
-
-            <div className="filter-block" style={{ border: 'none' }}>
-              {(selectedCats.length > 0 || minPrice || maxPrice) && (
-                <button
-                  onClick={() => {
-                    setSelectedCats([])
-                    setMinPrice('')
-                    setMaxPrice('')
-                    setPage(1)
-                    setSearchParams({})
-                  }}
-                  style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--muted)', cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                  Clear filters
-                </button>
-              )}
-            </div>
+          {/* ── Desktop sidebar ── */}
+          <aside className="shop-sidebar">
+            <FilterControls
+              selectedCats={selectedCats} toggleCat={toggleCat}
+              minPrice={minPrice} setMinPrice={setMinPrice}
+              maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+              setPage={setPage} onClear={clearAll}
+            />
           </aside>
 
-          {/* Main */}
+          {/* ── Main ── */}
           <main>
             <div className="results-bar">
               <span className="count-text">
                 <b>{total}</b> {total === 1 ? 'result' : 'results'}
                 {selectedCats.length === 1 ? ` in ${selectedCats[0]}` : ''}
               </span>
-              <select
-                value={sort}
-                onChange={e => { setSort(e.target.value); setPage(1) }}
-              >
-                <option value="featured">Sort: Featured</option>
-                <option value="price_asc">Price: low to high</option>
-                <option value="price_desc">Price: high to low</option>
-                <option value="newest">Newest</option>
-              </select>
+
+              <div style={{ display: 'flex', gap: 'var(--s3)', alignItems: 'center' }}>
+                {/* Mobile filter button — hidden on desktop via CSS */}
+                <button
+                  className="filter-toggle-btn"
+                  onClick={() => setFilterOpen(true)}
+                  aria-label="Open filters"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                  </svg>
+                  Filter
+                  {activeCount > 0 && (
+                    <span className="filter-badge">{activeCount}</span>
+                  )}
+                </button>
+
+                <select value={sort} onChange={e => { setSort(e.target.value); setPage(1) }}>
+                  <option value="featured">Sort: Featured</option>
+                  <option value="price_asc">Price: low → high</option>
+                  <option value="price_desc">Price: high → low</option>
+                  <option value="newest">Newest</option>
+                </select>
+              </div>
             </div>
 
+            {/* Active filter pills (mobile) */}
+            {activeCount > 0 && (
+              <div className="active-filter-pills">
+                {selectedCats.map(c => (
+                  <button key={c} className="filter-pill-active" onClick={() => toggleCat(c)}>
+                    {c} ×
+                  </button>
+                ))}
+                {(minPrice || maxPrice) && (
+                  <button className="filter-pill-active" onClick={() => { setMinPrice(''); setMaxPrice(''); }}>
+                    KES {minPrice || '0'} – {maxPrice || '∞'} ×
+                  </button>
+                )}
+                <button className="filter-pill-clear" onClick={clearAll}>Clear all</button>
+              </div>
+            )}
+
             {loading ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'var(--s5)' }}>
+              <div className="product-grid-shop">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} style={{ background: 'var(--paper-2)', borderRadius: 'var(--r)', aspectRatio: '3/4', animation: 'pulse 1.5s ease-in-out infinite' }} />
                 ))}
@@ -242,12 +292,7 @@ export default function Shop() {
             ) : products.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 'var(--s9) 0', color: 'var(--muted)' }}>
                 <p style={{ fontSize: 18, marginBottom: 'var(--s4)' }}>No batteries found.</p>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => { setSelectedCats([]); setMinPrice(''); setMaxPrice(''); setPage(1); setSearchParams({}) }}
-                >
-                  Clear filters
-                </button>
+                <button className="btn btn-secondary" onClick={clearAll}>Clear filters</button>
               </div>
             ) : (
               <div className="product-grid-shop">
@@ -265,6 +310,36 @@ export default function Shop() {
               </div>
             )}
           </main>
+        </div>
+      </div>
+
+      {/* ── Mobile filter drawer (bottom sheet) ── */}
+      <div className={`filter-drawer-backdrop${filterOpen ? ' open' : ''}`} onClick={() => setFilterOpen(false)} />
+      <div className={`filter-drawer${filterOpen ? ' open' : ''}`} aria-label="Filters">
+        <div className="filter-drawer-handle" />
+        <div className="filter-drawer-head">
+          <span style={{ fontFamily: 'var(--serif)', fontSize: 20 }}>Filters</span>
+          <button
+            onClick={() => setFilterOpen(false)}
+            style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div className="filter-drawer-body">
+          <FilterControls
+            selectedCats={selectedCats} toggleCat={toggleCat}
+            minPrice={minPrice} setMinPrice={setMinPrice}
+            maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+            setPage={setPage} onClear={clearAll}
+          />
+        </div>
+        <div className="filter-drawer-foot">
+          <button className="btn btn-primary" style={{ flex: 1, height: 48, fontSize: 15 }} onClick={() => setFilterOpen(false)}>
+            Show {total} result{total !== 1 ? 's' : ''}
+          </button>
         </div>
       </div>
 
