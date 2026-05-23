@@ -1216,6 +1216,13 @@ section.tight { padding: var(--s7) 0; }
   gap: var(--s4);
 }
 
+/* Home — 4-column featured products */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s5);
+}
+
 /* Contact — 2-col layout */
 .contact-grid {
   display: grid;
@@ -1226,14 +1233,15 @@ section.tight { padding: var(--s7) 0; }
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {
-  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+  .cat-grid      { grid-template-columns: repeat(3, 1fr); }
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 1024px) {
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
-  .related-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-4            { grid-template-columns: repeat(2, 1fr); }
+  .related-grid      { grid-template-columns: repeat(2, 1fr); }
   .product-grid-shop { grid-template-columns: repeat(2, 1fr); }
-  .finder-form { grid-template-columns: 1fr 1fr 1fr 1fr; } /* still 4 col at 1024 */
+  .finder-form       { grid-template-columns: 1fr 1fr 1fr 1fr; }
 }
 
 @media (max-width: 880px) {
@@ -1294,6 +1302,31 @@ section.tight { padding: var(--s7) 0; }
 
   /* Section head */
   .section-head { flex-direction: column; align-items: flex-start; margin-bottom: var(--s5); }
+
+  /* Featured products grid */
+  .featured-grid { grid-template-columns: repeat(2, 1fr); gap: var(--s3); }
+
+  /* Filter pills — horizontal scroll, no wrap */
+  .filter-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--s2);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-right: calc(-1 * var(--s4));
+    padding-right: var(--s4);
+  }
+  .filter-pills::-webkit-scrollbar { display: none; }
+  .pill { flex-shrink: 0; }
+
+  /* Product card — tighter on mobile */
+  .product-card .body       { padding: var(--s3); gap: var(--s2); }
+  .product-card h4          { font-size: 13px; line-height: 1.25; }
+  .product-card .price      { font-size: 17px; }
+  .product-card .price .old { font-size: 11px; }
+  .product-card .footer     { flex-wrap: wrap; gap: var(--s2); padding-top: var(--s2); }
+  .product-card .add-btn    { width: 34px; height: 34px; font-size: 16px; }
+  .product-card .specs-mini { font-size: 9px; gap: var(--s2); }
 }
 
 @media (max-width: 640px) {

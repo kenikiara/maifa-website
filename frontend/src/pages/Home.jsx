@@ -333,7 +333,7 @@ export default function Home() {
               <button key={c} className={`pill${activeCat===c?' active':''}`} onClick={()=>setActiveCat(c)}>{c}</button>
             ))}
           </div>
-          <div className="product-grid reveal reveal-delay-2" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'var(--s5)' }}>
+          <div className="featured-grid reveal reveal-delay-2">
             {featured.map(p=>(
               <Link key={p.id} to={`/shop/${toSlug(p.name)}-${p.id}`} className="product-card">
                 <div className="img">
