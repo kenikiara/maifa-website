@@ -382,7 +382,7 @@ section.tight { padding: var(--s7) 0; }
   position: absolute; inset: 0;
   background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(10,10,10,.03) 10px 11px);
 }
-.product-card .img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.product-card .img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 8%; }
 .battery-placeholder {
   width: 48%;
   aspect-ratio: 4/5;
