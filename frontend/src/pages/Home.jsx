@@ -222,7 +222,7 @@ export default function Home() {
                     </div>
                   )}
                   {p.image
-                    ? <img src={p.image} alt={p.name} loading="lazy" />
+                    ? <img src={`/products/${p.image}`} alt={p.name} loading="lazy" />
                     : <div className="battery-placeholder">M</div>
                   }
                   <span className="quick-view">Quick view</span>
