@@ -1179,39 +1179,133 @@ section.tight { padding: var(--s7) 0; }
 .help-row .k { color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
 .help-row .v { font-weight: 600; font-family: var(--mono); font-size: 13px; }
 
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE LAYOUT HELPERS
+   Classes used in JSX instead of inline gridTemplateColumns
+   so media queries can override them.
+   ══════════════════════════════════════════════════════ */
+
+/* Home — hero */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--s8);
+  align-items: end;
+  min-height: 76vh;
+}
+.hero-copy { padding-bottom: var(--s9); }
+
+/* Home — battery finder */
+.finder-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--s7);
+  align-items: center;
+}
+.finder-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s3);
+  align-items: end;
+}
+
+/* Home — 5-column categories */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--s4);
+}
+
+/* Contact — 2-col layout */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s9);
+  align-items: start;
+}
+
 /* ── Responsive ── */
+@media (max-width: 1100px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 1024px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .related-grid { grid-template-columns: repeat(2, 1fr); }
   .product-grid-shop { grid-template-columns: repeat(2, 1fr); }
+  .finder-form { grid-template-columns: 1fr 1fr 1fr 1fr; } /* still 4 col at 1024 */
 }
+
 @media (max-width: 880px) {
+  /* Nav */
   .nav { display: none; }
   .mobile-menu-btn { display: flex; }
+
+  /* Spacing */
+  section { padding: var(--s7) 0; }
+  #hero    { padding: var(--s6) 0 var(--s5); }
+  #finder  { padding: var(--s6) 0; }
+  .container { padding: 0 var(--s4); }
+
+  /* Typography */
+  h1 { font-size: clamp(36px, 10vw, 52px); }
+  h2 { font-size: clamp(28px, 7vw, 40px); }
+
+  /* Hero */
+  .hero-grid { grid-template-columns: 1fr; min-height: auto; }
+  .hero-copy { padding-bottom: var(--s6); }
+  .hero-card { display: none; }
+
+  /* Finder */
+  .finder-grid { grid-template-columns: 1fr; }
+  .finder-form { grid-template-columns: 1fr 1fr; }
+
+  /* Categories */
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Grids */
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--s5); }
-  section { padding: var(--s7) 0; }
-  h1 { font-size: 44px; }
-  h2 { font-size: 36px; }
+
+  /* Contact */
+  .contact-grid { grid-template-columns: 1fr; gap: var(--s6); }
+
+  /* Shop */
   .shop-layout { grid-template-columns: 1fr; }
   .product-grid-shop { grid-template-columns: repeat(2, 1fr); }
+
+  /* Product detail */
   .pdp { grid-template-columns: 1fr; }
   .gallery { position: static; grid-template-columns: 1fr; }
   .thumbs { flex-direction: row; }
   .thumb { width: 60px; height: 60px; }
   .tab-content-grid { grid-template-columns: 1fr; }
   .delivery-card { grid-template-columns: 1fr; }
+
+  /* Warranty */
   .warranty-layout { grid-template-columns: 1fr; }
   .stepper { grid-template-columns: 1fr 1fr; }
   .row-2, .row-3 { grid-template-columns: 1fr; }
   .radio-group.cols-3, .radio-group.cols-2 { grid-template-columns: 1fr; }
   .warranty-side { position: static; }
+
+  /* Related */
   .related-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Section head */
+  .section-head { flex-direction: column; align-items: flex-start; margin-bottom: var(--s5); }
 }
+
+@media (max-width: 640px) {
+  .finder-form { grid-template-columns: 1fr; }
+  .cat-grid    { grid-template-columns: 1fr 1fr; }
+}
+
 @media (max-width: 560px) {
   .footer-grid { grid-template-columns: 1fr; }
   .product-grid-shop { grid-template-columns: 1fr; }
   .related-grid { grid-template-columns: 1fr 1fr; }
+  .stepper { grid-template-columns: 1fr; }
 }
 
 /* ═══════════════════════════════════════════════════════

@@ -113,11 +113,11 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <section id="hero" style={{ padding:'var(--s7) 0 0', borderBottom:'1px solid var(--line)', overflow:'hidden' }}>
+      <section id="hero" style={{ borderBottom:'1px solid var(--line)', overflow:'hidden' }}>
         <div className="container">
-          <div style={{ display:'grid', gridTemplateColumns:'1.1fr .9fr', gap:'var(--s8)', alignItems:'end', minHeight:'76vh' }}>
+          <div className="hero-grid">
             {/* Copy */}
-            <div style={{ paddingBottom:'var(--s9)' }}>
+            <div className="hero-copy">
               <span className="eyebrow">Maifa · Built for Kenyan roads</span>
               <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)' }}>
                 Built for <em style={{ fontStyle:'italic', color:'var(--green-deep)' }}>Kenyan</em> roads.
@@ -139,8 +139,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Visual card */}
-            <div style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', justifyContent:'space-between', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
+            {/* Visual card — hidden on mobile via .hero-card */}
+            <div className="hero-card" style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', justifyContent:'space-between', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
               <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 70% 30%, rgba(51,217,48,.15), transparent 50%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.02) 14px 15px)', pointerEvents:'none' }} />
               <div style={{ position:'relative', zIndex:1 }}>
                 <span style={{ position:'absolute', top:0, right:0, background:'var(--green)', color:'#fff', padding:'7px 13px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase' }}>● Best seller — Hi Life NS70L</span>
@@ -176,13 +176,13 @@ export default function Home() {
 
           {!finderResult ? (
             /* ── Form ── */
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 2fr', gap:'var(--s7)', alignItems:'center' }}>
+            <div className="finder-grid">
               <div>
                 <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · 60 seconds</span>
                 <h3 style={{ color:'#fff', marginTop:'var(--s3)' }}>Tell us your car. We'll match the right battery.</h3>
                 <p style={{ color:'rgba(255,255,255,.55)', fontSize:14, marginTop:'var(--s2)' }}>Over 240 vehicle fitments mapped to in-stock SKUs.</p>
               </div>
-              <form onSubmit={handleFinder} style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'var(--s3)', alignItems:'end' }}>
+              <form onSubmit={handleFinder} className="finder-form">
                 {[
                   { label:'Make',  value:make,  onChange:e=>{setMake(e.target.value);setModel('')}, options:MAKES },
                   { label:'Model', value:model, onChange:e=>setModel(e.target.value), options:models },
@@ -291,7 +291,7 @@ export default function Home() {
             </div>
             <Link to="/shop" className="btn-ghost">View full catalogue</Link>
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'var(--s4)' }}>
+          <div className="cat-grid">
             {CATEGORIES.map((c,i) => (
               <Link key={c.key} to={`/shop?category=${encodeURIComponent(c.key)}`}
                 className="reveal"

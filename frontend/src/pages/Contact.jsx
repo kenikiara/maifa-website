@@ -74,7 +74,7 @@ export default function Contact() {
 
       <section>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s9)', alignItems: 'start' }}>
+          <div className="contact-grid">
 
             {/* Form */}
             <div>
