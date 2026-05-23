@@ -1577,3 +1577,46 @@ section.tight { padding: var(--s7) 0; }
 }
 .modal-btn-online:hover:not(:disabled) { background: #222; transform: translateY(-1px); }
 .modal-btn-online:disabled { opacity: .55; cursor: default; }
+
+/* ═══════════════════════════════════════════════════════
+   BLOG POST — Article page layout
+   ═══════════════════════════════════════════════════════ */
+
+.blog-post-layout {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: var(--s7) var(--s5);
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--s8);
+  align-items: start;
+}
+
+.blog-post-main {
+  min-width: 0; /* prevent text overflow in grid context */
+}
+
+.blog-post-sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--s4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  max-height: calc(100vh - var(--nav-h) - var(--s6));
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.blog-post-sidebar::-webkit-scrollbar { display: none; }
+
+/* Mobile-only "More articles" block — hidden when sidebar is visible */
+.blog-more-mobile { display: none; }
+
+@media (max-width: 960px) {
+  .blog-post-layout {
+    grid-template-columns: 1fr;
+    padding: var(--s6) var(--s4);
+    gap: 0;
+  }
+  .blog-post-sidebar { display: none; }
+  .blog-more-mobile  { display: block; }
+}

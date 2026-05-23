@@ -214,7 +214,7 @@ export default function Locations() {
           <div style={{ display: 'flex', gap: 'var(--s6)', overflow: 'auto', scrollbarWidth: 'none' }}>
             <button
               onClick={() => setActiveBranch(null)}
-              style={{ padding: 'var(--s4) 0', fontFamily: 'var(--serif)', fontSize: 18, color: activeBranch === null ? 'var(--ink)' : 'var(--muted)', borderBottom: `3px solid ${activeBranch === null ? 'var(--ink)' : 'transparent'}`, marginBottom: -1, whiteSpace: 'nowrap', cursor: 'pointer', background: 'none', border: 'none', borderBottom: `3px solid ${activeBranch === null ? 'var(--ink)' : 'transparent'}`, transition: 'color .15s' }}
+              style={{ padding: 'var(--s4) 0', fontFamily: 'var(--serif)', fontSize: 18, color: activeBranch === null ? 'var(--ink)' : 'var(--muted)', borderBottom: `3px solid ${activeBranch === null ? 'var(--ink)' : 'transparent'}`, marginBottom: -1, whiteSpace: 'nowrap', cursor: 'pointer', background: 'none', border: 'none', transition: 'color .15s' }}
             >
               All branches
             </button>
@@ -222,7 +222,7 @@ export default function Locations() {
               <button
                 key={b.id}
                 onClick={() => setActiveBranch(b.id)}
-                style={{ padding: 'var(--s4) 0', fontFamily: 'var(--serif)', fontSize: 18, color: activeBranch === b.id ? 'var(--ink)' : 'var(--muted)', borderBottom: `3px solid ${activeBranch === b.id ? 'var(--ink)' : 'transparent'}`, marginBottom: -1, whiteSpace: 'nowrap', cursor: 'pointer', background: 'none', border: 'none', borderBottom: `3px solid ${activeBranch === b.id ? 'var(--ink)' : 'transparent'}`, transition: 'color .15s' }}
+                style={{ padding: 'var(--s4) 0', fontFamily: 'var(--serif)', fontSize: 18, color: activeBranch === b.id ? 'var(--ink)' : 'var(--muted)', borderBottom: `3px solid ${activeBranch === b.id ? 'var(--ink)' : 'transparent'}`, marginBottom: -1, whiteSpace: 'nowrap', cursor: 'pointer', background: 'none', border: 'none', transition: 'color .15s' }}
               >
                 {b.name}
               </button>
