@@ -1827,6 +1827,24 @@ section.tight { padding: var(--s7) 0; }
 .modal-btn-online:disabled { opacity: .55; cursor: default; }
 
 /* ═══════════════════════════════════════════════════════
+   ABOUT PAGE — responsive overrides
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* Hero: stack photo below text */
+  .about-hero-grid { grid-template-columns: 1fr !important; }
+  /* Stats: 2 cols */
+  .about-stats { grid-template-columns: 1fr 1fr !important; }
+  /* Branches strip: 1 col */
+  .about-branches { grid-template-columns: 1fr !important; }
+  /* Timeline: hide branch photo on small screens */
+  .timeline-photo { display: none !important; }
+}
+@media (max-width: 600px) {
+  /* Values: 1 col */
+  .about-values { grid-template-columns: 1fr !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
    POLICY PAGES (Privacy / Terms)
    ═══════════════════════════════════════════════════════ */
 
