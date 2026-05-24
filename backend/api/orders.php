@@ -21,7 +21,11 @@ if ($method === 'POST') {
     if (empty($data['customer_area']))  json_err('Location/area is required');
     if (empty($data['product_id']))     json_err('Product is required');
 
-    $db   = db();
+    try {
+        $db = db();
+    } catch (Exception $e) {
+        json_err('Database connection failed. Please try again later.', 503);
+    }
 
     // Verify product exists
     $stmt = $db->prepare('SELECT id, name, sku, price_label, price_from FROM products WHERE id = ? AND active = 1');
@@ -32,26 +36,30 @@ if ($method === 'POST') {
     $price = $product['price_label'] ?: ('KES ' . number_format($product['price_from']));
     $url   = 'https://maifa.ke/shop/' . $product['id'];
 
-    $insert = $db->prepare('
-        INSERT INTO orders
-            (product_id, product_name, product_sku, product_price, product_url,
-             customer_name, customer_phone, customer_area, notes, source)
-        VALUES
-            (:product_id, :product_name, :product_sku, :product_price, :product_url,
-             :customer_name, :customer_phone, :customer_area, :notes, :source)
-    ');
-    $insert->execute([
-        ':product_id'    => $product['id'],
-        ':product_name'  => $product['name'],
-        ':product_sku'   => $product['sku'],
-        ':product_price' => $price,
-        ':product_url'   => $url,
-        ':customer_name' => clean($data['customer_name']),
-        ':customer_phone'=> clean($data['customer_phone']),
-        ':customer_area' => clean($data['customer_area']),
-        ':notes'         => clean($data['notes'] ?? ''),
-        ':source'        => 'online',
-    ]);
+    try {
+        $insert = $db->prepare('
+            INSERT INTO orders
+                (product_id, product_name, product_sku, product_price, product_url,
+                 customer_name, customer_phone, customer_area, notes, source)
+            VALUES
+                (:product_id, :product_name, :product_sku, :product_price, :product_url,
+                 :customer_name, :customer_phone, :customer_area, :notes, :source)
+        ');
+        $insert->execute([
+            ':product_id'    => $product['id'],
+            ':product_name'  => $product['name'],
+            ':product_sku'   => $product['sku'],
+            ':product_price' => $price,
+            ':product_url'   => $url,
+            ':customer_name' => clean($data['customer_name']),
+            ':customer_phone'=> clean($data['customer_phone']),
+            ':customer_area' => clean($data['customer_area']),
+            ':notes'         => clean($data['notes'] ?? ''),
+            ':source'        => 'online',
+        ]);
+    } catch (Exception $e) {
+        json_err('Order could not be saved. Please use WhatsApp to order instead.', 500);
+    }
 
     $orderId = $db->lastInsertId();
 

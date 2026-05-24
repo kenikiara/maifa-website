@@ -85,7 +85,7 @@ export default function OrderModal({ product, onClose }) {
       })
       const data = await res.json()
       if (data.success) {
-        setDone({ orderId: data.data?.order_id })
+        setDone({ orderId: data.order_id })
       } else {
         setError(data.error || 'Something went wrong. Please try again.')
       }
