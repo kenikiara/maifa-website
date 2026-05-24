@@ -561,25 +561,27 @@ export default function Home() {
           </div>
           <div className="grid-3 reveal reveal-delay-1">
             {[
-              {name:'Thika Road',   hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', embed:'https://maps.google.com/maps?q=Thika+Road,+Nairobi,+Kenya&output=embed&z=14'},
-              {name:'Kiambu Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', embed:'https://maps.google.com/maps?q=Kiambu+Road,+Nairobi,+Kenya&output=embed&z=14'},
-              {name:'Mombasa',      hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', embed:'https://maps.google.com/maps?q=Mombasa,+Kenya&output=embed&z=13'},
+              { name:'Thika Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', image:'/branches/thika-road.png' },
+              { name:'Kiambu Road', hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', image:'/branches/kiambu-road.png' },
+              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image:'/branches/mombasa.png' },
             ].map(loc=>(
-              <div key={loc.name} style={{ border:'1px solid var(--line)', borderRadius:'var(--r)', overflow:'hidden', display:'flex', flexDirection:'column', transition:'border-color .2s' }}
-                onMouseEnter={e=>e.currentTarget.style.borderColor='var(--ink)'}
-                onMouseLeave={e=>e.currentTarget.style.borderColor='var(--line)'}
+              <div key={loc.name} style={{ border:'1px solid var(--line)', borderRadius:'var(--r)', overflow:'hidden', display:'flex', flexDirection:'column', transition:'border-color .2s, box-shadow .2s', cursor:'default' }}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--ink)';e.currentTarget.style.boxShadow='var(--shadow-2)'}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.boxShadow='none'}}
               >
-                {/* Embedded Google Map */}
-                <div style={{ aspectRatio:'16/10', position:'relative', overflow:'hidden' }}>
-                  <iframe
-                    src={loc.embed}
-                    title={`Map — ${loc.name}`}
-                    width="100%" height="100%"
-                    style={{ position:'absolute', inset:0, border:0, filter:'grayscale(20%) contrast(1.05)' }}
+                {/* Branch photo */}
+                <div style={{ aspectRatio:'16/10', overflow:'hidden', position:'relative', background:'#e8e8e4' }}>
+                  <img
+                    src={loc.image}
+                    alt={`Maifa ${loc.name} branch`}
                     loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
+                    style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform .4s ease' }}
+                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.04)'}
+                    onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
                   />
+                  <span style={{ position:'absolute', top:10, left:10, background:'var(--green)', color:'#fff', fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 10px', borderRadius:'var(--r-pill)', display:'flex', alignItems:'center', gap:5 }}>
+                    <span style={{ width:5, height:5, borderRadius:'50%', background:'#fff' }} />Open now
+                  </span>
                 </div>
                 <div style={{ padding:'var(--s5)', display:'flex', flexDirection:'column', gap:'var(--s3)' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
@@ -587,15 +589,14 @@ export default function Home() {
                       <h4 style={{ fontFamily:'var(--serif)', fontSize:22 }}>{loc.name}</h4>
                       <p style={{ fontSize:13, color:'var(--muted)', marginTop:3 }}>{loc.hours}</p>
                     </div>
-                    <span className="badge green"><span className="dot" />Open</span>
                   </div>
                   <div style={{ fontFamily:'var(--mono)', fontSize:14, color:'var(--ink)', fontWeight:500 }}>{loc.phone}</div>
                   <div style={{ display:'flex', gap:'var(--s2)' }}>
-                    <a href={`tel:+${loc.tel}`} style={{ flex:1, textAlign:'center', padding:10, border:'1px solid var(--line)', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:500, transition:'all .15s' }}
+                    <a href={`tel:+${loc.tel}`} style={{ flex:1, textAlign:'center', padding:10, border:'1px solid var(--line)', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:500, transition:'all .15s', color:'var(--ink)', textDecoration:'none' }}
                       onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--ink)';e.currentTarget.style.background='var(--paper)'}}
                       onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.background='transparent'}}
                     >Call</a>
-                    <a href={loc.maps} target="_blank" rel="noopener noreferrer" style={{ flex:1, textAlign:'center', padding:10, background:'var(--ink)', color:'#fff', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:500 }}>Directions</a>
+                    <a href={loc.maps} target="_blank" rel="noopener noreferrer" style={{ flex:1, textAlign:'center', padding:10, background:'var(--ink)', color:'#fff', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:500, textDecoration:'none' }}>Directions</a>
                   </div>
                 </div>
               </div>
