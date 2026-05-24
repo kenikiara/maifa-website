@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -148,10 +148,13 @@ export default function Home() {
   const featured = (filteredData?.products || []).slice(0, 4)
 
   const [heroIdx, setHeroIdx]   = useState(0)
+  const heroPaused              = useRef(false)
 
-  /* Auto-advance hero card every 3 seconds */
+  /* Auto-advance hero card every 3 seconds — skips tick while hovered */
   useEffect(() => {
-    const t = setInterval(() => setHeroIdx(i => (i + 1) % FEATURED.length), 3000)
+    const t = setInterval(() => {
+      if (!heroPaused.current) setHeroIdx(i => (i + 1) % FEATURED.length)
+    }, 3000)
     return () => clearInterval(t)
   }, [])
 
@@ -223,7 +226,12 @@ export default function Home() {
             </div>
 
             {/* Visual card — rotating featured product */}
-            <div className="hero-card" style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
+            <div
+              className="hero-card"
+              style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}
+              onMouseEnter={() => { heroPaused.current = true }}
+              onMouseLeave={() => { heroPaused.current = false }}
+            >
               {/* Subtle texture overlay */}
               <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 60% 20%, rgba(29,185,84,.12), transparent 55%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.018) 14px 15px)', pointerEvents:'none' }} />
 
