@@ -73,6 +73,70 @@ function matchCategory(make, model) {
   return MODEL_CAT[model] || MAKE_CAT[make] || 'Standard'
 }
 
+/* ── Hero rotating featured batteries (one per category) ── */
+const FEATURED = [
+  {
+    badge:    'Large Car · Best Seller',
+    category: 'Large Car',
+    name:     'Hi Life NS70L',
+    voltage:  '12V',
+    sub:      'MAINTENANCE FREE',
+    specs:    '65 Ah · 600 CCA',
+    fits:     'Premio · Harrier · RAV4',
+    price:    'KES 17,000',
+    sku:      'NS70L-65A',
+    image:    '/products/ns70l.png',
+  },
+  {
+    badge:    'Standard · Most Popular',
+    category: 'Standard',
+    name:     'Hi Life NS40ZL',
+    voltage:  '12V',
+    sub:      'MAINTENANCE FREE',
+    specs:    '35 Ah · 370 CCA',
+    fits:     'Vitz · March · Axio 1.3',
+    price:    'KES 10,500',
+    sku:      'NS40ZL-35A',
+    image:    '/products/ns40.png',
+  },
+  {
+    badge:    'EFB · Start-Stop Ready',
+    category: 'EFB',
+    name:     'EFB 650',
+    voltage:  '12V',
+    sub:      'ENHANCED FLOODED',
+    specs:    '65 Ah · 650 CCA',
+    fits:     'Aqua · Prius · i-Stop',
+    price:    'KES 18,500',
+    sku:      'EFB-650',
+    image:    '/products/efb-650.png',
+  },
+  {
+    badge:    'Heavy Duty · Commercial',
+    category: 'Heavy Duty',
+    name:     'Hi-Way N80',
+    voltage:  '12V',
+    sub:      'HEAVY DUTY',
+    specs:    '80 Ah · 700 CCA',
+    fits:     'Truck · Bus · Matatu',
+    price:    'KES 22,000',
+    sku:      'N80-HIWAY',
+    image:    '/products/n80-hiway.png',
+  },
+  {
+    badge:    'European · Premium',
+    category: 'European',
+    name:     'DIN 80-730',
+    voltage:  '12V',
+    sub:      'EURO SPEC',
+    specs:    '80 Ah · 730 CCA',
+    fits:     'BMW · Mercedes · Audi',
+    price:    'KES 24,500',
+    sku:      'DIN80-730',
+    image:    '/products/din80-730.png',
+  },
+]
+
 export default function Home() {
   useScrollReveal()
 
@@ -82,6 +146,14 @@ export default function Home() {
   const [activeCat, setActiveCat] = useState('All')
   const { data: filteredData } = useApi(activeCat === 'All' ? '/api/products.php' : `/api/products.php?category=${encodeURIComponent(activeCat)}`)
   const featured = (filteredData?.products || []).slice(0, 4)
+
+  const [heroIdx, setHeroIdx]   = useState(0)
+
+  /* Auto-advance hero card every 3 seconds */
+  useEffect(() => {
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % FEATURED.length), 3000)
+    return () => clearInterval(t)
+  }, [])
 
   const [make, setMake]         = useState('')
   const [model, setModel]       = useState('')
@@ -150,31 +222,65 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Visual card — hidden on mobile via .hero-card */}
-            <div className="hero-card" style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', justifyContent:'space-between', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
-              <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 70% 30%, rgba(51,217,48,.15), transparent 50%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.02) 14px 15px)', pointerEvents:'none' }} />
-              <div style={{ position:'relative', zIndex:1 }}>
-                <span style={{ position:'absolute', top:0, right:0, background:'var(--green)', color:'#fff', padding:'7px 13px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase' }}>● Best seller — Hi Life NS70L</span>
-                <div className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.45)' }}>Featured product</div>
+            {/* Visual card — rotating featured product */}
+            <div className="hero-card" style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
+              {/* Subtle texture overlay */}
+              <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 60% 20%, rgba(29,185,84,.12), transparent 55%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.018) 14px 15px)', pointerEvents:'none' }} />
+
+              {/* Fixed header — badge + eyebrow */}
+              <div style={{ position:'relative', zIndex:2, display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:'var(--s5)' }}>
+                <div className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.4)' }}>Featured product</div>
+                <span key={`badge-${heroIdx}`} className="hero-badge-in" style={{ background:'var(--green)', color:'#fff', padding:'6px 12px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', whiteSpace:'nowrap' }}>
+                  ● {FEATURED[heroIdx].badge}
+                </span>
               </div>
-              {/* Battery card */}
-              <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:'55%', aspectRatio:'4/5', background:'linear-gradient(160deg,#1a1a1a,#0a0a0a)', border:'1px solid rgba(255,255,255,.1)', borderRadius:8, padding:22, display:'flex', flexDirection:'column', justifyContent:'space-between', zIndex:1 }}>
-                <div style={{ position:'absolute', top:-11, left:'22%', width:'18%', height:20, background:'#2a2a2a', borderRadius:'2px 2px 0 0' }} />
-                <div style={{ position:'absolute', top:-11, right:'22%', width:'18%', height:20, background:'#2a2a2a', borderRadius:'2px 2px 0 0' }} />
-                <div>
-                  <div style={{ fontFamily:'var(--serif)', fontSize:26, color:'var(--green-bright)' }}>Maifa</div>
-                  <div style={{ fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginTop:5, display:'grid', gap:2 }}>
-                    <div>HI LIFE / NS70L</div><div>MAINTENANCE FREE</div>
+
+              {/* Animated product area — changes every 3 sec */}
+              <div key={heroIdx} className="hero-product-in" style={{ position:'relative', zIndex:2, flex:1, display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
+
+                {/* Product image */}
+                <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'var(--s4) 0' }}>
+                  <img
+                    src={FEATURED[heroIdx].image}
+                    alt={FEATURED[heroIdx].name}
+                    style={{ maxHeight:220, maxWidth:'80%', objectFit:'contain', filter:'drop-shadow(0 12px 32px rgba(0,0,0,.5))' }}
+                  />
+                </div>
+
+                {/* Product info */}
+                <div style={{ display:'grid', gap:6 }}>
+                  <div style={{ fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.35)' }}>
+                    {FEATURED[heroIdx].category} · {FEATURED[heroIdx].sub}
+                  </div>
+                  <div style={{ fontFamily:'var(--serif)', fontSize:30, lineHeight:1.1, color:'#fff' }}>
+                    {FEATURED[heroIdx].name}
+                  </div>
+                  <div style={{ display:'flex', gap:'var(--s5)', alignItems:'baseline', marginTop:2 }}>
+                    <span style={{ fontFamily:'var(--serif)', fontSize:52, lineHeight:1 }}>{FEATURED[heroIdx].voltage}</span>
+                    <span style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', lineHeight:1.4 }}>
+                      {FEATURED[heroIdx].specs}<br/>{FEATURED[heroIdx].fits}
+                    </span>
                   </div>
                 </div>
-                <div>
-                  <div style={{ fontFamily:'var(--serif)', fontSize:60, lineHeight:1 }}>12V</div>
-                  <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginTop:6 }}>65 Ah · 600 CCA</div>
+
+                {/* Dot indicators */}
+                <div style={{ display:'flex', gap:6, justifyContent:'center', margin:'var(--s4) 0 var(--s3)' }}>
+                  {FEATURED.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setHeroIdx(i)}
+                      aria-label={`Show ${FEATURED[i].name}`}
+                      style={{ width: i === heroIdx ? 20 : 6, height:6, borderRadius:3, border:'none', cursor:'pointer', transition:'width .3s ease, background .3s ease', background: i === heroIdx ? 'var(--green-bright)' : 'rgba(255,255,255,.2)', padding:0 }}
+                    />
+                  ))}
                 </div>
-              </div>
-              {/* Ticker */}
-              <div style={{ position:'relative', zIndex:1, display:'flex', justifyContent:'space-between', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s4)' }}>
-                <span>SKU: NS70L-65A</span><span>KES 17,000</span><span>IN STOCK</span>
+
+                {/* Footer ticker */}
+                <div style={{ display:'flex', justifyContent:'space-between', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.38)', borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s4)' }}>
+                  <span>SKU: {FEATURED[heroIdx].sku}</span>
+                  <span style={{ color:'var(--green-bright)', fontWeight:600 }}>{FEATURED[heroIdx].price}</span>
+                  <span>IN STOCK</span>
+                </div>
               </div>
             </div>
           </div>

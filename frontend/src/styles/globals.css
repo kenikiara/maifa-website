@@ -2393,3 +2393,25 @@ section.tight { padding: var(--s7) 0; }
   mix-blend-mode: difference;
   animation: aurora 60s linear infinite;
 }
+
+/* ═══════════════════════════════════════════════════════
+   HERO FEATURED PRODUCT ROTATION
+   ═══════════════════════════════════════════════════════ */
+
+/* Product area fades + slides in when key changes */
+@keyframes hero-product-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-product-in {
+  animation: hero-product-in 0.45s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+
+/* Badge pill slides in from right */
+@keyframes hero-badge-in {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.hero-badge-in {
+  animation: hero-badge-in 0.35s ease forwards;
+}
