@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import PageTransition from '../components/ui/PageTransition'
-import LampBackground from '../components/ui/LampBackground'
+import AuroraBackground from '../components/ui/AuroraBackground'
 
 const WA = '254791899602'
 
@@ -121,41 +121,41 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <section id="hero" style={{ position:'relative', borderBottom:'1px solid rgba(255,255,255,.08)', overflow:'hidden', background:'#020817' }}>
-        {/* Lamp animated background */}
-        <LampBackground />
+      <section id="hero" style={{ position:'relative', borderBottom:'1px solid var(--line)', overflow:'hidden' }}>
+        {/* Aurora animated background */}
+        <AuroraBackground />
 
         <div className="container" style={{ position:'relative', zIndex:1 }}>
           <div className="hero-grid">
             {/* Copy */}
             <div className="hero-copy">
-              <span className="eyebrow" style={{ color:'rgba(255,255,255,.55)', borderColor:'rgba(255,255,255,.12)' }}>Maifa · Built for Kenyan roads</span>
-              <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)', color:'#fff' }}>
-                Built for <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>Kenyan</em> roads.
+              <span className="eyebrow">Maifa · Built for Kenyan roads</span>
+              <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)' }}>
+                Built for <em style={{ fontStyle:'italic', color:'var(--green-deep)' }}>Kenyan</em> roads.
               </h1>
-              <p style={{ fontSize:18, color:'rgba(255,255,255,.72)', maxWidth:480, marginBottom:'var(--s6)', lineHeight:1.6 }}>
+              <p style={{ fontSize:18, color:'#333', maxWidth:480, marginBottom:'var(--s6)', lineHeight:1.6 }}>
                 Maintenance-free car batteries engineered for tropical heat and rough roads. Free installation, same-day delivery across Nairobi, Kiambu and Mombasa.
               </p>
               <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap' }}>
                 <a href="#finder" className="btn btn-primary">Find my battery <span style={{ marginLeft:4 }}>→</span></a>
-                <Link to="/shop" className="btn" style={{ background:'rgba(255,255,255,.1)', color:'#fff', border:'1px solid rgba(255,255,255,.18)' }}>Browse all batteries</Link>
+                <Link to="/shop" className="btn btn-secondary">Browse all batteries</Link>
               </div>
-              <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid rgba(255,255,255,.1)', flexWrap:'wrap' }}>
+              <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid var(--line)', flexWrap:'wrap' }}>
                 {[{num:'3',label:'Branches across Kenya'},{num:'42k+',label:'Batteries fitted'},{num:'12mo',label:'Standard warranty'},{num:'4.9★',label:'Customer rating'}].map(s=>(
                   <div key={s.num}>
-                    <div style={{ fontFamily:'var(--serif)', fontSize:38, lineHeight:1, color:'#fff' }}>{s.num}</div>
-                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.38)', marginTop:4 }}>{s.label}</div>
+                    <div style={{ fontFamily:'var(--serif)', fontSize:38, lineHeight:1 }}>{s.num}</div>
+                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--muted)', marginTop:4 }}>{s.label}</div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Visual card — hidden on mobile via .hero-card */}
-            <div className="hero-card" style={{ position:'relative', background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.1)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', justifyContent:'space-between', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
-              <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 70% 30%, rgba(29,185,84,.12), transparent 55%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.015) 14px 15px)', pointerEvents:'none' }} />
+            <div className="hero-card" style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', justifyContent:'space-between', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}>
+              <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 70% 30%, rgba(51,217,48,.15), transparent 50%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.02) 14px 15px)', pointerEvents:'none' }} />
               <div style={{ position:'relative', zIndex:1 }}>
                 <span style={{ position:'absolute', top:0, right:0, background:'var(--green)', color:'#fff', padding:'7px 13px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase' }}>● Best seller — Hi Life NS70L</span>
-                <div className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.35)' }}>Featured product</div>
+                <div className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.45)' }}>Featured product</div>
               </div>
               {/* Battery card */}
               <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:'55%', aspectRatio:'4/5', background:'linear-gradient(160deg,#1a1a1a,#0a0a0a)', border:'1px solid rgba(255,255,255,.1)', borderRadius:8, padding:22, display:'flex', flexDirection:'column', justifyContent:'space-between', zIndex:1 }}>
@@ -173,7 +173,7 @@ export default function Home() {
                 </div>
               </div>
               {/* Ticker */}
-              <div style={{ position:'relative', zIndex:1, display:'flex', justifyContent:'space-between', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.35)', borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s4)' }}>
+              <div style={{ position:'relative', zIndex:1, display:'flex', justifyContent:'space-between', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s4)' }}>
                 <span>SKU: NS70L-65A</span><span>KES 17,000</span><span>IN STOCK</span>
               </div>
             </div>

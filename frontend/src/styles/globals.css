@@ -2370,3 +2370,26 @@ section.tight { padding: var(--s7) 0; }
   font-family: var(--mono);
   margin-top: 1px;
 }
+
+/* ═══════════════════════════════════════════════════════
+   AURORA BACKGROUND
+   ═══════════════════════════════════════════════════════ */
+
+@keyframes aurora {
+  from { background-position: 50% 50%, 50% 50%; }
+  to   { background-position: 350% 50%, 350% 50%; }
+}
+
+/* Second shimmer pass via ::after — mix-blend-difference adds depth */
+.aurora-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(100deg, #fff 0%, #fff 7%, transparent 10%, transparent 12%, #fff 16%),
+    repeating-linear-gradient(100deg, #0f7a3d 10%, #22c55e 15%, #86efac 20%, #bbf7d0 25%, #4ade80 30%);
+  background-size: 200%, 100%;
+  background-attachment: fixed;
+  mix-blend-mode: difference;
+  animation: aurora 60s linear infinite;
+}
