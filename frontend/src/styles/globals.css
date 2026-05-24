@@ -1702,29 +1702,31 @@ section.tight { padding: var(--s7) 0; }
   background: rgba(10,10,10,.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 1000;
+  z-index: 9000;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: var(--s5);
   animation: fadeIn .18s ease;
 }
-@media (min-width: 600px) {
-  .modal-overlay { align-items: center; padding: var(--s5); }
+/* Mobile: bottom sheet */
+@media (max-width: 599px) {
+  .modal-overlay { align-items: flex-end; padding: 0; }
 }
 @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
 
 .modal-box {
   background: var(--white);
-  border-radius: 20px 20px 0 0;
+  border-radius: 16px;
   width: 100%;
   max-width: 520px;
-  max-height: 92vh;
+  max-height: 90vh;
   overflow-y: auto;
   animation: slideUp .22s ease;
 }
-@media (min-width: 600px) {
-  .modal-box { border-radius: 16px; max-height: 90vh; }
+/* Mobile: full-width sheet with rounded top */
+@media (max-width: 599px) {
+  .modal-box { border-radius: 20px 20px 0 0; max-height: 92vh; }
 }
 @keyframes slideUp { from { transform:translateY(40px);opacity:0 } to { transform:translateY(0);opacity:1 } }
 
