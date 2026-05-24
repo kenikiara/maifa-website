@@ -606,22 +606,22 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" style={{ background:'var(--paper-2)', overflow:'hidden', paddingBottom:'var(--s9)' }}>
+      <section id="testimonials" style={{ background:'radial-gradient(ellipse 70% 60% at 10% 55%, rgba(15,122,61,.28) 0%, transparent 100%), radial-gradient(ellipse 55% 65% at 88% 25%, rgba(29,185,84,.16) 0%, transparent 100%), radial-gradient(ellipse 45% 45% at 55% 95%, rgba(15,122,61,.2) 0%, transparent 100%), #060d07', overflow:'hidden', paddingBottom:'var(--s9)' }}>
         <div className="container">
           <div className="section-head reveal">
             <div>
-              <span className="eyebrow">Reviews · 4.9 / 5 average</span>
-              <h2 style={{ marginTop:'var(--s4)' }}>From Kenyan drivers.</h2>
+              <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Reviews · 4.9 / 5 average</span>
+              <h2 style={{ marginTop:'var(--s4)', color:'#fff' }}>From Kenyan drivers.</h2>
             </div>
             {/* Star summary */}
             <div className="review-summary reveal reveal-delay-1">
               <div style={{ display:'flex', gap:3 }}>
                 {[1,2,3,4,5].map(s=>(
-                  <svg key={s} width="20" height="20" viewBox="0 0 24 24" fill="#d4a017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg key={s} width="20" height="20" viewBox="0 0 24 24" fill="#fbbc04"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 ))}
               </div>
-              <span style={{ fontWeight:700, fontSize:22, fontFamily:'var(--serif)' }}>4.9</span>
-              <span style={{ fontSize:13, color:'var(--muted)', fontFamily:'var(--mono)' }}>200+ verified drivers</span>
+              <span style={{ fontWeight:700, fontSize:22, fontFamily:'var(--serif)', color:'#fff' }}>4.9</span>
+              <span style={{ fontSize:13, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)' }}>200+ verified drivers</span>
             </div>
           </div>
         </div>
@@ -632,7 +632,7 @@ export default function Home() {
             {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
               <div key={i} className="review-card">
                 <div className="review-stars">{'★'.repeat(t.stars)}</div>
-                <p className="review-quote">"{t.quote}"</p>
+                <p className="review-quote">{t.quote}</p>
                 <div className="review-author">
                   <div className="review-initial">{t.initial}</div>
                   <div>
@@ -651,7 +651,7 @@ export default function Home() {
             {[...TESTIMONIALS.slice(5), ...TESTIMONIALS.slice(5)].map((t, i) => (
               <div key={i} className="review-card">
                 <div className="review-stars">{'★'.repeat(t.stars)}</div>
-                <p className="review-quote">"{t.quote}"</p>
+                <p className="review-quote">{t.quote}</p>
                 <div className="review-author">
                   <div className="review-initial">{t.initial}</div>
                   <div>
