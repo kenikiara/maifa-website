@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maifa.ke/sitemap.xml
+
+# LLM crawlers — welcome, full content available at /llms.txt
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
