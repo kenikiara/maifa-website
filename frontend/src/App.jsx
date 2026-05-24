@@ -5,6 +5,7 @@ import Navbar         from './components/layout/Navbar'
 import Footer         from './components/layout/Footer'
 import PageTransition from './components/ui/PageTransition'
 import SplashScreen   from './components/ui/SplashScreen'
+import ChatBot        from './components/ui/ChatBot'
 
 import Home          from './pages/Home'
 import Shop          from './pages/Shop'
@@ -30,6 +31,7 @@ function AppInner() {
     <>
       <ScrollToTop />
       <Navbar />
+      <ChatBot />
       <Routes>
         <Route path="/"           element={<PageTransition><Home /></PageTransition>} />
         <Route path="/shop"       element={<PageTransition><Shop /></PageTransition>} />
