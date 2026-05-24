@@ -9,14 +9,15 @@ const BRANCHES = [
     id: 1,
     name: 'Thika Road',
     area: 'Nairobi',
-    address: 'Thika Road, Nairobi, Kenya',
+    address: 'Amaron Battery Kenya – Nairobi, Thika Road',
     phone: '+254 791 899 602',
     tel: '+254791899602',
     wa: '254791899602',
     hours: { weekday: 'Mon – Sat', time: '7:30 am – 7:00 pm' },
     open: true,
     maps: 'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9',
-    embed: 'https://maps.google.com/maps?q=Thika+Road,+Nairobi,+Kenya&output=embed&z=15',
+    embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.167556337681!2d36.869916798464736!3d-1.2315114999999968!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f15c42e8ba0c5%3A0x2972a910aadc2d85!2sAmaron%20Battery%20Kenya%20-%20Nairobi%20-%20Thika%20Road!5e1!3m2!1sen!2ske!4v1779619483929!5m2!1sen!2ske',
+    image: '/branches/thika-road.jpg',
     services: ['Free Installation', 'Battery Testing', 'Trade-in', 'Same-Day Delivery'],
   },
   {
@@ -31,6 +32,7 @@ const BRANCHES = [
     open: true,
     maps: 'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA',
     embed: 'https://maps.google.com/maps?q=Kiambu+Road,+Nairobi,+Kenya&output=embed&z=15',
+    image: null,
     services: ['Free Installation', 'Battery Testing', 'Trade-in', 'Same-Day Delivery'],
   },
   {
@@ -45,6 +47,7 @@ const BRANCHES = [
     open: true,
     maps: 'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA',
     embed: 'https://maps.google.com/maps?q=Mombasa,+Kenya&output=embed&z=14',
+    image: null,
     services: ['Free Installation', 'Battery Testing', 'Trade-in'],
   },
 ]
@@ -65,17 +68,25 @@ function BranchCard({ branch, active, onSelect }) {
         flexDirection: 'column',
       }}
     >
-      {/* Map */}
-      <div style={{ position: 'relative', height: 220, flexShrink: 0 }}>
-        <iframe
-          src={branch.embed}
-          title={`Map — ${branch.name}`}
-          width="100%" height="100%"
-          style={{ position: 'absolute', inset: 0, border: 0, filter: 'grayscale(15%) contrast(1.05)' }}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          allowFullScreen
-        />
+      {/* Photo or Map */}
+      <div style={{ position: 'relative', height: 220, flexShrink: 0, background: '#e8e8e4' }}>
+        {branch.image ? (
+          <img
+            src={branch.image}
+            alt={`${branch.name} branch`}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        ) : (
+          <iframe
+            src={branch.embed}
+            title={`Map — ${branch.name}`}
+            width="100%" height="100%"
+            style={{ position: 'absolute', inset: 0, border: 0, filter: 'grayscale(15%) contrast(1.05)' }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        )}
         {/* Open badge overlay */}
         <span style={{
           position: 'absolute', top: 12, left: 12,
@@ -297,17 +308,28 @@ export default function Locations() {
                 </div>
               </div>
 
-              {/* Big map */}
-              <div style={{ borderRadius: 'var(--r-lg)', overflow: 'hidden', height: 380 }}>
-                <iframe
-                  src={selectedBranch.embed}
-                  title={`Map — ${selectedBranch.name}`}
-                  width="100%" height="100%"
-                  style={{ border: 0, display: 'block' }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  allowFullScreen
-                />
+              {/* Branch photo + map */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s4)' }}>
+                {selectedBranch.image && (
+                  <div style={{ borderRadius: 'var(--r-lg)', overflow: 'hidden', height: 220 }}>
+                    <img
+                      src={selectedBranch.image}
+                      alt={`${selectedBranch.name} branch`}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  </div>
+                )}
+                <div style={{ borderRadius: 'var(--r-lg)', overflow: 'hidden', flex: 1, minHeight: selectedBranch.image ? 160 : 380 }}>
+                  <iframe
+                    src={selectedBranch.embed}
+                    title={`Map — ${selectedBranch.name}`}
+                    width="100%" height="100%"
+                    style={{ border: 0, display: 'block', minHeight: selectedBranch.image ? 160 : 380 }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
               </div>
             </div>
           </div>
