@@ -19,9 +19,16 @@ const CATEGORIES = [
 ]
 
 const TESTIMONIALS = [
-  { stars:5, quote: '"Booked online, fitted in twelve minutes flat at the Thika Road branch. They even took my old battery off the price."', name:'James M.', car:'Toyota Premio · 2014' },
-  { stars:5, quote: '"My usual battery shop kept giving me the wrong size. Maifa\'s finder got it right first try. Two years on, still strong."', name:'Wanjiku K.', car:'Subaru Forester · 2017' },
-  { stars:5, quote: '"Needed a heavy-duty unit for my Land Cruiser before a Loita Hills trip. They delivered to Karen and fit it in my driveway."', name:'David O.', car:'Land Cruiser 79 · 2020' },
+  { stars:5, quote:'Booked online, fitted in twelve minutes flat at the Thika Road branch. They even knocked off the old battery from the price.', name:'James M.', car:'Toyota Premio · Nairobi', initial:'J' },
+  { stars:5, quote:'My usual shop kept giving me the wrong size. Maifa\'s battery finder got it right first try. Two years on, still going strong.', name:'Wanjiku K.', car:'Subaru Forester · Kiambu', initial:'W' },
+  { stars:5, quote:'Needed a heavy-duty unit for my Land Cruiser before a Loita Hills trip. Called at 9am, fitted by noon. Exceptional service.', name:'David O.', car:'Land Cruiser 79 · Karen', initial:'D' },
+  { stars:5, quote:'Dead battery on a Monday morning. Maifa Mombasa branch had me back on the road in under 20 minutes. Outstanding.', name:'Fatuma A.', car:'Toyota Vitz · Mombasa', initial:'F' },
+  { stars:5, quote:'The team explained exactly why my old battery failed and what size I needed. No upselling, just honest advice. Will always come back.', name:'Brian N.', car:'Mazda CX-5 · Westlands', initial:'B' },
+  { stars:5, quote:'Traded in my dead Exide and got KES 1,200 off a new Amaron. The whole swap took 18 minutes. Couldn\'t be happier.', name:'Grace W.', car:'Honda Fit · Thika Road', initial:'G' },
+  { stars:5, quote:'My Premio had been sluggish-starting for weeks. Maifa diagnosed a failing battery and replaced it on the spot. Starts perfectly now.', name:'Peter K.', car:'Toyota Premio · South C', initial:'P' },
+  { stars:5, quote:'I drive a Prius so I was worried about finding the right EFB battery. Maifa stocked exactly what I needed and fitted it for free.', name:'Sarah O.', car:'Toyota Prius · Lavington', initial:'S' },
+  { stars:5, quote:'Three buses in my fleet. Maifa gave me a bulk deal and sent a technician to our yard. Saved us a full day of downtime.', name:'Hassan M.', car:'Fleet Owner · Industrial Area', initial:'H' },
+  { stars:5, quote:'Called the Kiambu Road branch at 6pm thinking they\'d be closed. They waited for me and sorted my battery. Real customer care.', name:'Anne K.', car:'Nissan X-Trail · Ridgeways', initial:'A' },
 ]
 
 const TRUST_ITEMS = [
@@ -480,24 +487,57 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" style={{ background:'var(--paper-2)' }}>
+      <section id="testimonials" style={{ background:'var(--paper-2)', overflow:'hidden', paddingBottom:'var(--s9)' }}>
         <div className="container">
           <div className="section-head reveal">
             <div>
               <span className="eyebrow">Reviews · 4.9 / 5 average</span>
               <h2 style={{ marginTop:'var(--s4)' }}>From Kenyan drivers.</h2>
             </div>
+            {/* Star summary */}
+            <div className="review-summary reveal reveal-delay-1">
+              <div style={{ display:'flex', gap:3 }}>
+                {[1,2,3,4,5].map(s=>(
+                  <svg key={s} width="20" height="20" viewBox="0 0 24 24" fill="#d4a017"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                ))}
+              </div>
+              <span style={{ fontWeight:700, fontSize:22, fontFamily:'var(--serif)' }}>4.9</span>
+              <span style={{ fontSize:13, color:'var(--muted)', fontFamily:'var(--mono)' }}>200+ verified drivers</span>
+            </div>
           </div>
-          <div className="grid-3 reveal reveal-delay-1">
-            {TESTIMONIALS.map((t,i)=>(
-              <div key={i} style={{ background:'var(--white)', borderRadius:'var(--r)', padding:'var(--s6)', display:'flex', flexDirection:'column', gap:'var(--s4)' }}>
-                <div style={{ color:'#d4a017', letterSpacing:4, fontSize:14 }}>{'★'.repeat(t.stars)}</div>
-                <p style={{ fontFamily:'var(--serif)', fontSize:21, lineHeight:1.35, color:'var(--ink)' }}>{t.quote}</p>
-                <div style={{ display:'flex', gap:'var(--s3)', alignItems:'center', marginTop:'auto' }}>
-                  <div style={{ width:40, height:40, borderRadius:'50%', background:'var(--paper-2)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'var(--serif)', fontSize:16, color:'var(--ink)', flexShrink:0 }}>{t.name[0]}</div>
+        </div>
+
+        {/* Row 1 — scrolls left */}
+        <div className="marquee-wrap">
+          <div className="marquee-track marquee-left">
+            {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+              <div key={i} className="review-card">
+                <div className="review-stars">{'★'.repeat(t.stars)}</div>
+                <p className="review-quote">"{t.quote}"</p>
+                <div className="review-author">
+                  <div className="review-initial">{t.initial}</div>
                   <div>
-                    <div style={{ fontWeight:600, fontSize:14 }}>{t.name}</div>
-                    <div style={{ fontSize:12, color:'var(--muted)', fontFamily:'var(--mono)' }}>{t.car}</div>
+                    <div className="review-name">{t.name}</div>
+                    <div className="review-car">{t.car}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 — scrolls right */}
+        <div className="marquee-wrap" style={{ marginTop:16 }}>
+          <div className="marquee-track marquee-right">
+            {[...TESTIMONIALS.slice(5), ...TESTIMONIALS.slice(5)].map((t, i) => (
+              <div key={i} className="review-card">
+                <div className="review-stars">{'★'.repeat(t.stars)}</div>
+                <p className="review-quote">"{t.quote}"</p>
+                <div className="review-author">
+                  <div className="review-initial">{t.initial}</div>
+                  <div>
+                    <div className="review-name">{t.name}</div>
+                    <div className="review-car">{t.car}</div>
                   </div>
                 </div>
               </div>

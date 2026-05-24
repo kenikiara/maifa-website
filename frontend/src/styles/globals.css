@@ -2258,3 +2258,115 @@ section.tight { padding: var(--s7) 0; }
     left: 16px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   TESTIMONIALS MARQUEE
+   ═══════════════════════════════════════════════════════ */
+
+/* Star summary row */
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--s3);
+}
+
+/* Marquee wrapper — clips overflow */
+.marquee-wrap {
+  overflow: hidden;
+  cursor: default;
+  /* fade edges */
+  mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+}
+
+/* Track — flex row that's twice as wide as needed */
+.marquee-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Pause on hover */
+.marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+/* Direction animations */
+.marquee-left  { animation: scroll-left  42s linear infinite; }
+.marquee-right { animation: scroll-right 38s linear infinite; }
+
+@keyframes scroll-left  { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+@keyframes scroll-right { 0% { transform: translateX(-50%) } 100% { transform: translateX(0) } }
+
+/* Respect reduce-motion */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left, .marquee-right { animation: none; }
+}
+
+/* Review card */
+.review-card {
+  flex-shrink: 0;
+  width: 300px;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 22px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(0,0,0,.06);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(0,0,0,.10);
+}
+
+.review-stars {
+  color: #d4a017;
+  letter-spacing: 3px;
+  font-size: 13px;
+}
+
+.review-quote {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  flex: 1;
+  margin: 0;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.review-initial {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--green-light);
+  color: var(--green);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.review-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.review-car {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--mono);
+  margin-top: 1px;
+}
