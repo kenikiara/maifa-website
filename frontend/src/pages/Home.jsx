@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -73,68 +73,6 @@ function matchCategory(make, model) {
 }
 
 /* ── Hero rotating featured batteries (one per category) ── */
-const FEATURED = [
-  {
-    badge:    'Large Car · Best Seller',
-    category: 'Large Car',
-    name:     'Hi Life NS70L',
-    voltage:  '12V',
-    sub:      'MAINTENANCE FREE',
-    specs:    '65 Ah · 600 CCA',
-    fits:     'Premio · Harrier · RAV4',
-    price:    'KES 17,000',
-    sku:      'NS70L-65A',
-    image:    '/products/ns70l.png',
-  },
-  {
-    badge:    'Standard · Most Popular',
-    category: 'Standard',
-    name:     'Hi Life NS40ZL',
-    voltage:  '12V',
-    sub:      'MAINTENANCE FREE',
-    specs:    '35 Ah · 370 CCA',
-    fits:     'Vitz · March · Axio 1.3',
-    price:    'KES 10,500',
-    sku:      'NS40ZL-35A',
-    image:    '/products/ns40.png',
-  },
-  {
-    badge:    'EFB · Start-Stop Ready',
-    category: 'EFB',
-    name:     'EFB 650',
-    voltage:  '12V',
-    sub:      'ENHANCED FLOODED',
-    specs:    '65 Ah · 650 CCA',
-    fits:     'Aqua · Prius · i-Stop',
-    price:    'KES 18,500',
-    sku:      'EFB-650',
-    image:    '/products/efb-650.png',
-  },
-  {
-    badge:    'Heavy Duty · Commercial',
-    category: 'Heavy Duty',
-    name:     'Hi-Way N80',
-    voltage:  '12V',
-    sub:      'HEAVY DUTY',
-    specs:    '80 Ah · 700 CCA',
-    fits:     'Truck · Bus · Matatu',
-    price:    'KES 22,000',
-    sku:      'N80-HIWAY',
-    image:    '/products/n80-hiway.png',
-  },
-  {
-    badge:    'European · Premium',
-    category: 'European',
-    name:     'DIN 80-730',
-    voltage:  '12V',
-    sub:      'EURO SPEC',
-    specs:    '80 Ah · 730 CCA',
-    fits:     'BMW · Mercedes · Audi',
-    price:    'KES 24,500',
-    sku:      'DIN80-730',
-    image:    '/products/din80-730.png',
-  },
-]
 
 export default function Home() {
   useScrollReveal()
@@ -145,17 +83,6 @@ export default function Home() {
   const [activeCat, setActiveCat] = useState('All')
   const { data: filteredData } = useApi(activeCat === 'All' ? '/api/products.php' : `/api/products.php?category=${encodeURIComponent(activeCat)}`)
   const featured = (filteredData?.products || []).slice(0, 4)
-
-  const [heroIdx, setHeroIdx]   = useState(0)
-  const heroPaused              = useRef(false)
-
-  /* Auto-advance hero card every 3 seconds — skips tick while hovered */
-  useEffect(() => {
-    const t = setInterval(() => {
-      if (!heroPaused.current) setHeroIdx(i => (i + 1) % FEATURED.length)
-    }, 3000)
-    return () => clearInterval(t)
-  }, [])
 
   const [make, setMake]         = useState('')
   const [model, setModel]       = useState('')
@@ -203,100 +130,30 @@ export default function Home() {
             alt=""
             style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center center' }}
           />
-          {/* Left-to-right gradient: paper-solid on left (text readable), transparent on right (car shows through) */}
-          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, #f7f6f2 0%, #f7f6f2 28%, rgba(247,246,242,.9) 42%, rgba(247,246,242,.3) 62%, transparent 100%)' }} />
+          {/* Left-to-right gradient: solid paper on left (text readable), car fully visible on right */}
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, #f7f6f2 0%, #f7f6f2 32%, rgba(247,246,242,.85) 48%, rgba(247,246,242,.15) 65%, transparent 100%)' }} />
         </div>
 
         <div className="container" style={{ position:'relative', zIndex:1 }}>
-          <div className="hero-grid">
-            {/* Copy */}
-            <div className="hero-copy">
-              <span className="eyebrow">Maifa · Built for Kenyan roads</span>
-              <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)' }}>
-                Built for <em style={{ fontStyle:'italic', color:'var(--green-deep)' }}>Kenyan</em> roads.
-              </h1>
-              <p style={{ fontSize:18, color:'#333', maxWidth:480, marginBottom:'var(--s6)', lineHeight:1.6 }}>
-                Maintenance-free car batteries engineered for tropical heat and rough roads. Free installation, same-day delivery across Nairobi, Kiambu and Mombasa.
-              </p>
-              <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap' }}>
-                <a href="#finder" className="btn btn-primary">Find my battery <span style={{ marginLeft:4 }}>→</span></a>
-                <Link to="/shop" className="btn btn-secondary">Browse all batteries</Link>
-              </div>
-              <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid var(--line)', flexWrap:'wrap' }}>
-                {[{num:'3',label:'Branches across Kenya'},{num:'42k+',label:'Batteries fitted'},{num:'12mo',label:'Standard warranty'},{num:'4.9★',label:'Customer rating'}].map(s=>(
-                  <div key={s.num}>
-                    <div style={{ fontFamily:'var(--serif)', fontSize:38, lineHeight:1 }}>{s.num}</div>
-                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--muted)', marginTop:4 }}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
+          <div className="hero-copy" style={{ maxWidth:580, paddingBottom:'var(--s9)' }}>
+            <span className="eyebrow">Maifa · Built for Kenyan roads</span>
+            <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)' }}>
+              Built for <em style={{ fontStyle:'italic', color:'var(--green-deep)' }}>Kenyan</em> roads.
+            </h1>
+            <p style={{ fontSize:18, color:'#333', maxWidth:480, marginBottom:'var(--s6)', lineHeight:1.6 }}>
+              Maintenance-free car batteries engineered for tropical heat and rough roads. Free installation, same-day delivery across Nairobi, Kiambu and Mombasa.
+            </p>
+            <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap' }}>
+              <a href="#finder" className="btn btn-primary">Find my battery <span style={{ marginLeft:4 }}>→</span></a>
+              <Link to="/shop" className="btn btn-secondary">Browse all batteries</Link>
             </div>
-
-            {/* Visual card — rotating featured product */}
-            <div
-              className="hero-card"
-              style={{ position:'relative', background:'var(--ink)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', minHeight:580, display:'flex', flexDirection:'column', color:'#fff', padding:'var(--s7)', overflow:'hidden' }}
-              onMouseEnter={() => { heroPaused.current = true }}
-              onMouseLeave={() => { heroPaused.current = false }}
-            >
-              {/* Subtle texture overlay */}
-              <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 60% 20%, rgba(29,185,84,.12), transparent 55%), repeating-linear-gradient(45deg,transparent 0 14px,rgba(255,255,255,.018) 14px 15px)', pointerEvents:'none' }} />
-
-              {/* Fixed header — badge + eyebrow */}
-              <div style={{ position:'relative', zIndex:2, display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:'var(--s5)' }}>
-                <div className="eyebrow no-rule" style={{ color:'rgba(255,255,255,.4)' }}>Featured product</div>
-                <span key={`badge-${heroIdx}`} className="hero-badge-in" style={{ background:'var(--green)', color:'#fff', padding:'6px 12px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', whiteSpace:'nowrap' }}>
-                  ● {FEATURED[heroIdx].badge}
-                </span>
-              </div>
-
-              {/* Animated product area — changes every 3 sec */}
-              <div key={heroIdx} className="hero-product-in" style={{ position:'relative', zIndex:2, flex:1, display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
-
-                {/* Product image */}
-                <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'var(--s4) 0' }}>
-                  <img
-                    src={FEATURED[heroIdx].image}
-                    alt={FEATURED[heroIdx].name}
-                    style={{ maxHeight:220, maxWidth:'80%', objectFit:'contain', filter:'drop-shadow(0 12px 32px rgba(0,0,0,.5))' }}
-                  />
+            <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid var(--line)', flexWrap:'wrap' }}>
+              {[{num:'3',label:'Branches across Kenya'},{num:'42k+',label:'Batteries fitted'},{num:'12mo',label:'Standard warranty'},{num:'4.9★',label:'Customer rating'}].map(s=>(
+                <div key={s.num}>
+                  <div style={{ fontFamily:'var(--serif)', fontSize:38, lineHeight:1 }}>{s.num}</div>
+                  <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--muted)', marginTop:4 }}>{s.label}</div>
                 </div>
-
-                {/* Product info */}
-                <div style={{ display:'grid', gap:6 }}>
-                  <div style={{ fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.35)' }}>
-                    {FEATURED[heroIdx].category} · {FEATURED[heroIdx].sub}
-                  </div>
-                  <div style={{ fontFamily:'var(--serif)', fontSize:30, lineHeight:1.1, color:'#fff' }}>
-                    {FEATURED[heroIdx].name}
-                  </div>
-                  <div style={{ display:'flex', gap:'var(--s5)', alignItems:'baseline', marginTop:2 }}>
-                    <span style={{ fontFamily:'var(--serif)', fontSize:52, lineHeight:1 }}>{FEATURED[heroIdx].voltage}</span>
-                    <span style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', lineHeight:1.4 }}>
-                      {FEATURED[heroIdx].specs}<br/>{FEATURED[heroIdx].fits}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Dot indicators */}
-                <div style={{ display:'flex', gap:6, justifyContent:'center', margin:'var(--s4) 0 var(--s3)' }}>
-                  {FEATURED.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setHeroIdx(i)}
-                      aria-label={`Show ${FEATURED[i].name}`}
-                      style={{ width: i === heroIdx ? 20 : 6, height:6, borderRadius:3, border:'none', cursor:'pointer', transition:'width .3s ease, background .3s ease', background: i === heroIdx ? 'var(--green-bright)' : 'rgba(255,255,255,.2)', padding:0 }}
-                    />
-                  ))}
-                </div>
-
-                {/* Footer ticker */}
-                <div style={{ display:'flex', justifyContent:'space-between', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.38)', borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s4)' }}>
-                  <span>SKU: {FEATURED[heroIdx].sku}</span>
-                  <span style={{ color:'var(--green-bright)', fontWeight:600 }}>{FEATURED[heroIdx].price}</span>
-                  <span>IN STOCK</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

@@ -1419,14 +1419,13 @@ section.tight { padding: var(--s7) 0; }
    ══════════════════════════════════════════════════════ */
 
 /* Home — hero */
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: var(--s8);
-  align-items: end;
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   min-height: 76vh;
+  padding-bottom: var(--s9);
 }
-.hero-copy { padding-bottom: var(--s9); }
 
 /* Home — battery finder */
 .finder-grid {
@@ -1493,9 +1492,7 @@ section.tight { padding: var(--s7) 0; }
   h2 { font-size: clamp(28px, 7vw, 40px); }
 
   /* Hero */
-  .hero-grid { grid-template-columns: 1fr; min-height: auto; }
-  .hero-copy { padding-bottom: var(--s6); }
-  .hero-card { display: none; }
+  .hero-copy { min-height: 70vh; padding-bottom: var(--s6); }
 
   /* Finder */
   .finder-grid { grid-template-columns: 1fr; }
