@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import ThreeAurora from '../ui/ThreeAurora'
 
 const SOCIALS = [
   {
@@ -36,7 +37,8 @@ export default function Footer() {
   const year = new Date().getFullYear()
   return (
     <footer className="site-footer">
-      <div className="container">
+      <ThreeAurora />
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="footer-grid">
           <div>
             <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:20 }}>

@@ -405,7 +405,7 @@ section.tight { padding: var(--s7) 0; }
 }
 
 /* ── Footer ── */
-.site-footer { background: var(--ink); color: rgba(255,255,255,.75); padding: var(--s9) 0 var(--s5); }
+.site-footer { position: relative; overflow: hidden; background: #000; color: rgba(255,255,255,.75); padding: var(--s9) 0 var(--s5); }
 .site-footer h4 {
   font-family: var(--sans);
   font-size: 11px;
