@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import PageTransition from '../components/ui/PageTransition'
+import ShaderBackground from '../components/ui/ShaderBackground'
 
 const WA = '254791899602'
 
@@ -308,23 +309,32 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section id="featured-products" style={{ background:'var(--paper-2)' }}>
-        <div className="container">
+      <section id="featured-products" style={{ position:'relative', overflow:'hidden' }}>
+        <ShaderBackground />
+        <div className="container" style={{ position:'relative', zIndex:1 }}>
           <div className="section-head reveal">
             <div>
-              <span className="eyebrow">Top sellers · This month</span>
-              <h2 style={{ marginTop:'var(--s4)' }}>Featured batteries</h2>
+              <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Top sellers · This month</span>
+              <h2 style={{ marginTop:'var(--s4)', color:'#fff' }}>Featured batteries</h2>
             </div>
-            <Link to="/shop" className="btn-ghost">Shop all batteries</Link>
+            <Link to="/shop" className="btn-ghost" style={{ color:'rgba(255,255,255,.7)', borderColor:'rgba(255,255,255,.2)' }}>Shop all batteries</Link>
           </div>
           <div className="filter-pills reveal reveal-delay-1">
             {['All','Standard','Large Car','EFB','Heavy Duty','European'].map(c=>(
-              <button key={c} className={`pill${activeCat===c?' active':''}`} onClick={()=>setActiveCat(c)}>{c}</button>
+              <button
+                key={c}
+                className={`pill${activeCat===c?' active':''}`}
+                onClick={()=>setActiveCat(c)}
+                style={activeCat===c
+                  ? {}
+                  : { background:'rgba(255,255,255,.08)', borderColor:'rgba(255,255,255,.15)', color:'rgba(255,255,255,.7)' }
+                }
+              >{c}</button>
             ))}
           </div>
           <div className="featured-grid reveal reveal-delay-2">
             {featured.map(p=>(
-              <Link key={p.id} to={`/shop/${toSlug(p.name)}-${p.id}`} className="product-card">
+              <Link key={p.id} to={`/shop/${toSlug(p.name)}-${p.id}`} className="product-card shader-card">
                 <div className="img">
                   {p.badge && (
                     <div className="badges">
@@ -357,9 +367,9 @@ export default function Home() {
               </Link>
             ))}
             {featured.length === 0 && Array.from({length:4}).map((_,i)=>(
-              <div key={i} className="product-card" style={{ opacity:.4 }}>
+              <div key={i} className="product-card shader-card" style={{ opacity:.4 }}>
                 <div className="img"><div className="battery-placeholder">M</div></div>
-                <div className="body"><div style={{ height:12, background:'var(--line)', borderRadius:4, marginBottom:8 }} /><div style={{ height:16, background:'var(--line)', borderRadius:4 }} /></div>
+                <div className="body"><div style={{ height:12, background:'rgba(255,255,255,.1)', borderRadius:4, marginBottom:8 }} /><div style={{ height:16, background:'rgba(255,255,255,.1)', borderRadius:4 }} /></div>
               </div>
             ))}
           </div>

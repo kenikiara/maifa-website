@@ -628,6 +628,27 @@ section.tight { padding: var(--s7) 0; }
 }
 .product-card:hover .add-btn { background: var(--red); }
 
+/* ── Shader-background card variant ── */
+.shader-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.shader-card:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+.shader-card .img { background: rgba(255, 255, 255, 0.06); }
+.shader-card .cat { color: rgba(255, 255, 255, 0.45); }
+.shader-card h4 { color: #fff; }
+.shader-card .specs-mini { color: rgba(255, 255, 255, 0.4); border-color: rgba(255, 255, 255, 0.1); }
+.shader-card .specs-mini b { color: rgba(255, 255, 255, 0.9); }
+.shader-card .price { color: #fff; }
+.shader-card .price .old { color: rgba(255, 255, 255, 0.35); }
+.shader-card .img .quick-view { background: rgba(255,255,255,0.15); color: #fff; }
+
 /* ── Filter pills ── */
 .filter-pills { display: flex; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s5); }
 .pill {
