@@ -12,11 +12,11 @@ function toSlug(name) {
 }
 
 const CATEGORIES = [
-  { num: '01', key: 'Standard',   label: 'Car Batteries Standard', blurb: 'Small-engine sedans. Lower electrical demand. Maintenance free.', img: '/categories/regular-car.png' },
-  { num: '02', key: 'Large Car',  label: 'Large Cars',             blurb: 'SUVs and big engines. Higher draw. Built to keep up.',             img: '/categories/suv.png'         },
-  { num: '03', key: 'EFB',        label: 'Start-Stop EFB',         blurb: 'Engineered for cars with idle-stop. Frequent restarts, no sweat.', img: '/categories/efb.png'         },
-  { num: '04', key: 'Heavy Duty', label: 'Heavy Duty',             blurb: 'Maximum vibration resistance. Verified for Kenyan terrain.',       img: '/categories/heavy-duty.png'  },
-  { num: '05', key: 'European',   label: 'European',               blurb: 'High CCA. Long cycle life. For BMW, Mercedes, Audi & co.',         img: '/categories/euro-spec.png'   },
+  { num: '01', key: 'Standard',   label: 'Car Batteries Standard', blurb: 'Small-engine sedans. Lower electrical demand. Maintenance free.', img: '/categories/regular-car.webp' },
+  { num: '02', key: 'Large Car',  label: 'Large Cars',             blurb: 'SUVs and big engines. Higher draw. Built to keep up.',             img: '/categories/suv.webp'         },
+  { num: '03', key: 'EFB',        label: 'Start-Stop EFB',         blurb: 'Engineered for cars with idle-stop. Frequent restarts, no sweat.', img: '/categories/efb.webp'         },
+  { num: '04', key: 'Heavy Duty', label: 'Heavy Duty',             blurb: 'Maximum vibration resistance. Verified for Kenyan terrain.',       img: '/categories/heavy-duty.webp'  },
+  { num: '05', key: 'European',   label: 'European',               blurb: 'High CCA. Long cycle life. For BMW, Mercedes, Audi & co.',         img: '/categories/euro-spec.webp'   },
 ]
 
 const TESTIMONIALS = [
@@ -127,7 +127,7 @@ export default function Home() {
         {/* Hero background — branded car photo with gradient isolation */}
         <div style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none' }}>
           <img
-            src="/hero-car.png"
+            src="/hero-car.webp"
             alt=""
             style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center center' }}
           />
@@ -435,9 +435,9 @@ export default function Home() {
           </div>
           <div className="grid-3 reveal reveal-delay-1">
             {[
-              { name:'Thika Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', image:'/branches/thika-road.png' },
-              { name:'Kiambu Road', hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', image:'/branches/kiambu-road.png' },
-              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image:'/branches/mombasa.png' },
+              { name:'Thika Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', image:'/branches/thika-road.webp' },
+              { name:'Kiambu Road', hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', image:'/branches/kiambu-road.webp' },
+              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image:'/branches/mombasa.webp' },
             ].map(loc=>(
               <div key={loc.name} style={{ border:'1px solid var(--line)', borderRadius:'var(--r)', overflow:'hidden', display:'flex', flexDirection:'column', transition:'border-color .2s, box-shadow .2s', cursor:'default' }}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--ink)';e.currentTarget.style.boxShadow='var(--shadow-2)'}}

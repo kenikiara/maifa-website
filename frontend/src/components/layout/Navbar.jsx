@@ -21,7 +21,7 @@ export default function Navbar() {
       <header className="site-header">
         <div className="header-inner">
           <NavLink to="/" className="logo" aria-label="Maifa home">
-            <img src="/maifa-logo.png" alt="Maifa" onError={e => e.target.style.display = 'none'} />
+            <img src="/maifa-logo.webp" alt="Maifa" onError={e => e.target.style.display = 'none'} />
           </NavLink>
 
           <nav className="nav" aria-label="Main navigation">
@@ -73,7 +73,7 @@ export default function Navbar() {
       <nav className={`mobile-nav${open ? ' open' : ''}`} aria-label="Mobile navigation">
         {/* Header */}
         <div className="mobile-nav-head">
-          <img src="/maifa-logo.png" alt="Maifa" style={{ height: 28, objectFit: 'contain' }} />
+          <img src="/maifa-logo.webp" alt="Maifa" style={{ height: 28, objectFit: 'contain' }} />
           <button
             className="mobile-nav-close"
             aria-label="Close menu"

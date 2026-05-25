@@ -18,6 +18,12 @@ DirectoryIndex index.html index.php
     RewriteEngine On
     RewriteBase /
 
+    # Auto-serve .webp instead of .png/.jpg when browser supports it and .webp exists
+    RewriteCond %{HTTP_ACCEPT} image/webp
+    RewriteCond %{REQUEST_FILENAME} \.(png|jpe?g)$
+    RewriteCond %{REQUEST_FILENAME%\.*}.webp -f
+    RewriteRule ^(.+)\.(png|jpe?g)$ $1.webp [T=image/webp,L]
+
     # Static frontend assets — serve directly
     RewriteCond %{REQUEST_URI} ^/assets/
     RewriteRule ^ - [L]
@@ -85,6 +91,14 @@ DirectoryIndex index.html index.php
     <IfModule mod_headers.c>
         Header append Vary Accept-Encoding
     </IfModule>
+
+</IfModule>
+
+# Vary header for auto-WebP (ensures CDN/proxy caches don't mix formats)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(png|jpe?g)$">
+        Header append Vary Accept
+    </FilesMatch>
 
 </IfModule>
 

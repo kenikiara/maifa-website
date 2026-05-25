@@ -1,5 +1,8 @@
+import { useEffect, useRef, useState, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
-import ThreeAurora from '../ui/ThreeAurora'
+
+// Only import Three.js (492 KB) once the footer scrolls into view
+const ThreeAurora = lazy(() => import('../ui/ThreeAurora'))
 
 const SOCIALS = [
   {
@@ -35,9 +38,27 @@ const SOCIALS = [
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const footerRef = useRef(null)
+  const [auroraVisible, setAuroraVisible] = useState(false)
+
+  useEffect(() => {
+    const el = footerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setAuroraVisible(true); observer.disconnect() } },
+      { rootMargin: '200px' }   // start loading 200px before footer enters view
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <footer className="site-footer">
-      <ThreeAurora />
+    <footer className="site-footer" ref={footerRef}>
+      {auroraVisible && (
+        <Suspense fallback={null}>
+          <ThreeAurora />
+        </Suspense>
+      )}
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="footer-grid">
           <div>

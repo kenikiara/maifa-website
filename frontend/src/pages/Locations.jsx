@@ -17,7 +17,7 @@ const BRANCHES = [
     open: true,
     maps: 'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9',
     embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2402.167556337681!2d36.869916798464736!3d-1.2315114999999968!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f15c42e8ba0c5%3A0x2972a910aadc2d85!2sAmaron%20Battery%20Kenya%20-%20Nairobi%20-%20Thika%20Road!5e1!3m2!1sen!2ske!4v1779619483929!5m2!1sen!2ske',
-    image: '/branches/thika-road.png',
+    image: '/branches/thika-road.webp',
     services: ['Free Installation', 'Battery Testing', 'Trade-in', 'Same-Day Delivery'],
   },
   {
@@ -32,7 +32,7 @@ const BRANCHES = [
     open: true,
     maps: 'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA',
     embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4804.382198714865!2d36.830105011306934!3d-1.2051069355392965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f3dfed29304b3%3A0x9c08e8eb6fc4cfbe!2sAmaron%20Battery%20Kenya%20-%20Nairobi%20-%20Kiambu%20Road!5e1!3m2!1sen!2ske!4v1779620683887!5m2!1sen!2ske',
-    image: '/branches/kiambu-road.png',
+    image: '/branches/kiambu-road.webp',
     services: ['Free Installation', 'Battery Testing', 'Trade-in', 'Same-Day Delivery'],
   },
   {
@@ -47,7 +47,7 @@ const BRANCHES = [
     open: true,
     maps: 'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA',
     embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2457686.498809158!2d36.94228027099616!3d-2.6851557360990097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1840133e6ef16e5d%3A0x3141049c92fce55a!2sAmaron%20Battery%20Kenya%20-%20Mombasa!5e1!3m2!1sen!2ske!4v1779620624932!5m2!1sen!2ske',
-    image: '/branches/mombasa.png',
+    image: '/branches/mombasa.webp',
     services: ['Free Installation', 'Battery Testing', 'Trade-in'],
   },
 ]

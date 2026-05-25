@@ -3,15 +3,30 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+
   build: {
+    // Target modern browsers — smaller, faster output (no legacy polyfills)
+    target: 'esnext',
+
+    // Warn only on chunks > 600 KB
+    chunkSizeWarningLimit: 600,
+
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ['three'],
+        manualChunks(id) {
+          // Three.js in its own chunk — only loaded when footer is visible
+          if (id.includes('node_modules/three')) return 'three'
+
+          // React core — shared by every page, cache long-term
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react'
+
+          // Router — small but shared
+          if (id.includes('node_modules/react-router')) return 'router'
         },
       },
     },
   },
+
   server: {
     proxy: {
       '/api': {

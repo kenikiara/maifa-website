@@ -12,7 +12,7 @@ export default function SplashScreen({ onDone }) {
   return (
     <div className={`splash${leaving ? ' splash-out' : ''}`}>
       <div className="splash-inner">
-        <img src="/maifa-logo.png" alt="Maifa" className="splash-logo" />
+        <img src="/maifa-logo.webp" alt="Maifa" className="splash-logo" />
         <div className="splash-track">
           <div className="splash-fill" />
         </div>
