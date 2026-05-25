@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import PageTransition from '../components/ui/PageTransition'
-import AuroraBackground from '../components/ui/AuroraBackground'
 
 const WA = '254791899602'
 
@@ -196,9 +195,17 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <section id="hero" style={{ position:'relative', borderBottom:'1px solid var(--line)', overflow:'hidden' }}>
-        {/* Aurora animated background */}
-        <AuroraBackground />
+      <section id="hero" style={{ position:'relative', borderBottom:'1px solid var(--line)', overflow:'hidden', background:'var(--paper)' }}>
+        {/* Hero background — branded car photo with gradient isolation */}
+        <div style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none' }}>
+          <img
+            src="/hero-car.png"
+            alt=""
+            style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center center' }}
+          />
+          {/* Left-to-right gradient: paper-solid on left (text readable), transparent on right (car shows through) */}
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, #f7f6f2 0%, #f7f6f2 28%, rgba(247,246,242,.9) 42%, rgba(247,246,242,.3) 62%, transparent 100%)' }} />
+        </div>
 
         <div className="container" style={{ position:'relative', zIndex:1 }}>
           <div className="hero-grid">
