@@ -115,7 +115,7 @@ function BranchCard({ branch, active, onSelect }) {
         <div style={{ height: 1, background: 'var(--line)' }} />
 
         {/* Hours */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', rowGap: 'var(--s3)' }}>
           <div>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 3 }}>Hours</div>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 13, fontWeight: 600 }}>{branch.hours.weekday}</div>
@@ -262,7 +262,7 @@ export default function Locations() {
       {selectedBranch && (
         <section style={{ background: 'var(--ink)', padding: 'var(--s8) 0' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s8)', alignItems: 'center' }}>
+            <div className="loc-spotlight" style={{ display: 'grid', gap: 'var(--s8)', alignItems: 'center' }}>
               <div>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--green-bright)' }}>Selected branch</span>
                 <h2 style={{ color: '#fff', marginTop: 'var(--s3)', marginBottom: 'var(--s4)' }}>{selectedBranch.name}</h2>
@@ -367,7 +367,7 @@ export default function Locations() {
                       {BRANCHES.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                     </select>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s4)' }}>
+                  <div className="loc-form-row" style={{ display: 'grid', gap: 'var(--s4)' }}>
                     <div className="field">
                       <label>Name <span className="req">*</span></label>
                       <input type="text" placeholder="Your name" value={form.name} onChange={set('name')} required />
@@ -420,7 +420,7 @@ export default function Locations() {
                   {BRANCHES.map(b => (
                     <div
                       key={b.id}
-                      style={{ background: 'var(--paper)', borderRadius: 'var(--r)', padding: 'var(--s4) var(--s5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--s4)', cursor: 'pointer', border: `1.5px solid ${activeBranch === b.id ? 'var(--ink)' : 'var(--line)'}`, transition: 'border-color .15s' }}
+                      style={{ background: 'var(--paper)', borderRadius: 'var(--r)', padding: 'var(--s4) var(--s5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--s3)', cursor: 'pointer', border: `1.5px solid ${activeBranch === b.id ? 'var(--ink)' : 'var(--line)'}`, transition: 'border-color .15s' }}
                       onClick={() => { setActiveBranch(b.id); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
                     >
                       <div>
@@ -445,7 +445,7 @@ export default function Locations() {
                     { day: 'Sunday', time: 'Closed' },
                     { day: 'Public Holidays', time: 'Call to confirm' },
                   ].map(row => (
-                    <div key={row.day} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: 'var(--s3)' }}>
+                    <div key={row.day} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', rowGap: 'var(--s1)', fontSize: 13, borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: 'var(--s3)' }}>
                       <span style={{ color: 'rgba(255,255,255,.6)' }}>{row.day}</span>
                       <span style={{ fontFamily: 'var(--mono)', fontWeight: 600 }}>{row.time}</span>
                     </div>

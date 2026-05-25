@@ -37,21 +37,119 @@ DirectoryIndex index.html index.php
     RewriteRule ^ index.html [L]
 </IfModule>
 
-# ── Gzip compression ──
+# ── Gzip / Brotli compression ──
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json application/xml image/svg+xml
+
+    # Fix for broken Accept-Encoding headers from some proxies/browsers
+    <IfModule mod_setenvif.c>
+        <IfModule mod_headers.c>
+            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ \
+                ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+        </IfModule>
+    </IfModule>
+
+    # Compress all matching MIME types
+    AddOutputFilterByType DEFLATE \
+        application/atom+xml \
+        application/javascript \
+        application/json \
+        application/ld+json \
+        application/manifest+json \
+        application/rss+xml \
+        application/vnd.ms-fontobject \
+        application/x-font-ttf \
+        application/x-javascript \
+        application/x-web-app-manifest+json \
+        application/xhtml+xml \
+        application/xml \
+        font/eot \
+        font/opentype \
+        font/otf \
+        font/ttf \
+        image/svg+xml \
+        image/x-icon \
+        text/css \
+        text/html \
+        text/javascript \
+        text/plain \
+        text/x-component \
+        text/xml
+
+    # Remove browser bugs (old IE quirks)
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+    # Tell caches this content was compressed
+    <IfModule mod_headers.c>
+        Header append Vary Accept-Encoding
+    </IfModule>
+
+</IfModule>
+
+# Brotli (cPanel servers with mod_brotli)
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS \
+        text/html text/plain text/css text/javascript text/xml \
+        application/javascript application/json application/xml \
+        application/ld+json application/manifest+json image/svg+xml
 </IfModule>
 
 # ── Browser caching ──
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType image/webp "access plus 1 year"
-    ExpiresByType image/jpeg "access plus 1 year"
-    ExpiresByType image/png  "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType text/css   "access plus 6 months"
-    ExpiresByType application/javascript "access plus 6 months"
-    ExpiresByType application/json "access plus 0 seconds"
+
+    # Images — 1 year (content-hashed filenames in Vite build)
+    ExpiresByType image/webp         "access plus 1 year"
+    ExpiresByType image/jpeg         "access plus 1 year"
+    ExpiresByType image/png          "access plus 1 year"
+    ExpiresByType image/gif          "access plus 1 year"
+    ExpiresByType image/svg+xml      "access plus 1 year"
+    ExpiresByType image/x-icon       "access plus 1 year"
+
+    # Fonts — 1 year
+    ExpiresByType font/woff2         "access plus 1 year"
+    ExpiresByType font/woff          "access plus 1 year"
+    ExpiresByType font/ttf           "access plus 1 year"
+    ExpiresByType font/eot           "access plus 1 year"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+    ExpiresByType application/x-font-ttf        "access plus 1 year"
+
+    # CSS & JS — 6 months (Vite appends hash to filenames)
+    ExpiresByType text/css                "access plus 6 months"
+    ExpiresByType application/javascript  "access plus 6 months"
+    ExpiresByType text/javascript         "access plus 6 months"
+
+    # HTML — short cache (SPA shell changes with each deploy)
+    ExpiresByType text/html          "access plus 1 hour"
+
+    # JSON / API — no cache
+    ExpiresByType application/json   "access plus 0 seconds"
+    ExpiresByType application/ld+json "access plus 0 seconds"
+
+    # Manifest / service worker — short cache
+    ExpiresByType application/manifest+json "access plus 1 day"
+</IfModule>
+
+# ── Cache-Control headers for immutable hashed assets ──
+<IfModule mod_headers.c>
+    # Vite-hashed JS/CSS chunks are immutable — max 1 year
+    <FilesMatch "\.(js|css)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    # Fonts are immutable
+    <FilesMatch "\.(woff2?|ttf|eot|otf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    # Images
+    <FilesMatch "\.(webp|jpg|jpeg|png|gif|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+    # HTML — revalidate every time
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
 </IfModule>
 
 # ── Block .env and config files ──
