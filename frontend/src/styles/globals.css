@@ -776,12 +776,17 @@ section.tight { padding: var(--s7) 0; }
   to   { opacity: 1; transform: none; }
 }
 
-/* ── Page head (shop, warranty) ── */
+/* ── Page head — fluid green ── */
 .page-head {
   padding: var(--s8) 0 var(--s6);
-  border-bottom: 1px solid var(--line);
-  background: var(--paper);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 110%, rgba(20,200,85,0.38) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 65% at 95% 5%,   rgba(15,200,75,0.18) 0%, transparent 55%),
+    linear-gradient(148deg, #031508 0%, #063d1c 42%, #0f7a3d 100%);
 }
+
+/* Breadcrumbs — neutral */
 .crumbs {
   font-family: var(--mono);
   font-size: 11px;
@@ -793,7 +798,20 @@ section.tight { padding: var(--s7) 0; }
 .crumbs a { color: var(--muted); }
 .crumbs a:hover { color: var(--ink); }
 .crumbs span { color: var(--ink); }
-.page-head h1 { font-size: clamp(40px, 6vw, 80px); }
+
+/* Breadcrumbs — white on green header */
+.page-head .crumbs            { color: rgba(255,255,255,0.5); }
+.page-head .crumbs a          { color: rgba(255,255,255,0.5); }
+.page-head .crumbs a:hover    { color: #fff; }
+.page-head .crumbs span       { color: rgba(255,255,255,0.9); }
+
+/* Headings & body text on green */
+.page-head h1                 { font-size: clamp(40px, 6vw, 80px); color: #fff; }
+.page-head h1 em              { color: rgba(120,255,170,0.9); font-style: italic; }
+.page-head p                  { color: rgba(255,255,255,0.72); }
+.page-head .eyebrow           { color: rgba(255,255,255,0.6); }
+
+/* Meta row */
 .page-head .meta {
   display: flex;
   justify-content: space-between;
@@ -802,7 +820,25 @@ section.tight { padding: var(--s7) 0; }
   flex-wrap: wrap;
   gap: var(--s4);
 }
-.page-head .meta p { color: var(--muted); font-size: 14px; }
+.page-head .meta p { color: rgba(255,255,255,0.65); font-size: 14px; }
+
+/* Badges on green bg */
+.page-head .badge.outline {
+  color: rgba(255,255,255,0.85);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* Secondary button on green bg */
+.page-head .btn-secondary {
+  color: #fff;
+  border-color: rgba(255,255,255,0.4);
+}
+.page-head .btn-secondary:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+/* Layout helpers */
 .head-row {
   display: flex;
   justify-content: space-between;

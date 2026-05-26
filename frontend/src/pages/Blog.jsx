@@ -52,11 +52,11 @@ export default function Blog() {
   return (
     <>
       {/* Page header */}
-      <section className="page-head" style={{ padding: 'var(--s8) 0 var(--s6)', borderBottom: '1px solid var(--line)' }}>
+      <section className="page-head" style={{ padding: 'var(--s8) 0 var(--s6)' }}>
         <div className="container">
           <div className="crumbs"><Link to="/">Home</Link> / <span>Blog</span></div>
           <h1>Battery &amp; Car Tips</h1>
-          <p style={{ color: 'var(--muted)', maxWidth: 520, marginTop: 'var(--s3)' }}>
+          <p style={{ maxWidth: 520, marginTop: 'var(--s3)' }}>
             Expert guides on car batteries, maintenance, and getting the best value in Kenya.
           </p>
         </div>

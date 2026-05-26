@@ -176,8 +176,8 @@ export default function Warranty() {
           <div className="head-row">
             <div>
               <span className="eyebrow">Warranty · Free · 12-month cover</span>
-              <h1 style={{ marginTop: 'var(--s2)' }}>Register your <em style={{ fontStyle: 'italic', color: 'var(--green)' }}>battery.</em></h1>
-              <p style={{ color: '#444', fontSize: 16, maxWidth: 580, marginTop: 'var(--s4)', lineHeight: 1.65 }}>
+              <h1 style={{ marginTop: 'var(--s2)' }}>Register your <em style={{ fontStyle: 'italic' }}>battery.</em></h1>
+              <p style={{ fontSize: 16, maxWidth: 580, marginTop: 'var(--s4)', lineHeight: 1.65 }}>
                 Activate your one-year warranty in under three minutes. Once registered, walk into any branch with your code — no paperwork hunting, no call centres.
               </p>
             </div>

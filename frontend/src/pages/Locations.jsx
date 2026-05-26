@@ -211,7 +211,7 @@ export default function Locations() {
           <div className="meta">
             <p>Three branches across Kenya — walk in or reach us directly on WhatsApp.</p>
             <div style={{ display: 'flex', gap: 'var(--s2)', flexWrap: 'wrap' }}>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--muted)', letterSpacing: '.08em' }}>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'rgba(255,255,255,0.55)', letterSpacing: '.08em' }}>
                 MON – SAT &nbsp;·&nbsp; 7:30AM – 7PM
               </span>
             </div>

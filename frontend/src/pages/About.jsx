@@ -35,7 +35,7 @@ export default function About() {
   return (
     <>
       {/* ── Hero ── */}
-      <section style={{ padding: 'var(--s9) 0 0', borderBottom: '1px solid var(--line)', overflow: 'hidden' }}>
+      <section className="page-head" style={{ padding: 'var(--s9) 0 var(--s7)', overflow: 'hidden' }}>
         <div className="container">
           <div className="crumbs" style={{ marginBottom: 'var(--s5)' }}>
             <Link to="/">Home</Link> / <span>About</span>
@@ -48,7 +48,7 @@ export default function About() {
               <h1 style={{ marginTop: 'var(--s4)', fontSize: 'clamp(42px,5.5vw,80px)', lineHeight: 1 }}>
                 Nairobi's battery specialists, since 2012.
               </h1>
-              <p style={{ fontSize: 17, lineHeight: 1.7, color: '#444', marginTop: 'var(--s5)', maxWidth: 480 }}>
+              <p style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(255,255,255,0.8)', marginTop: 'var(--s5)', maxWidth: 480 }}>
                 Maifa was founded by mechanics tired of watching customers buy cheap batteries that failed in six months. We set out to stock only proven brands — Amaron first — and back every sale with honest advice and real warranty.
               </p>
               <div style={{ display: 'flex', gap: 'var(--s3)', marginTop: 'var(--s6)', flexWrap: 'wrap' }}>
@@ -59,11 +59,11 @@ export default function About() {
               </div>
 
               {/* Stats row */}
-              <div className="about-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 'var(--s4)', marginTop: 'var(--s8)', paddingTop: 'var(--s6)', borderTop: '1px solid var(--line)' }}>
+              <div className="about-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 'var(--s4)', marginTop: 'var(--s8)', paddingTop: 'var(--s6)', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
                 {STATS.map(s => (
                   <div key={s.label}>
-                    <div style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(28px,3vw,44px)', lineHeight: 1, color: 'var(--green-deep)' }}>{s.value}</div>
-                    <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 'var(--s2)', lineHeight: 1.4 }}>{s.label}</div>
+                    <div style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(28px,3vw,44px)', lineHeight: 1, color: '#fff' }}>{s.value}</div>
+                    <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginTop: 'var(--s2)', lineHeight: 1.4 }}>{s.label}</div>
                   </div>
                 ))}
               </div>
