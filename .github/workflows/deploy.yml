@@ -65,7 +65,7 @@ jobs:
 
       # 6. Upload React build + .htaccess → maifa.ke/
       - name: Deploy frontend to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -78,7 +78,7 @@ jobs:
 
       # 7. Upload PHP backend → maifa.ke/backend/
       - name: Deploy backend to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
