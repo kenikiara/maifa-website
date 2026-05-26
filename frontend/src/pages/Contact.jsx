@@ -51,7 +51,7 @@ export default function Contact() {
         body: JSON.stringify(form),
       })
       const data = await res.json()
-      if (data.ok) setSent(true)
+      if (data.success) setSent(true)
       else setError(data.error || 'Failed to send message. Please try again.')
     } catch {
       setError('Network error. Please try again.')

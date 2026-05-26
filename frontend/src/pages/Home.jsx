@@ -76,7 +76,90 @@ function matchCategory(make, model) {
   return MODEL_CAT[model] || MAKE_CAT[make] || 'Standard'
 }
 
-/* ── Hero rotating featured batteries (one per category) ── */
+/* ── Newsletter section with live API ── */
+function NewsletterSection() {
+  const [email,   setEmail]   = useState('')
+  const [loading, setLoading] = useState(false)
+  const [status,  setStatus]  = useState(null) // null | 'success' | 'error'
+  const [msg,     setMsg]     = useState('')
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    setStatus(null)
+    try {
+      const res  = await fetch('/api/newsletter.php', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setStatus('success')
+        setMsg(data.message === 'Already subscribed' ? "You're already on the list!" : "You're in! We'll be in touch.")
+        setEmail('')
+      } else {
+        setStatus('error')
+        setMsg(data.error || 'Something went wrong. Please try again.')
+      }
+    } catch {
+      setStatus('error')
+      setMsg('Network error. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <section id="newsletter" style={{ background:'var(--ink)', color:'#fff', padding:'var(--s8) 0' }}>
+      <div className="container">
+        <div className="newsletter-grid">
+          <div>
+            <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Stay charged</span>
+            <h3 style={{ color:'#fff', marginTop:'var(--s4)' }}>Battery tips, new arrivals, and the occasional discount.</h3>
+          </div>
+          <div>
+            {status === 'success' ? (
+              <div style={{ display:'flex', alignItems:'center', gap:14, padding:'var(--s5)', background:'rgba(15,122,61,.18)', border:'1.5px solid var(--green)', borderRadius:'var(--r-lg)' }}>
+                <div style={{ width:38, height:38, borderRadius:'50%', background:'var(--green)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontWeight:600, color:'#fff', fontSize:15 }}>{msg}</div>
+                  <div style={{ fontSize:12, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)', marginTop:3 }}>We won't spam you — ever.</div>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="newsletter-form">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  style={{ flex:1, background:'transparent', border:'none', padding:'12px 16px', color:'#fff', fontFamily:'var(--sans)', fontSize:14, outline:'none', minWidth:0 }}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                  style={{ height:46, padding:'0 20px', flexShrink:0, opacity: loading ? .7 : 1 }}
+                >
+                  {loading ? 'Subscribing…' : 'Subscribe'}
+                </button>
+              </form>
+            )}
+            {status === 'error' && (
+              <p style={{ color:'#f87171', fontSize:13, fontFamily:'var(--mono)', marginTop:8 }}>{msg}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ── Page ── */
 
 export default function Home() {
   useScrollReveal()
@@ -582,20 +665,7 @@ export default function Home() {
       </section>
 
       {/* Newsletter */}
-      <section id="newsletter" style={{ background:'var(--ink)', color:'#fff', padding:'var(--s8) 0' }}>
-        <div className="container">
-          <div className="newsletter-grid">
-            <div>
-              <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Stay charged</span>
-              <h3 style={{ color:'#fff', marginTop:'var(--s4)' }}>Battery tips, new arrivals, and the occasional discount.</h3>
-            </div>
-            <form onSubmit={e=>e.preventDefault()} className="newsletter-form">
-              <input type="email" placeholder="your@email.com" required style={{ flex:1, background:'transparent', border:'none', padding:'12px 16px', color:'#fff', fontFamily:'var(--sans)', fontSize:14, outline:'none', minWidth:0 }} />
-              <button type="submit" className="btn btn-primary" style={{ height:46, padding:'0 20px', flexShrink:0 }}>Subscribe</button>
-            </form>
-          </div>
-        </div>
-      </section>
+      <NewsletterSection />
     </PageTransition>
 
     {quickModal && <BatteryQuickModal onClose={() => setQuickModal(false)} />}

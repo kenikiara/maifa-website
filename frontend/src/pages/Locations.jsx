@@ -190,7 +190,7 @@ export default function Locations() {
         body: JSON.stringify({ ...form, subject }),
       })
       const data = await res.json()
-      if (data.ok) setSent(true)
+      if (data.success) setSent(true)
       else setError(data.error || 'Failed to send. Please try again.')
     } catch {
       setError('Network error. Please try again.')
