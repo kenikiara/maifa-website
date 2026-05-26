@@ -398,17 +398,17 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section id="featured-products" style={{ position:'relative', overflow:'hidden' }}>
+      <section id="featured-products" style={{ position:'relative', overflow:'hidden', isolation:'isolate' }}>
         <ShaderBackground />
         <div className="container" style={{ position:'relative', zIndex:1 }}>
-          <div className="section-head reveal">
+          <div className="section-head">
             <div>
               <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Top sellers · This month</span>
               <h2 style={{ marginTop:'var(--s4)', color:'#fff' }}>Featured batteries</h2>
             </div>
             <Link to="/shop" className="btn-ghost" style={{ color:'rgba(255,255,255,.7)', borderColor:'rgba(255,255,255,.2)' }}>Shop all batteries</Link>
           </div>
-          <div className="filter-pills reveal reveal-delay-1">
+          <div className="filter-pills">
             {['All','Standard','Large Car','EFB','Heavy Duty','European'].map(c=>(
               <button
                 key={c}
@@ -421,7 +421,7 @@ export default function Home() {
               >{c}</button>
             ))}
           </div>
-          <div className="featured-grid reveal reveal-delay-2">
+          <div className="featured-grid">
             {featured.map(p=>(
               <Link key={p.id} to={`/shop/${toSlug(p.name)}-${p.id}`} className="product-card shader-card">
                 <div className="img">

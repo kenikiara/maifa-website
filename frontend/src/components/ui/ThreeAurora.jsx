@@ -71,49 +71,54 @@ export default function ThreeAurora() {
     const wrap = wrapRef.current
     if (!wrap) return
 
-    const scene    = new THREE.Scene()
-    const camera   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;'
-    wrap.appendChild(renderer.domElement)
+    let renderer, ro, raf
 
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        iTime:       { value: 0 },
-        iResolution: { value: new THREE.Vector2(wrap.offsetWidth, wrap.offsetHeight) },
-      },
-      vertexShader:   VERT,
-      fragmentShader: FRAG,
-    })
+    try {
+      const scene    = new THREE.Scene()
+      const camera   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'low-power' })
+      renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;'
+      wrap.appendChild(renderer.domElement)
 
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
-    scene.add(mesh)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          iTime:       { value: 0 },
+          iResolution: { value: new THREE.Vector2(wrap.offsetWidth, wrap.offsetHeight) },
+        },
+        vertexShader:   VERT,
+        fragmentShader: FRAG,
+      })
 
-    const resize = () => {
-      const w = wrap.offsetWidth
-      const h = wrap.offsetHeight
-      renderer.setSize(w, h)
-      material.uniforms.iResolution.value.set(w, h)
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
+      scene.add(mesh)
+
+      const resize = () => {
+        const w = wrap.offsetWidth
+        const h = wrap.offsetHeight
+        renderer.setSize(w, h)
+        material.uniforms.iResolution.value.set(w, h)
+      }
+      ro = new ResizeObserver(resize)
+      ro.observe(wrap)
+      resize()
+
+      const animate = () => {
+        material.uniforms.iTime.value += 0.016
+        renderer.render(scene, camera)
+        raf = requestAnimationFrame(animate)
+      }
+      animate()
+    } catch {
+      // WebGL not available or shader compilation failed — degrade silently
     }
-    const ro = new ResizeObserver(resize)
-    ro.observe(wrap)
-    resize()
-
-    let raf
-    const animate = () => {
-      material.uniforms.iTime.value += 0.016
-      renderer.render(scene, camera)
-      raf = requestAnimationFrame(animate)
-    }
-    animate()
 
     return () => {
-      cancelAnimationFrame(raf)
-      ro.disconnect()
-      if (wrap.contains(renderer.domElement)) wrap.removeChild(renderer.domElement)
-      mesh.geometry.dispose()
-      material.dispose()
-      renderer.dispose()
+      if (raf) cancelAnimationFrame(raf)
+      if (ro) ro.disconnect()
+      if (renderer) {
+        if (wrap.contains(renderer.domElement)) wrap.removeChild(renderer.domElement)
+        renderer.dispose()
+      }
     }
   }, [])
 

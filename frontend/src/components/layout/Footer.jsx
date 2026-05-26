@@ -1,8 +1,15 @@
-import { useEffect, useRef, useState, lazy, Suspense } from 'react'
+import { useEffect, useRef, useState, lazy, Suspense, Component } from 'react'
 import { Link } from 'react-router-dom'
 
 // Only import Three.js (492 KB) once the footer scrolls into view
 const ThreeAurora = lazy(() => import('../ui/ThreeAurora'))
+
+// Swallows any render/load error from ThreeAurora — footer content always shows
+class AuroraErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { failed: false } }
+  static getDerivedStateFromError() { return { failed: true } }
+  render() { return this.state.failed ? null : this.props.children }
+}
 
 const SOCIALS = [
   {
@@ -55,9 +62,11 @@ export default function Footer() {
   return (
     <footer className="site-footer" ref={footerRef}>
       {auroraVisible && (
-        <Suspense fallback={null}>
-          <ThreeAurora />
-        </Suspense>
+        <AuroraErrorBoundary>
+          <Suspense fallback={null}>
+            <ThreeAurora />
+          </Suspense>
+        </AuroraErrorBoundary>
       )}
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="footer-grid">

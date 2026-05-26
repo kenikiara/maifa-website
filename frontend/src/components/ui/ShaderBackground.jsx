@@ -193,6 +193,7 @@ export default function ShaderBackground() {
         display: 'block',
         pointerEvents: 'none',
         zIndex: 0,
+        willChange: 'transform', /* force own GPU compositing layer */
       }}
     />
   )
