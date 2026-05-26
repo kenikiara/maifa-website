@@ -134,11 +134,3 @@ if ($method === 'DELETE') {
 }
 
 json_err('Method not allowed', 405);
-
-function make_slug(string $title, string $override = ''): string {
-    if ($override) return preg_replace('/[^a-z0-9-]/', '', strtolower(trim($override)));
-    $slug = strtolower(trim($title));
-    $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
-    $slug = preg_replace('/[\s-]+/', '-', $slug);
-    return trim($slug, '-');
-}

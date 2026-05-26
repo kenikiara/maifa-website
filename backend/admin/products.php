@@ -56,7 +56,11 @@ $action  = $_GET['action'] ?? 'list';
 $edit_id = (int) ($_GET['id'] ?? 0);
 $editing = null;
 if ($action === 'add' || $action === 'edit') {
-    if ($edit_id) $editing = $db->prepare('SELECT * FROM products WHERE id=?') and $editing->execute([$edit_id]) and $editing = $editing->fetch();
+    if ($edit_id) {
+        $stmt = $db->prepare('SELECT * FROM products WHERE id=?');
+        $stmt->execute([$edit_id]);
+        $editing = $stmt->fetch();
+    }
 }
 $products = $db->query('SELECT * FROM products ORDER BY sort_order ASC, id DESC')->fetchAll();
 $cats = ['Standard','Large Car','EFB','Heavy Duty','European'];

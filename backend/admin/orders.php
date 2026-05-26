@@ -24,8 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$filter  = $_GET['status'] ?? '';
+$allowed_statuses = ['pending', 'confirmed', 'delivered', 'cancelled'];
+$filter  = in_array($_GET['status'] ?? '', $allowed_statuses) ? $_GET['status'] : '';
 $view_id = (int) ($_GET['view'] ?? 0);
+$page    = max(1, (int) ($_GET['page'] ?? 1));
+$per_pg  = 50;
+$offset  = ($page - 1) * $per_pg;
 
 // Single order view
 $order = null;
@@ -41,9 +45,20 @@ $pending   = (int) $db->query("SELECT COUNT(*) FROM orders WHERE status='pending
 $confirmed = (int) $db->query("SELECT COUNT(*) FROM orders WHERE status='confirmed'")->fetchColumn();
 $delivered = (int) $db->query("SELECT COUNT(*) FROM orders WHERE status='delivered'")->fetchColumn();
 
-// Orders list
-$where  = $filter ? "WHERE status='" . $db->quote($filter) . "'" : '';
-$orders = $db->query("SELECT * FROM orders $where ORDER BY created_at DESC LIMIT 200")->fetchAll();
+// Orders list — prepared statement, paginated
+if ($filter) {
+    $cnt_s = $db->prepare("SELECT COUNT(*) FROM orders WHERE status = ?");
+    $cnt_s->execute([$filter]);
+    $page_total = (int) $cnt_s->fetchColumn();
+    $stmt = $db->prepare("SELECT * FROM orders WHERE status = ? ORDER BY created_at DESC LIMIT $per_pg OFFSET $offset");
+    $stmt->execute([$filter]);
+} else {
+    $page_total = $total;
+    $stmt = $db->prepare("SELECT * FROM orders ORDER BY created_at DESC LIMIT $per_pg OFFSET $offset");
+    $stmt->execute();
+}
+$orders      = $stmt->fetchAll();
+$total_pages = (int) ceil($page_total / $per_pg);
 
 $statusColors = [
     'pending'   => 'background:rgba(246,180,4,.15);color:#f6b404',
@@ -215,6 +230,23 @@ $statusColors = [
           </table>
         </div>
       </div>
+
+      <?php if ($total_pages > 1): ?>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px">
+        <span style="font-size:12px;color:rgba(255,255,255,.35);font-family:'JetBrains Mono',monospace">
+          Page <?= $page ?> of <?= $total_pages ?> · <?= $page_total ?> orders
+        </span>
+        <div style="display:flex;gap:8px">
+          <?php if ($page > 1): ?>
+          <a href="?status=<?= htmlspecialchars($filter) ?>&page=<?= $page - 1 ?>" class="btn-sm outline">← Prev</a>
+          <?php endif; ?>
+          <?php if ($page < $total_pages): ?>
+          <a href="?status=<?= htmlspecialchars($filter) ?>&page=<?= $page + 1 ?>" class="btn-sm outline">Next →</a>
+          <?php endif; ?>
+        </div>
+      </div>
+      <?php endif; ?>
+
       <?php endif; ?>
 
     </div>

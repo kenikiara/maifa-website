@@ -31,11 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        $allowed_tags = '<p><br><b><i><strong><em><h2><h3><ul><ol><li><a><table><thead><tbody><tr><th><td><blockquote><hr>';
         $fields = [
             'title'       => htmlspecialchars($title, ENT_QUOTES, 'UTF-8'),
             'slug'        => $slug,
             'excerpt'     => htmlspecialchars(trim($_POST['excerpt'] ?? ''), ENT_QUOTES, 'UTF-8'),
-            'content'     => $_POST['content'] ?? '',
+            'content'     => strip_tags($_POST['content'] ?? '', $allowed_tags),
             'category'    => htmlspecialchars(trim($_POST['category'] ?? 'General'), ENT_QUOTES, 'UTF-8'),
             'tags'        => htmlspecialchars(trim($_POST['tags'] ?? ''), ENT_QUOTES, 'UTF-8'),
             'meta_title'  => htmlspecialchars(trim($_POST['meta_title'] ?? ''), ENT_QUOTES, 'UTF-8'),
@@ -76,13 +77,6 @@ if ($view === 'edit' && $edit_id) {
 $articles = $db->query('SELECT id, title, slug, category, published, created_at FROM articles ORDER BY created_at DESC')->fetchAll();
 $cats     = ['General','Buying Guide','Brand Comparison','Car Tips','Service','EV & Modern Cars'];
 
-function make_slug(string $title, string $override = ''): string {
-    if ($override) return preg_replace('/[^a-z0-9-]/', '', strtolower(trim($override)));
-    $slug = strtolower(trim($title));
-    $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
-    $slug = preg_replace('/[\s-]+/', '-', $slug);
-    return trim($slug, '-');
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">

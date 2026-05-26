@@ -28,6 +28,10 @@ DirectoryIndex index.html index.php
     RewriteCond %{REQUEST_URI} ^/assets/
     RewriteRule ^ - [L]
 
+    # Static file extensions — serve directly UNLESS it's an admin/backend path
+    # (admin/ rewrites must run first so admin CSS/JS resolve correctly)
+    RewriteCond %{REQUEST_URI} !^/admin/
+    RewriteCond %{REQUEST_URI} !^/backend/
     RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|eot|map)$ [NC]
     RewriteRule ^ - [L]
 

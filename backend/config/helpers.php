@@ -73,6 +73,14 @@ function notify_email(string $message, string $subject = 'New Maifa Notification
     @mail($to, $subject, $message, $headers);
 }
 
+function make_slug(string $title, string $override = ''): string {
+    if ($override) return preg_replace('/[^a-z0-9-]/', '', strtolower(trim($override)));
+    $slug = strtolower(trim($title));
+    $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
+    $slug = preg_replace('/[\s-]+/', '-', $slug);
+    return trim($slug, '-');
+}
+
 function generate_warranty_code(): string {
     do {
         $code = 'MFA-' . strtoupper(substr(md5(uniqid()), 0, 4)) . '-' . strtoupper(substr(md5(microtime()), 0, 4));
