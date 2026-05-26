@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import PageTransition from '../components/ui/PageTransition'
 import ShaderBackground from '../components/ui/ShaderBackground'
+import TestimonialsColumn from '../components/ui/TestimonialsColumn'
 
 const WA = '254791899602'
 
@@ -480,61 +482,62 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" style={{ background:'radial-gradient(ellipse 70% 60% at 10% 55%, rgba(15,122,61,.28) 0%, transparent 100%), radial-gradient(ellipse 55% 65% at 88% 25%, rgba(29,185,84,.16) 0%, transparent 100%), radial-gradient(ellipse 45% 45% at 55% 95%, rgba(15,122,61,.2) 0%, transparent 100%), #060d07', overflow:'hidden', paddingBottom:'var(--s9)' }}>
+      <section id="testimonials" style={{ background:'radial-gradient(ellipse 70% 60% at 10% 55%, rgba(15,122,61,.28) 0%, transparent 100%), radial-gradient(ellipse 55% 65% at 88% 25%, rgba(29,185,84,.16) 0%, transparent 100%), radial-gradient(ellipse 45% 45% at 55% 95%, rgba(15,122,61,.2) 0%, transparent 100%), #060d07', overflow:'hidden', paddingTop:'var(--s9)', paddingBottom:'var(--s9)' }}>
         <div className="container">
-          <div className="section-head reveal">
-            <div>
-              <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Reviews · 4.9 / 5 average</span>
-              <h2 style={{ marginTop:'var(--s4)', color:'#fff' }}>From Kenyan drivers.</h2>
-            </div>
-            {/* Star summary */}
-            <div className="review-summary reveal reveal-delay-1">
-              <div style={{ display:'flex', gap:3 }}>
+
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', marginBottom:'var(--s8)' }}
+          >
+            <div style={{ display:'inline-flex', alignItems:'center', gap:6, border:'1px solid rgba(15,122,61,.5)', borderRadius:'var(--r-pill)', padding:'5px 16px', marginBottom:'var(--s4)' }}>
+              <div style={{ display:'flex', gap:2 }}>
                 {[1,2,3,4,5].map(s=>(
-                  <svg key={s} width="20" height="20" viewBox="0 0 24 24" fill="#fbbc04"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#fbbc04"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 ))}
               </div>
-              <span style={{ fontWeight:700, fontSize:22, fontFamily:'var(--serif)', color:'#fff' }}>4.9</span>
-              <span style={{ fontSize:13, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)' }}>200+ verified drivers</span>
+              <span style={{ fontFamily:'var(--mono)', fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', color:'var(--green-bright)' }}>4.9 · 200+ verified drivers</span>
             </div>
-          </div>
-        </div>
+            <h2 style={{ color:'#fff', fontSize:'clamp(32px,4vw,52px)', marginBottom:'var(--s4)' }}>
+              What Kenyan drivers say.
+            </h2>
+            <p style={{ color:'rgba(255,255,255,.55)', fontSize:16, maxWidth:480, lineHeight:1.65 }}>
+              Real reviews from real customers — from Nairobi's city roads to the Mombasa highway.
+            </p>
+          </motion.div>
 
-        {/* Row 1 — scrolls left */}
-        <div className="marquee-wrap">
-          <div className="marquee-track marquee-left">
-            {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
-              <div key={i} className="review-card">
-                <div className="review-stars">{'★'.repeat(t.stars)}</div>
-                <p className="review-quote">{t.quote}</p>
-                <div className="review-author">
-                  <div className="review-initial">{t.initial}</div>
-                  <div>
-                    <div className="review-name">{t.name}</div>
-                    <div className="review-car">{t.car}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 2 — scrolls right */}
-        <div className="marquee-wrap" style={{ marginTop:16 }}>
-          <div className="marquee-track marquee-right">
-            {[...TESTIMONIALS.slice(5), ...TESTIMONIALS.slice(5)].map((t, i) => (
-              <div key={i} className="review-card">
-                <div className="review-stars">{'★'.repeat(t.stars)}</div>
-                <p className="review-quote">{t.quote}</p>
-                <div className="review-author">
-                  <div className="review-initial">{t.initial}</div>
-                  <div>
-                    <div className="review-name">{t.name}</div>
-                    <div className="review-car">{t.car}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Scrolling columns — fade top & bottom */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 20,
+            maxHeight: 680,
+            overflow: 'hidden',
+            maskImage: 'linear-gradient(to bottom, transparent, black 18%, black 82%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 18%, black 82%, transparent)',
+          }}>
+            {/* Column 1 — always visible */}
+            <TestimonialsColumn
+              testimonials={TESTIMONIALS.slice(0, 4)}
+              duration={18}
+            />
+            {/* Column 2 — hidden on mobile */}
+            <TestimonialsColumn
+              testimonials={TESTIMONIALS.slice(3, 7)}
+              duration={22}
+              style={{ display: 'none' }}
+              className="testimonials-col-2"
+            />
+            {/* Column 3 — hidden on tablet */}
+            <TestimonialsColumn
+              testimonials={TESTIMONIALS.slice(6, 10)}
+              duration={20}
+              style={{ display: 'none' }}
+              className="testimonials-col-3"
+            />
           </div>
         </div>
       </section>

@@ -14,10 +14,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Three.js in its own chunk — only loaded when footer is visible
+          // Three.js — only loaded when footer is visible
           if (id.includes('node_modules/three')) return 'three'
 
-          // React core — shared by every page, cache long-term
+          // Framer Motion — used on Home + lazy pages
+          if (id.includes('node_modules/framer-motion') || id.includes('node_modules/motion')) return 'motion'
+
+          // React core — long-term cached
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react'
 
           // Router — small but shared

@@ -2303,7 +2303,27 @@ section.tight { padding: var(--s7) 0; }
 }
 
 /* ═══════════════════════════════════════════════════════
-   TESTIMONIALS MARQUEE
+   TESTIMONIALS — SCROLLING COLUMNS
+   ═══════════════════════════════════════════════════════ */
+
+/* Column 2: show on ≥ 768px */
+@media (min-width: 768px) {
+  .testimonials-col-2 { display: block !important; }
+}
+
+/* Column 3: show on ≥ 1100px */
+@media (min-width: 1100px) {
+  .testimonials-col-3 { display: block !important; }
+}
+
+/* Respect reduce-motion — freeze the scroll */
+@media (prefers-reduced-motion: reduce) {
+  .testimonials-col-2 [style*="translateY"],
+  .testimonials-col-3 [style*="translateY"] { animation: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   TESTIMONIALS MARQUEE (legacy — kept for reference)
    ═══════════════════════════════════════════════════════ */
 
 /* Star summary row */
