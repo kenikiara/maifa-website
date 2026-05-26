@@ -526,7 +526,7 @@ export default function Home() {
             {[
               { name:'Thika Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', image:'/branches/thika-road.webp' },
               { name:'Kiambu Road', hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', image:'/branches/kiambu-road.webp' },
-              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image:'/branches/mombasa.webp' },
+              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image: null },
             ].map(loc=>(
               <div key={loc.name} style={{ border:'1px solid var(--line)', borderRadius:'var(--r)', overflow:'hidden', display:'flex', flexDirection:'column', transition:'border-color .2s, box-shadow .2s', cursor:'default' }}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--ink)';e.currentTarget.style.boxShadow='var(--shadow-2)'}}
@@ -534,14 +534,22 @@ export default function Home() {
               >
                 {/* Branch photo */}
                 <div style={{ aspectRatio:'16/10', overflow:'hidden', position:'relative', background:'#e8e8e4' }}>
-                  <img
-                    src={loc.image}
-                    alt={`Maifa ${loc.name} branch`}
-                    loading="lazy"
-                    style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform .4s ease' }}
-                    onMouseEnter={e=>e.currentTarget.style.transform='scale(1.04)'}
-                    onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
-                  />
+                  {loc.image ? (
+                    <img
+                      src={loc.image}
+                      alt={`Maifa ${loc.name} branch`}
+                      loading="lazy"
+                      style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform .4s ease' }}
+                      onMouseEnter={e=>e.currentTarget.style.transform='scale(1.04)'}
+                      onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+                    />
+                  ) : (
+                    <div style={{ width:'100%', height:'100%', background:'linear-gradient(148deg,#031508 0%,#063d1c 45%,#0f7a3d 100%)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                      </svg>
+                    </div>
+                  )}
                   <span style={{ position:'absolute', top:10, left:10, background:'var(--green)', color:'#fff', fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 10px', borderRadius:'var(--r-pill)', display:'flex', alignItems:'center', gap:5 }}>
                     <span style={{ width:5, height:5, borderRadius:'50%', background:'#fff' }} />Open now
                   </span>

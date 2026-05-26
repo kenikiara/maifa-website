@@ -18,7 +18,7 @@ const STATS = [
 const TIMELINE = [
   { year: '2012', event: 'Maifa opens its first branch on Thika Road, stocking Amaron Hi Life for Japanese-import vehicles.', image: '/branches/thika-road.webp', label: 'Thika Road branch' },
   { year: '2016', event: 'Kiambu Road branch opens following demand from Runda, Muthaiga, and Ruaka customers.', image: '/branches/kiambu-road.webp', label: 'Kiambu Road branch' },
-  { year: '2020', event: 'Mombasa branch launches — Maifa\'s first outside Nairobi, serving the Coast corridor.', image: '/branches/mombasa.webp', label: 'Mombasa branch' },
+  { year: '2020', event: 'Mombasa branch launches — Maifa\'s first outside Nairobi, serving the Coast corridor.', image: null, label: 'Mombasa branch' },
   { year: '2024', event: 'EFB and European DIN ranges added as Kenya\'s fleet of newer start-stop vehicles grows.', image: null, label: null },
   { year: '2026', event: 'maifa.ke launches — online battery finder, warranty registration, and nationwide ordering.', image: null, label: null },
 ]
@@ -26,7 +26,7 @@ const TIMELINE = [
 const BRANCHES = [
   { name: 'Thika Road', phone: '+254 791 899 602', hours: 'Mon–Sat · 7:30am – 7pm', image: '/branches/thika-road.webp' },
   { name: 'Kiambu Road', phone: '+254 700 777 698', hours: 'Mon–Sat · 7:30am – 7pm', image: '/branches/kiambu-road.webp' },
-  { name: 'Mombasa', phone: '+254 701 880 955', hours: 'Mon–Sat · 8am – 6:30pm', image: '/branches/mombasa.webp' },
+  { name: 'Mombasa', phone: '+254 701 880 955', hours: 'Mon–Sat · 8am – 6:30pm', image: null },
 ]
 
 export default function About() {
@@ -138,13 +138,21 @@ export default function About() {
             {BRANCHES.map((b, i) => (
               <div key={b.name} className="reveal" style={{ transitionDelay: `${i * 0.1}s`, borderRadius: 'var(--r-lg)', overflow: 'hidden', position: 'relative' }}>
                 <div style={{ height: 260, overflow: 'hidden' }}>
-                  <img
-                    src={b.image}
-                    alt={`Maifa ${b.name}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .4s ease' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                  />
+                  {b.image ? (
+                    <img
+                      src={b.image}
+                      alt={`Maifa ${b.name}`}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .4s ease' }}
+                      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                    />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', background: 'linear-gradient(148deg,#031508 0%,#063d1c 45%,#0f7a3d 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                      </svg>
+                    </div>
+                  )}
                 </div>
                 <div style={{ padding: 'var(--s4) var(--s5)', background: 'rgba(255,255,255,.06)', borderTop: '1px solid rgba(255,255,255,.1)' }}>
                   <div style={{ fontFamily: 'var(--serif)', fontSize: 20, color: '#fff', marginBottom: 4 }}>{b.name}</div>
