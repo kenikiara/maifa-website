@@ -6,6 +6,7 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
 import PageTransition from '../components/ui/PageTransition'
 import ShaderBackground from '../components/ui/ShaderBackground'
 import TestimonialsColumn from '../components/ui/TestimonialsColumn'
+import BatteryQuickModal from '../components/ui/BatteryQuickModal'
 
 const WA = '254791899602'
 
@@ -80,6 +81,8 @@ function matchCategory(make, model) {
 export default function Home() {
   useScrollReveal()
 
+  const [quickModal, setQuickModal] = useState(false)
+
   const { data } = useApi('/api/products.php')
   const products  = (data?.products || []).slice(0, 4)
 
@@ -114,6 +117,7 @@ export default function Home() {
   }
 
   return (
+    <>
     <PageTransition>
       {/* Marquee */}
       <div className="marquee" aria-hidden="true">
@@ -147,7 +151,7 @@ export default function Home() {
               Maintenance-free car batteries engineered for tropical heat and rough roads. Free installation, same-day delivery across Nairobi, Kiambu and Mombasa.
             </p>
             <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap' }}>
-              <a href="#finder" className="btn btn-primary">Find my battery <span style={{ marginLeft:4 }}>→</span></a>
+              <button onClick={() => setQuickModal(true)} className="btn btn-primary">Find my battery <span style={{ marginLeft:4 }}>→</span></button>
               <Link to="/shop" className="btn btn-secondary">Browse all batteries</Link>
             </div>
             <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid var(--line)', flexWrap:'wrap' }}>
@@ -593,5 +597,8 @@ export default function Home() {
         </div>
       </section>
     </PageTransition>
+
+    {quickModal && <BatteryQuickModal onClose={() => setQuickModal(false)} />}
+    </>
   )
 }

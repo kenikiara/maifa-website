@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-
-const WA_NUMBER = '254791899602'
+import BatteryQuickModal from '../ui/BatteryQuickModal'
 
 const links = [
   { to: '/',          label: 'Home' },
   { to: '/shop',      label: 'Shop' },
-  { to: '/#finder',   label: 'Battery Finder', ext: true },
   { to: '/about',     label: 'About' },
   { to: '/locations', label: 'Locations' },
   { to: '/warranty',  label: 'Warranty' },
@@ -14,7 +12,8 @@ const links = [
 ]
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
+  const [open,  setOpen]  = useState(false)
+  const [modal, setModal] = useState(false)
 
   return (
     <>
@@ -38,15 +37,13 @@ export default function Navbar() {
           </nav>
 
           <div className="header-actions">
-            <a
-              href={`https://wa.me/${WA_NUMBER}?text=Hi! I need help finding the right battery.`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setModal(true)}
               className="btn btn-primary"
               style={{ height: 40, padding: '0 16px', fontSize: 13 }}
             >
               Find My Battery
-            </a>
+            </button>
             <button
               className="mobile-menu-btn icon-btn"
               aria-label="Open menu"
@@ -105,21 +102,21 @@ export default function Navbar() {
 
         {/* Footer strip */}
         <div className="mobile-nav-foot">
-          <a
-            href={`https://wa.me/${WA_NUMBER}?text=Hi! I need help finding the right battery.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setOpen(false)}
+          <button
+            onClick={() => { setOpen(false); setModal(true) }}
             className="btn btn-primary"
             style={{ width: '100%', justifyContent: 'center', fontSize: 15, height: 50 }}
           >
             Find My Battery →
-          </a>
+          </button>
           <p style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--mono)', textAlign: 'center', letterSpacing: '.06em' }}>
             Free fitting · Same-day Nairobi
           </p>
         </div>
       </nav>
+
+      {/* Battery quick-enquiry modal */}
+      {modal && <BatteryQuickModal onClose={() => setModal(false)} />}
     </>
   )
 }
