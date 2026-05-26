@@ -1885,6 +1885,17 @@ section.tight { padding: var(--s7) 0; }
 .modal-btn-online:hover:not(:disabled) { background: #222; transform: translateY(-1px); }
 .modal-btn-online:disabled { opacity: .55; cursor: default; }
 
+/* ── About timeline row ── */
+.about-timeline-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: var(--s6);
+  align-items: center;
+}
+.about-timeline-row.has-photo {
+  grid-template-columns: 100px 1fr 280px;
+}
+
 /* ═══════════════════════════════════════════════════════
    ABOUT PAGE — responsive overrides
    ═══════════════════════════════════════════════════════ */
@@ -1895,12 +1906,20 @@ section.tight { padding: var(--s7) 0; }
   .about-stats { grid-template-columns: 1fr 1fr !important; }
   /* Branches strip: 1 col */
   .about-branches { grid-template-columns: 1fr !important; }
-  /* Timeline: hide branch photo on small screens */
+  /* Timeline: hide branch photo, collapse row to single column */
   .timeline-photo { display: none !important; }
+  .about-timeline-row,
+  .about-timeline-row.has-photo {
+    grid-template-columns: 1fr !important;
+    gap: var(--s2) !important;
+  }
+  .about-year { font-size: 26px !important; }
 }
 @media (max-width: 600px) {
   /* Values: 1 col */
   .about-values { grid-template-columns: 1fr !important; }
+  /* Stats: keep 2 cols */
+  .about-stats { grid-template-columns: 1fr 1fr !important; }
 }
 
 /* ═══════════════════════════════════════════════════════

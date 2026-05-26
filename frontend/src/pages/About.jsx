@@ -171,19 +171,15 @@ export default function About() {
             {TIMELINE.map((t, i) => (
               <div
                 key={t.year}
-                className="reveal"
+                className={`reveal about-timeline-row${t.image ? ' has-photo' : ''}`}
                 style={{
                   transitionDelay: `${i * 0.08}s`,
-                  display: 'grid',
-                  gridTemplateColumns: t.image ? '100px 1fr 280px' : '100px 1fr',
-                  gap: 'var(--s6)',
                   padding: 'var(--s6) 0',
                   borderTop: i === 0 ? 'none' : '1px solid var(--line)',
-                  alignItems: 'center',
                 }}
               >
                 {/* Year */}
-                <div style={{ fontFamily: 'var(--serif)', fontSize: 38, lineHeight: 1, color: 'var(--green-deep)' }}>{t.year}</div>
+                <div className="about-year" style={{ fontFamily: 'var(--serif)', fontSize: 38, lineHeight: 1, color: 'var(--green-deep)' }}>{t.year}</div>
 
                 {/* Event text */}
                 <div>
