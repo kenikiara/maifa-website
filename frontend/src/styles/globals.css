@@ -1567,6 +1567,9 @@ section.tight { padding: var(--s7) 0; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--s5); }
 
+  /* Stats card — drop fixed aspect ratio on mobile so image always shows */
+  .stats-card { aspect-ratio: unset !important; min-height: 520px; }
+
   /* Contact */
   .contact-grid  { grid-template-columns: 1fr; gap: var(--s6); }
   .loc-spotlight { grid-template-columns: 1fr; }

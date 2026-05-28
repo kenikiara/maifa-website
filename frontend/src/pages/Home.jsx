@@ -493,15 +493,15 @@ export default function Home() {
             </div>
 
             {/* Stats visual */}
-            <div className="reveal reveal-delay-2" style={{ background:'var(--ink)', borderRadius:'var(--r-lg)', aspectRatio:'4/5', padding:'var(--s7)', color:'#fff', display:'flex', flexDirection:'column', justifyContent:'space-between', overflow:'hidden', position:'relative' }}>
+            <div className="reveal reveal-delay-2 stats-card" style={{ background:'var(--ink)', borderRadius:'var(--r-lg)', aspectRatio:'4/5', padding:'var(--s7)', color:'#fff', display:'flex', flexDirection:'column', justifyContent:'space-between', overflow:'hidden', position:'relative' }}>
               <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at 30% 70%, rgba(246,4,4,.18), transparent 50%), repeating-linear-gradient(0deg,transparent 0 22px,rgba(255,255,255,.03) 22px 23px)', pointerEvents:'none' }} />
               <div style={{ position:'relative' }}>
                 <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>By the numbers</span>
-                <h3 style={{ fontSize:46, lineHeight:1, color:'#fff', marginTop:'var(--s4)' }}>A decade of <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>powering</em> Kenyan cars.</h3>
+                <h3 style={{ fontSize:'clamp(28px,4vw,46px)', lineHeight:1.05, color:'#fff', marginTop:'var(--s4)' }}>A decade of <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>powering</em> Kenyan cars.</h3>
               </div>
 
               {/* Middle image — bleeds to card edges, fades into dark bg */}
-              <div style={{ flex:1, margin:'var(--s5) calc(-1 * var(--s7))', position:'relative', overflow:'hidden', minHeight:0 }}>
+              <div style={{ flex:1, margin:'var(--s5) calc(-1 * var(--s7))', position:'relative', overflow:'hidden', minHeight:160 }}>
                 <img
                   src="/branches/we-deliver.webp"
                   alt=""
