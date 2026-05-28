@@ -499,6 +499,18 @@ export default function Home() {
                 <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>By the numbers</span>
                 <h3 style={{ fontSize:46, lineHeight:1, color:'#fff', marginTop:'var(--s4)' }}>A decade of <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>powering</em> Kenyan cars.</h3>
               </div>
+
+              {/* Middle image — bleeds to card edges, fades into dark bg */}
+              <div style={{ flex:1, margin:'var(--s5) calc(-1 * var(--s7))', position:'relative', overflow:'hidden', minHeight:0 }}>
+                <img
+                  src="/branches/we-deliver.webp"
+                  alt=""
+                  style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 40%', display:'block' }}
+                />
+                {/* fade top into card background */}
+                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom, var(--ink) 0%, transparent 30%, transparent 65%, var(--ink) 100%)', pointerEvents:'none' }} />
+              </div>
+
               <div style={{ position:'relative', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--s5)', paddingTop:'var(--s5)', borderTop:'1px solid rgba(255,255,255,.1)' }}>
                 {[{n:'42k+',l:'Batteries fitted since 2015'},{n:'98%',l:'Same-day delivery rate'},{n:'3',l:'Branches: Thika · Kiambu · Mombasa'},{n:'12m',l:'Warranty on every battery'}].map(s=>(
                   <div key={s.n}>
