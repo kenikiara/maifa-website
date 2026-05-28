@@ -320,7 +320,7 @@ export default function Warranty() {
                   <label>Old battery returned?</label>
                   <div className="radio-group cols-2">
                     {[
-                      { val: 'yes', label: 'Yes — traded in', sub: 'KES 1,500 credit applied' },
+                      { val: 'yes', label: 'Yes — traded in', sub: 'KES 500 credit applied' },
                       { val: 'no',  label: 'No / kept it',    sub: 'No credit' },
                     ].map(opt => (
                       <label key={opt.val} className={`radio-card${form.old_battery_returned === opt.val ? ' selected' : ''}`} onClick={() => radioSet('old_battery_returned', opt.val)}>

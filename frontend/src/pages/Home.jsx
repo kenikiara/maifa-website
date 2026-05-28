@@ -39,12 +39,12 @@ const TRUST_ITEMS = [
   { icon:'⚡', name:'Free installation',     desc:'All Nairobi branches' },
   { icon:'🛡',  name:'1-year warranty',        desc:'Replacement guarantee' },
   { icon:'📱', name:'M-Pesa accepted',        desc:'Plus card & cash on delivery' },
-  { icon:'♻', name:'Old battery trade-in',   desc:'Up to KES 1,500 off' },
+  { icon:'♻', name:'Old battery trade-in',   desc:'Up to KES 500 off' },
 ]
 
 const TICKER = [
-  'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 1,500','1-Year Warranty','M-Pesa Accepted',
-  'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 1,500','1-Year Warranty','M-Pesa Accepted',
+  'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 500','1-Year Warranty','M-Pesa Accepted',
+  'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 500','1-Year Warranty','M-Pesa Accepted',
 ]
 
 const MAKES  = ['Toyota','Nissan','Honda','Mercedes','BMW','Subaru','Mazda','Mitsubishi','Volkswagen','Isuzu']
@@ -479,7 +479,7 @@ export default function Home() {
               {[
                 {num:'01',title:'Free installation, no appointment',body:'Drive in to any branch and we\'ll fit your battery on the spot — usually under 12 minutes. Or we\'ll come to you anywhere in Nairobi for free.'},
                 {num:'02',title:'The right size, the first time',body:'Our 60-second battery finder maps over 240 vehicle fitments to in-stock SKUs. No guesswork — bring the wrong car and we\'ll still get it right.'},
-                {num:'03',title:'Trade in your old battery',body:'We pay up to KES 1,500 for your old battery and recycle it responsibly through our partner facility outside Athi River.'},
+                {num:'03',title:'Trade in your old battery',body:'We pay up to KES 500 for your old battery and recycle it responsibly through our partner facility outside Athi River.'},
                 {num:'04',title:'Warranty that means it',body:'Every Maifa battery is backed by a one-year warranty with a real, in-person claim process. No call centres. No lost paperwork. Just bring it in.'},
               ].map((item,i)=>(
                 <div key={item.num} className={`reveal reveal-delay-${i%3+1}`} style={{ padding:'var(--s6) 0', borderTop:'1px solid var(--line)', display:'grid', gridTemplateColumns:'54px 1fr', gap:'var(--s5)', alignItems:'start' }}>

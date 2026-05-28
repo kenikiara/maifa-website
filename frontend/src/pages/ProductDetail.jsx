@@ -182,7 +182,7 @@ export default function ProductDetail() {
                   <div className="delivery-ico">↻</div>
                   <div>
                     <div className="t">Old battery trade-in</div>
-                    <div className="d">Up to KES 1,500 off.</div>
+                    <div className="d">Up to KES 500 off.</div>
                   </div>
                 </div>
                 <div className="delivery-item">
