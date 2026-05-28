@@ -219,28 +219,28 @@ export default function Home() {
             alt=""
             style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center center' }}
           />
-          {/* Left-to-right gradient: semi-transparent on left (car visible + text readable), fully clear on right */}
-          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(247,246,242,.82) 0%, rgba(247,246,242,.72) 30%, rgba(247,246,242,.38) 55%, rgba(247,246,242,.08) 78%, transparent 100%)' }} />
+          {/* Dark green overlay — car visible through it, text stays white + readable */}
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(3,18,8,.88) 0%, rgba(3,18,8,.78) 35%, rgba(3,18,8,.48) 60%, rgba(3,18,8,.12) 82%, transparent 100%)' }} />
         </div>
 
         <div className="container" style={{ position:'relative', zIndex:1 }}>
           <div className="hero-copy" style={{ maxWidth:580, paddingBottom:'var(--s9)' }}>
-            <span className="eyebrow">Maifa · Built for Kenyan roads</span>
-            <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)' }}>
-              Built for <em style={{ fontStyle:'italic', color:'var(--green-deep)' }}>Kenyan</em> roads.
+            <span className="eyebrow" style={{ color:'rgba(255,255,255,.55)' }}>Maifa · Built for Kenyan roads</span>
+            <h1 style={{ fontSize:'clamp(56px,8vw,112px)', lineHeight:.95, margin:'var(--s4) 0 var(--s4)', color:'#fff' }}>
+              Built for <em style={{ fontStyle:'italic', color:'rgba(100,255,150,.9)' }}>Kenyan</em> roads.
             </h1>
-            <p style={{ fontSize:18, color:'#333', maxWidth:480, marginBottom:'var(--s6)', lineHeight:1.6 }}>
+            <p style={{ fontSize:18, color:'rgba(255,255,255,.78)', maxWidth:480, marginBottom:'var(--s6)', lineHeight:1.6 }}>
               Maintenance-free car batteries engineered for tropical heat and rough roads. Free installation, same-day delivery across Nairobi, Kiambu and Mombasa.
             </p>
             <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap' }}>
               <button onClick={() => setQuickModal(true)} className="btn btn-primary">Find my battery <span style={{ marginLeft:4 }}>→</span></button>
-              <Link to="/shop" className="btn btn-secondary">Browse all batteries</Link>
+              <Link to="/shop" className="btn btn-secondary" style={{ borderColor:'rgba(255,255,255,.35)', color:'#fff' }}>Browse all batteries</Link>
             </div>
-            <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid var(--line)', flexWrap:'wrap' }}>
+            <div style={{ display:'flex', gap:'var(--s7)', marginTop:'var(--s7)', paddingTop:'var(--s5)', borderTop:'1px solid rgba(255,255,255,.15)', flexWrap:'wrap' }}>
               {[{num:'3',label:'Branches across Kenya'},{num:'42k+',label:'Batteries fitted'},{num:'12mo',label:'Standard warranty'},{num:'4.9★',label:'Customer rating'}].map(s=>(
                 <div key={s.num}>
-                  <div style={{ fontFamily:'var(--serif)', fontSize:38, lineHeight:1 }}>{s.num}</div>
-                  <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--muted)', marginTop:4 }}>{s.label}</div>
+                  <div style={{ fontFamily:'var(--serif)', fontSize:38, lineHeight:1, color:'#fff' }}>{s.num}</div>
+                  <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.45)', marginTop:4 }}>{s.label}</div>
                 </div>
               ))}
             </div>
