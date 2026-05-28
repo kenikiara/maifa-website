@@ -505,7 +505,7 @@ export default function Home() {
                 <img
                   src="/branches/we-deliver.webp"
                   alt=""
-                  style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 40%', display:'block' }}
+                  style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 75%', display:'block' }}
                 />
                 {/* fade top into card background */}
                 <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom, var(--ink) 0%, transparent 30%, transparent 65%, var(--ink) 100%)', pointerEvents:'none' }} />
