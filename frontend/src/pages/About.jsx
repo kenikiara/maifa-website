@@ -18,7 +18,7 @@ const STATS = [
 const TIMELINE = [
   { year: '2012', event: 'Maifa opens its first branch on Thika Road, stocking Amaron Hi Life for Japanese-import vehicles.', image: '/branches/thika-road.webp', label: 'Thika Road branch' },
   { year: '2016', event: 'Kiambu Road branch opens following demand from Runda, Muthaiga, and Ruaka customers.', image: '/branches/kiambu-road.webp', label: 'Kiambu Road branch' },
-  { year: '2020', event: 'Mombasa branch launches — Maifa\'s first outside Nairobi, serving the Coast corridor.', image: null, label: 'Mombasa branch' },
+  { year: '2020', event: 'Mombasa branch launches — Maifa\'s first outside Nairobi, serving the Coast corridor.', image: '/branches/mombasa.webp', label: 'Mombasa branch' },
   { year: '2024', event: 'EFB and European DIN ranges added as Kenya\'s fleet of newer start-stop vehicles grows.', image: null, label: null },
   { year: '2026', event: 'maifa.ke launches — online battery finder, warranty registration, and nationwide ordering.', image: null, label: null },
 ]
@@ -26,7 +26,7 @@ const TIMELINE = [
 const BRANCHES = [
   { name: 'Thika Road', phone: '+254 791 899 602', hours: 'Mon–Sat · 7:30am – 7pm', image: '/branches/thika-road.webp' },
   { name: 'Kiambu Road', phone: '+254 700 777 698', hours: 'Mon–Sat · 7:30am – 7pm', image: '/branches/kiambu-road.webp' },
-  { name: 'Mombasa', phone: '+254 701 880 955', hours: 'Mon–Sat · 8am – 6:30pm', image: null },
+  { name: 'Mombasa', phone: '+254 701 880 955', hours: 'Mon–Sat · 8am – 6:30pm', image: '/branches/mombasa.webp' },
 ]
 
 export default function About() {

@@ -47,7 +47,7 @@ const BRANCHES = [
     open: true,
     maps: 'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA',
     embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2457686.498809158!2d36.94228027099616!3d-2.6851557360990097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1840133e6ef16e5d%3A0x3141049c92fce55a!2sAmaron%20Battery%20Kenya%20-%20Mombasa!5e1!3m2!1sen!2ske!4v1779620624932!5m2!1sen!2ske',
-    image: null, /* replace with a proper photo when available */
+    image: '/branches/mombasa.webp',
     services: ['Free Installation', 'Battery Testing', 'Trade-in'],
   },
 ]
