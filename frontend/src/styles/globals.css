@@ -173,26 +173,28 @@ section.tight { padding: var(--s7) 0; }
 .badge.outline { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
 .badge .dot    { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
-/* ── Marquee ── */
+/* ── Marquee (header ticker) ── */
 .marquee { overflow: hidden; padding: var(--s3) 0; border-bottom: 3px solid var(--green); background: var(--white); }
-.marquee-track {
+.marquee > .marquee-track {
   display: flex;
-  gap: var(--s8);
+  width: max-content;
   white-space: nowrap;
-  animation: marquee-scroll 40s linear infinite;
+  animation: marquee-scroll 28s linear infinite;
+  will-change: transform;
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink);
 }
-.marquee-track span { display: inline-flex; align-items: center; gap: var(--s3); }
-.marquee-track .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+/* padding on each item (not gap) so wrap boundary spacing is identical */
+.marquee > .marquee-track span { display: inline-flex; align-items: center; gap: var(--s3); padding: 0 2.5rem; }
+.marquee > .marquee-track .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .marquee > .marquee-track { animation: none; } }
 
 /* ── Header ── */
 .site-header {

@@ -44,7 +44,6 @@ const TRUST_ITEMS = [
 
 const TICKER = [
   'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 500','1-Year Warranty','M-Pesa Accepted',
-  'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 500','1-Year Warranty','M-Pesa Accepted',
 ]
 
 const MAKES  = ['Toyota','Nissan','Honda','Mercedes','BMW','Subaru','Mazda','Mitsubishi','Volkswagen','Isuzu']
@@ -205,7 +204,7 @@ export default function Home() {
       {/* Marquee */}
       <div className="marquee" aria-hidden="true">
         <div className="marquee-track">
-          {TICKER.map((t, i) => (
+          {[...TICKER, ...TICKER].map((t, i) => (
             <span key={i}><span className="dot" />{t}</span>
           ))}
         </div>
