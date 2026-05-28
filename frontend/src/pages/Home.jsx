@@ -211,7 +211,7 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <section id="hero" style={{ position:'relative', borderBottom:'1px solid var(--line)', overflow:'hidden', background:'var(--paper)' }}>
+      <section id="hero" style={{ position:'relative', borderBottom:'1px solid var(--line)', overflow:'hidden', background:'#0a0a0a' }}>
         {/* Hero background — branded car photo with gradient isolation */}
         <div style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none' }}>
           <img
@@ -219,8 +219,8 @@ export default function Home() {
             alt=""
             style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center center' }}
           />
-          {/* Left-to-right gradient: solid paper on left (text readable), car fully visible on right */}
-          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, #f7f6f2 0%, #f7f6f2 32%, rgba(247,246,242,.85) 48%, rgba(247,246,242,.15) 65%, transparent 100%)' }} />
+          {/* Left-to-right gradient: semi-transparent on left (car visible + text readable), fully clear on right */}
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(247,246,242,.82) 0%, rgba(247,246,242,.72) 30%, rgba(247,246,242,.38) 55%, rgba(247,246,242,.08) 78%, transparent 100%)' }} />
         </div>
 
         <div className="container" style={{ position:'relative', zIndex:1 }}>
