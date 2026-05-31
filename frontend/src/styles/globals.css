@@ -11,9 +11,6 @@
   --green-mid:    #148a45;
   --green-bright: #1db954;
   --green-light:  #e8f5ee;
-  /* Legacy alias — nothing is red anymore */
-  --red:          #0f7a3d;
-  --red-deep:     #0a5a2c;
 
   /* Neutrals */
   --ink:          #0a0a0a;
@@ -169,7 +166,7 @@ section.tight { padding: var(--s7) 0; }
   white-space: nowrap;
 }
 .badge.green   { background: var(--green); color: #fff; }
-.badge.red     { background: var(--ink); color: #fff; }
+.badge.red     { background: var(--green); color: #fff; }
 .badge.outline { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
 .badge .dot    { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
@@ -189,7 +186,7 @@ section.tight { padding: var(--s7) 0; }
 }
 /* padding on each item (not gap) so wrap boundary spacing is identical */
 .marquee > .marquee-track span { display: inline-flex; align-items: center; gap: var(--s3); padding: 0 2.5rem; }
-.marquee > .marquee-track .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+.marquee > .marquee-track .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -629,7 +626,7 @@ section.tight { padding: var(--s7) 0; }
   transition: background .15s;
   flex-shrink: 0;
 }
-.product-card:hover .add-btn { background: var(--red); }
+.product-card:hover .add-btn { background: var(--green); }
 
 /* ── Shader-background card variant ── */
 .shader-card {
@@ -705,7 +702,7 @@ section.tight { padding: var(--s7) 0; }
   display: flex;
   justify-content: space-between;
 }
-.field label .req { color: var(--red); }
+.field label .req { color: var(--green); }
 .field label .opt { color: var(--muted); font-weight: 400; }
 .field input, .field select, .field textarea {
   border: 1.5px solid var(--line);
@@ -761,7 +758,7 @@ section.tight { padding: var(--s7) 0; }
 .center { text-align: center; }
 .thick-rule { height: 4px; background: var(--ink); width: 56px; }
 .thick-rule.green { background: var(--green); }
-.thick-rule.red   { background: var(--red); }
+.thick-rule.red   { background: var(--green); }
 
 /* ── Selection ── */
 ::selection { background: rgba(15,122,61,.15); color: var(--ink); }
@@ -1238,10 +1235,10 @@ section.tight { padding: var(--s7) 0; }
 /* ── Warranty stepper ── */
 .stepper { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s2); margin-bottom: var(--s7); }
 .step { padding: var(--s4) 0; border-top: 3px solid var(--line); transition: border-color .2s; }
-.step.active { border-top-color: var(--red); }
+.step.active { border-top-color: var(--green); }
 .step.done   { border-top-color: var(--green); }
 .step .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-.step.active .num { color: var(--red); }
+.step.active .num { color: var(--green); }
 .step.done  .num  { color: var(--green); }
 .step h5 { font-family: var(--serif); font-size: 19px; line-height: 1.1; margin-top: 4px; }
 .step.done h5::after { content: " ✓"; color: var(--green); }
@@ -2110,7 +2107,7 @@ section.tight { padding: var(--s7) 0; }
   right: -3px;
   width: 18px;
   height: 18px;
-  background: #f60404;
+  background: var(--green);
   color: #fff;
   border-radius: 50%;
   font-size: 10px;
@@ -2365,6 +2362,14 @@ section.tight { padding: var(--s7) 0; }
 /* ═══════════════════════════════════════════════════════
    TESTIMONIALS — SCROLLING COLUMNS
    ═══════════════════════════════════════════════════════ */
+
+@keyframes testimonials-scroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="testimonials-scroll"] { animation: none !important; }
+}
 
 /* Column 2: show on ≥ 768px */
 @media (min-width: 768px) {

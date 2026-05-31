@@ -14,12 +14,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Three.js — only loaded when footer is visible
-          if (id.includes('node_modules/three')) return 'three'
-
-          // Framer Motion — used on Home + lazy pages
-          if (id.includes('node_modules/framer-motion') || id.includes('node_modules/motion')) return 'motion'
-
           // React core — long-term cached
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react'
 

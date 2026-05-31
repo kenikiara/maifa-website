@@ -1,25 +1,11 @@
-import { motion } from 'framer-motion'
-
-/**
- * Infinite-scrolling vertical column of testimonial cards.
- *
- * Props:
- *   testimonials  — array of { stars, quote, name, car, initial }
- *   duration      — seconds for one full scroll cycle (default 15)
- *   style         — extra inline styles on the wrapper (e.g. display:none on mobile)
- */
 export default function TestimonialsColumn({ testimonials, duration = 15, style, className }) {
   return (
     <div className={className} style={{ overflow: 'hidden', ...style }}>
-      <motion.div
-        animate={{ y: '-50%' }}
-        transition={{
-          duration,
-          repeat: Infinity,
-          ease: 'linear',
-          repeatType: 'loop',
+      <div
+        style={{
+          display: 'flex', flexDirection: 'column', gap: 20, paddingBottom: 20,
+          animation: `testimonials-scroll ${duration}s linear infinite`,
         }}
-        style={{ display: 'flex', flexDirection: 'column', gap: 20, paddingBottom: 20 }}
       >
         {/* Two copies so the loop is seamless */}
         {[0, 1].map(copy => (
@@ -67,7 +53,7 @@ export default function TestimonialsColumn({ testimonials, duration = 15, style,
             </div>
           ))
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }

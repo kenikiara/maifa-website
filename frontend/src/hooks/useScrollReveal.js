@@ -20,13 +20,6 @@ export function useScrollReveal() {
 
     observe()
 
-    // Also pick up elements added to DOM after initial render (async loads)
-    const mutation = new MutationObserver(observe)
-    mutation.observe(document.body, { childList: true, subtree: true })
-
-    return () => {
-      observer.disconnect()
-      mutation.disconnect()
-    }
+    return () => observer.disconnect()
   }, [])
 }

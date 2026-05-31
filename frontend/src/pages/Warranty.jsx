@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 
 const CITIES = ['Nairobi', 'Mombasa', 'Kiambu', 'Nakuru', 'Eldoret', 'Kisumu', 'Thika', 'Other']
 const BATTERY_MODELS = [
@@ -170,6 +171,10 @@ export default function Warranty() {
 
   return (
     <>
+      <Helmet>
+        <title>Battery Warranty Registration — Maifa Kenya</title>
+        <meta name="description" content="Register your Amaron battery warranty online. Maifa provides a 12-month replacement guarantee on all batteries. Quick, paperless registration." />
+      </Helmet>
       <section className="page-head">
         <div className="container">
           <div className="crumbs"><Link to="/">Home</Link> / Help / <span>Warranty Registration</span></div>

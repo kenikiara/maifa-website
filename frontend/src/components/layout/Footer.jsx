@@ -1,15 +1,5 @@
-import { useEffect, useRef, useState, lazy, Suspense, Component } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-
-// Only import Three.js (492 KB) once the footer scrolls into view
-const ThreeAurora = lazy(() => import('../ui/ThreeAurora'))
-
-// Swallows any render/load error from ThreeAurora — footer content always shows
-class AuroraErrorBoundary extends Component {
-  constructor(props) { super(props); this.state = { failed: false } }
-  static getDerivedStateFromError() { return { failed: true } }
-  render() { return this.state.failed ? null : this.props.children }
-}
 
 const SOCIALS = [
   {
@@ -46,28 +36,14 @@ const SOCIALS = [
 export default function Footer() {
   const year = new Date().getFullYear()
   const footerRef = useRef(null)
-  const [auroraVisible, setAuroraVisible] = useState(false)
-
-  useEffect(() => {
-    const el = footerRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setAuroraVisible(true); observer.disconnect() } },
-      { rootMargin: '200px' }   // start loading 200px before footer enters view
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
 
   return (
     <footer className="site-footer" ref={footerRef}>
-      {auroraVisible && (
-        <AuroraErrorBoundary>
-          <Suspense fallback={null}>
-            <ThreeAurora />
-          </Suspense>
-        </AuroraErrorBoundary>
-      )}
+      {/* CSS aurora — replaces Three.js, zero bundle cost */}
+      <div className="aurora-layer" style={{ position:'absolute', inset:0, overflow:'hidden', pointerEvents:'none', zIndex:0,
+        backgroundImage: 'repeating-linear-gradient(100deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.03) 7%,transparent 10%,transparent 12%,rgba(255,255,255,.03) 16%),repeating-linear-gradient(100deg,rgba(15,122,61,.18) 10%,rgba(34,197,94,.14) 15%,rgba(134,239,172,.08) 20%,rgba(187,247,208,.06) 25%,rgba(74,222,128,.12) 30%)',
+        backgroundSize: '200%,100%', backgroundAttachment: 'fixed', animation: 'aurora 60s linear infinite',
+      }} />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="footer-grid">
           <div>

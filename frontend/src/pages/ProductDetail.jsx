@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import OrderModal from '../components/ui/OrderModal'
 
@@ -89,6 +90,10 @@ export default function ProductDetail() {
 
   return (
     <>
+      <Helmet>
+        <title>{product.name} — {displayPrice} | Maifa Kenya</title>
+        <meta name="description" content={`Buy ${product.name} — ${product.ah}Ah, ${product.cca} CCA. ${displayPrice}. Free installation and same-day delivery in Nairobi. 12-month warranty. ${product.short_desc || ''}`} />
+      </Helmet>
       <section style={{ padding: 'var(--s6) 0 var(--s9)' }}>
         <div className="container">
           <div className="crumbs" style={{ marginBottom: 'var(--s5)' }}>

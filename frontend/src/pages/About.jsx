@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const TEAM_VALUES = [
@@ -34,6 +35,10 @@ export default function About() {
 
   return (
     <>
+      <Helmet>
+        <title>About Maifa — Kenya's Amaron Battery Specialists Since 2012</title>
+        <meta name="description" content="Maifa has been supplying and fitting Amaron car batteries across Kenya since 2012. Learn about our three branches, our team, and our commitment to Kenyan drivers." />
+      </Helmet>
       {/* ── Hero ── */}
       <section className="page-head" style={{ padding: 'var(--s9) 0 var(--s7)', overflow: 'hidden' }}>
         <div className="container">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const BRANCHES = [
@@ -62,6 +63,10 @@ export default function Contact() {
 
   return (
     <>
+      <Helmet>
+        <title>Contact Maifa — Battery Shop Nairobi, Kiambu & Mombasa</title>
+        <meta name="description" content="Reach Maifa on WhatsApp, by phone, or visit one of our three branches — Thika Road, Kiambu Road, or Mombasa. Mon–Sat 7:30am–7pm." />
+      </Helmet>
       <section className="page-head">
         <div className="container">
           <div className="crumbs"><Link to="/">Home</Link> / <span>Contact</span></div>

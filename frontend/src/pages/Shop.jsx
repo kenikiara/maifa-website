@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import OrderModal from '../components/ui/OrderModal'
+
+function toSlug(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
 
 const CATEGORIES = [
   { label: 'Standard',   count: 5 },
@@ -32,7 +37,7 @@ function BatteryPlaceholder() {
 function ProductCard({ product, onOrder }) {
   return (
     <div className="product-card">
-      <Link to={`/shop/${product.id}`} style={{ display: 'contents' }}>
+      <Link to={`/shop/${toSlug(product.name)}-${product.id}`} style={{ display: 'contents' }}>
         <div className="img">
           <div className="badges">
             {product.badge && (
@@ -171,8 +176,16 @@ export default function Shop() {
 
   const totalPages = Math.ceil(total / PER_PAGE)
 
+  const pageTitle = selectedCats.length === 1
+    ? `${selectedCats[0]} Batteries — Maifa Kenya`
+    : 'Shop Amaron Car Batteries — Maifa Kenya'
+
   return (
     <>
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content="Browse Maifa's full range of Amaron car batteries — Standard, Large Car, EFB, Heavy Duty and European. Free installation, same-day delivery in Nairobi." />
+      </Helmet>
       <section className="page-head" style={{ padding: 'var(--s8) 0 var(--s6)' }}>
         <div className="container">
           <div className="crumbs">

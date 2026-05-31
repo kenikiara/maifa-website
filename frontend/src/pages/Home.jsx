@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { Helmet } from 'react-helmet-async'
 import { useApi } from '../hooks/useApi'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import PageTransition from '../components/ui/PageTransition'
@@ -9,6 +9,14 @@ import TestimonialsColumn from '../components/ui/TestimonialsColumn'
 import BatteryQuickModal from '../components/ui/BatteryQuickModal'
 
 const WA = '254791899602'
+
+function isBranchOpen(openH, openM, closeH, closeM) {
+  const now  = new Date()
+  const day  = now.getDay() // 0=Sun,6=Sat
+  if (day === 0) return false // closed Sundays
+  const mins = now.getHours() * 60 + now.getMinutes()
+  return mins >= openH * 60 + openM && mins < closeH * 60 + closeM
+}
 
 function toSlug(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -46,33 +54,107 @@ const TICKER = [
   'Free Installation in Nairobi','Same-Day Delivery','Old Battery Trade-In Up to KES 500','1-Year Warranty','M-Pesa Accepted',
 ]
 
-const MAKES  = ['Toyota','Nissan','Honda','Mercedes','BMW','Subaru','Mazda','Mitsubishi','Volkswagen','Isuzu']
-const MODELS = { Toyota:['Axio','Premio','Fielder','Land Cruiser','Vitz','Harrier','RAV4'], Nissan:['Note','March','X-Trail','Navara','Patrol'], Honda:['Fit','CRV','Accord'], Mercedes:['C-Class','E-Class','GLE'], BMW:['3 Series','5 Series','X5'], Subaru:['Forester','Outback','Impreza'], Mazda:['Demio','CX-5','Atenza'], Mitsubishi:['Pajero','Outlander','L200'], Volkswagen:['Golf','Touareg','Polo'], Isuzu:['D-Max','MUX'] }
-const YEARS  = Array.from({length:20}, (_,i)=>(2024-i).toString())
+// ── Comprehensive Kenyan car database ──
+const MAKES = [
+  'Toyota','Nissan','Subaru','Honda','Mazda','Mitsubishi',
+  'Isuzu','KIA','Hyundai','Mercedes','BMW','Volkswagen','Land Rover','Ford',
+]
 
-// Battery category matching — model takes priority over make
-const MAKE_CAT  = { Mercedes:'European', BMW:'European', Volkswagen:'European' }
-const MODEL_CAT = {
-  // Heavy Duty
-  'Land Cruiser':'Heavy Duty', 'Navara':'Heavy Duty', 'Patrol':'Heavy Duty',
-  'D-Max':'Heavy Duty', 'MUX':'Heavy Duty', 'L200':'Heavy Duty', 'Pajero':'Heavy Duty',
-  // Large Car
-  'RAV4':'Large Car', 'Harrier':'Large Car', 'X-Trail':'Large Car', 'CRV':'Large Car',
-  'Forester':'Large Car', 'Outback':'Large Car', 'Outlander':'Large Car',
-  'CX-5':'Large Car', 'GLE':'Large Car', 'X5':'Large Car', 'Touareg':'Large Car',
-  // EFB (idle stop-start)
-  'Note':'EFB',
-  // European (by model)
-  '3 Series':'European', '5 Series':'European', 'C-Class':'European',
-  'E-Class':'European', 'Golf':'European', 'Polo':'European',
-  // Standard
-  'Vitz':'Standard', 'Axio':'Standard', 'Premio':'Standard', 'Fielder':'Standard',
-  'Fit':'Standard', 'Accord':'Standard', 'Demio':'Standard', 'Atenza':'Standard',
-  'March':'Standard', 'Impreza':'Standard',
+const MODELS = {
+  Toyota: [
+    'Vitz','Passo','IST','Axio','Allion','Premio','Corolla',
+    'Succeed','Probox','Sienta','Wish','Noah','Voxy',
+    'Alphard','Vellfire','Mark X','Crown','Camry',
+    'Prius','Aqua','Harrier','RAV4','Fortuner',
+    'Land Cruiser Prado','Land Cruiser V8','Land Cruiser 70',
+    'Hilux','Hiace',
+  ],
+  Nissan: ['March','Note','Tiida','Bluebird','X-Trail','Juke','Murano','Teana','Navara','Patrol'],
+  Subaru: ['Impreza','XV','Forester','Outback','Legacy','WRX'],
+  Honda:  ['Fit','Freed','Stream','Vezel','CRV','Accord','Odyssey'],
+  Mazda:  ['Demio','Axela','Atenza','CX-3','CX-5'],
+  Mitsubishi: ['Colt','Galant','Eclipse Cross','Outlander','Pajero','L200 Triton'],
+  Isuzu: ['D-Max','MUX'],
+  KIA:   ['Picanto','Rio','Seltos','Sportage','Sorento'],
+  Hyundai: ['i10','i20','Elantra','Creta','Tucson','Santa Fe'],
+  Mercedes: ['A-Class','C-Class','E-Class','GLE','ML','S-Class'],
+  BMW: ['1 Series','3 Series','5 Series','7 Series','X3','X5'],
+  Volkswagen: ['Polo','Golf','Passat','Tiguan','Touareg'],
+  'Land Rover': ['Freelander','Discovery','Defender','Range Rover','Range Rover Sport'],
+  Ford: ['EcoSport','Ranger','Explorer','Everest'],
 }
 
-function matchCategory(make, model) {
-  return MODEL_CAT[model] || MAKE_CAT[make] || 'Standard'
+const YEARS = Array.from({ length: 25 }, (_, i) => (2024 - i).toString())
+
+const MODEL_CAT = {
+  // Toyota — Standard
+  'Vitz':'Standard','Passo':'Standard','IST':'Standard','Axio':'Standard',
+  'Allion':'Standard','Premio':'Standard','Corolla':'Standard',
+  'Succeed':'Standard','Probox':'Standard','Wish':'Standard',
+  // Toyota — EFB (idle stop-start)
+  'Sienta':'EFB','Noah':'EFB','Voxy':'EFB','Prius':'EFB','Aqua':'EFB',
+  // Toyota — Large Car
+  'Alphard':'Large Car','Vellfire':'Large Car','Mark X':'Large Car',
+  'Crown':'Large Car','Camry':'Large Car','Harrier':'Large Car','RAV4':'Large Car',
+  // Toyota — Heavy Duty
+  'Fortuner':'Heavy Duty','Land Cruiser Prado':'Heavy Duty',
+  'Land Cruiser V8':'Heavy Duty','Land Cruiser 70':'Heavy Duty',
+  'Hilux':'Heavy Duty','Hiace':'Heavy Duty',
+  // Nissan
+  'March':'Standard','Note':'EFB','Tiida':'Standard','Bluebird':'Standard',
+  'X-Trail':'Large Car','Juke':'Standard','Murano':'Large Car','Teana':'Large Car',
+  'Navara':'Heavy Duty','Patrol':'Heavy Duty',
+  // Subaru
+  'Impreza':'Standard','XV':'Large Car','Forester':'Large Car',
+  'Outback':'Large Car','Legacy':'Large Car','WRX':'Large Car',
+  // Honda
+  'Fit':'Standard','Freed':'Standard','Stream':'Standard',
+  'Vezel':'Large Car','CRV':'Large Car','Accord':'Large Car','Odyssey':'Large Car',
+  // Mazda
+  'Demio':'Standard','Axela':'Standard','Atenza':'Large Car','CX-3':'Large Car','CX-5':'Large Car',
+  // Mitsubishi
+  'Colt':'Standard','Galant':'Standard','Eclipse Cross':'Large Car',
+  'Outlander':'Large Car','Pajero':'Heavy Duty','L200 Triton':'Heavy Duty',
+  // Isuzu
+  'D-Max':'Heavy Duty','MUX':'Heavy Duty',
+  // KIA
+  'Picanto':'Standard','Rio':'Standard','Seltos':'Large Car',
+  'Sportage':'Large Car','Sorento':'Large Car',
+  // Hyundai
+  'i10':'Standard','i20':'Standard','Elantra':'Standard',
+  'Creta':'Large Car','Tucson':'Large Car','Santa Fe':'Large Car',
+  // Mercedes
+  'A-Class':'European','C-Class':'European','E-Class':'European',
+  'GLE':'European','ML':'European','S-Class':'European',
+  // BMW
+  '1 Series':'European','3 Series':'European','5 Series':'European',
+  '7 Series':'European','X3':'European','X5':'European',
+  // VW
+  'Polo':'European','Golf':'European','Passat':'European','Tiguan':'European','Touareg':'European',
+  // Land Rover
+  'Freelander':'European','Discovery':'Heavy Duty','Defender':'Heavy Duty',
+  'Range Rover':'European','Range Rover Sport':'European',
+  // Ford
+  'EcoSport':'Standard','Ranger':'Heavy Duty','Explorer':'Heavy Duty','Everest':'Heavy Duty',
+}
+
+// Year thresholds where a model upgrades to EFB (idle stop-start)
+const EFB_YEAR = { 'Noah':2014,'Voxy':2014,'Alphard':2015,'Vellfire':2015,'Crown':2013 }
+
+const CATEGORY_LABELS = {
+  'Standard':   { desc:'35–55Ah · Sedans & small engines',       color:'var(--green)' },
+  'Large Car':  { desc:'60–75Ah · SUVs & larger engines',        color:'var(--green-mid)' },
+  'EFB':        { desc:'EFB · Idle-stop & hybrid systems',       color:'#22c55e' },
+  'Heavy Duty': { desc:'80–200Ah · Trucks, 4×4s & commercial',  color:'var(--green-deep)' },
+  'European':   { desc:'High CCA · AGM/EFB for German brands',   color:'#16a34a' },
+}
+
+function matchCategory(make, model, year) {
+  const base = MODEL_CAT[model] || (
+    ['Mercedes','BMW','Volkswagen','Land Rover'].includes(make) ? 'European' : 'Standard'
+  )
+  if (year && EFB_YEAR[model] && parseInt(year) >= EFB_YEAR[model]) return 'EFB'
+  return base
 }
 
 /* ── Newsletter section with live API ── */
@@ -172,20 +254,26 @@ export default function Home() {
   const { data: filteredData } = useApi(activeCat === 'All' ? '/api/products.php' : `/api/products.php?category=${encodeURIComponent(activeCat)}`)
   const featured = (filteredData?.products || []).slice(0, 4)
 
-  const [make, setMake]         = useState('')
-  const [model, setModel]       = useState('')
-  const [year, setYear]         = useState('')
-  const [finderResult, setFinderResult] = useState(null) // null | { category, picks, carLabel }
-  const models = make ? (MODELS[make] || []) : []
+  const [make, setMake]               = useState('')
+  const [model, setModel]             = useState('')
+  const [year, setYear]               = useState('')
+  const [finderResult, setFinderResult] = useState(null)
+  const [finderLoading, setFinderLoading] = useState(false)
 
-  const { data: allProducts } = useApi('/api/products.php?limit=100')
-
-  function handleFinder(e) {
-    e.preventDefault()
-    const category = matchCategory(make, model)
-    const pool = allProducts?.products || []
-    const picks = pool.filter(p => p.category === category).slice(0, 3)
-    setFinderResult({ category, picks, carLabel: [year, make, model].filter(Boolean).join(' ') })
+  async function handleFinder() {
+    if (!make && !model) return
+    const category = matchCategory(make, model, year)
+    const carLabel = [year, make, model].filter(Boolean).join(' ')
+    setFinderLoading(true)
+    try {
+      const res  = await fetch(`/api/products.php?category=${encodeURIComponent(category)}&limit=3`)
+      const data = await res.json()
+      setFinderResult({ category, picks: data?.products || [], carLabel })
+    } catch {
+      setFinderResult({ category, picks: [], carLabel })
+    } finally {
+      setFinderLoading(false)
+    }
   }
 
   function resetFinder() {
@@ -200,6 +288,10 @@ export default function Home() {
 
   return (
     <>
+    <Helmet>
+      <title>Maifa — Amaron Car Batteries. Same-Day Delivery Across Kenya.</title>
+      <meta name="description" content="Maifa supplies and fits Amaron car batteries across Kenya. Free installation, same-day delivery in Nairobi, 12-month warranty. Branches on Thika Road, Kiambu Road, and Mombasa." />
+    </Helmet>
     <PageTransition>
       {/* Marquee */}
       <div className="marquee" aria-hidden="true">
@@ -253,34 +345,135 @@ export default function Home() {
         <div className="container">
 
           {!finderResult ? (
-            /* ── Form ── */
-            <div className="finder-grid">
-              <div>
-                <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · 60 seconds</span>
-                <h3 style={{ color:'#fff', marginTop:'var(--s3)' }}>Tell us your car. We'll match the right battery.</h3>
-                <p style={{ color:'rgba(255,255,255,.55)', fontSize:14, marginTop:'var(--s2)' }}>Over 240 vehicle fitments mapped to in-stock SKUs.</p>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 2fr', gap:'var(--s7)', alignItems:'start' }} className="finder-grid">
+              {/* Left — label + live feedback */}
+              <div style={{ position:'sticky', top:'calc(var(--nav-h) + var(--s4))' }}>
+                <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder</span>
+                <h3 style={{ color:'#fff', marginTop:'var(--s3)', lineHeight:1.15 }}>Tell us your car.<br/>We'll find the right battery.</h3>
+                <p style={{ color:'rgba(255,255,255,.5)', fontSize:13, marginTop:'var(--s3)', lineHeight:1.65 }}>
+                  Select your make, then model. The year helps us detect idle-stop (EFB) systems — common on 2013+ Japanese vans.
+                </p>
+
+                {/* Live category feedback */}
+                {(make || model) && (() => {
+                  const cat = matchCategory(make, model, year)
+                  const meta = CATEGORY_LABELS[cat]
+                  return (
+                    <div style={{ marginTop:'var(--s5)', padding:'var(--s4) var(--s5)', background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.12)', borderRadius:'var(--r)', borderLeft:`3px solid ${meta.color}` }}>
+                      <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:6 }}>Recommended type</div>
+                      <div style={{ fontFamily:'var(--serif)', fontSize:22, color:'#fff', marginBottom:4 }}>{cat}</div>
+                      <div style={{ fontSize:12, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)' }}>{meta.desc}</div>
+                    </div>
+                  )
+                })()}
+
+                {/* Progress indicator */}
+                <div style={{ marginTop:'var(--s5)', display:'flex', flexDirection:'column', gap:6 }}>
+                  {[
+                    { step:1, label:'Make', done:!!make, value:make },
+                    { step:2, label:'Model', done:!!model, value:model },
+                    { step:3, label:'Year', done:!!year, value:year, optional:true },
+                  ].map(s => (
+                    <div key={s.step} style={{ display:'flex', alignItems:'center', gap:10, opacity: (!make && s.step > 1) ? .3 : (!model && s.step > 2) ? .3 : 1 }}>
+                      <div style={{ width:22, height:22, borderRadius:'50%', border:`1.5px solid ${s.done ? 'var(--green-bright)' : 'rgba(255,255,255,.2)'}`, background: s.done ? 'var(--green)' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                        {s.done
+                          ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                          : <span style={{ fontSize:9, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)' }}>{s.step}</span>
+                        }
+                      </div>
+                      <span style={{ fontSize:12, fontFamily:'var(--mono)', letterSpacing:'.08em', textTransform:'uppercase', color: s.done ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.4)' }}>
+                        {s.done ? s.value : `${s.label}${s.optional ? ' (optional)' : ''}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <form onSubmit={handleFinder} className="finder-form">
-                {[
-                  { label:'Make',  value:make,  onChange:e=>{setMake(e.target.value);setModel('')}, options:MAKES },
-                  { label:'Model', value:model, onChange:e=>setModel(e.target.value), options:models },
-                  { label:'Year',  value:year,  onChange:e=>setYear(e.target.value),  options:YEARS },
-                ].map(f=>(
-                  <div key={f.label} style={{ display:'flex', flexDirection:'column', gap:6 }}>
-                    <label style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.45)' }}>{f.label}</label>
-                    <select value={f.value} onChange={f.onChange} required={f.label!=='Model'} style={{ background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.16)', color:'#fff', padding:'13px 15px', borderRadius:'var(--r)', fontFamily:'var(--sans)', fontSize:14, appearance:'none', backgroundImage:'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'><path fill=\'%2333d930\' d=\'M5 6L0 0h10z\'/></svg>")', backgroundRepeat:'no-repeat', backgroundPosition:'right 14px center' }}>
-                      <option value="">Select {f.label}</option>
-                      {f.options.map(o=><option key={o} value={o} style={{ background:'#1a1a1a' }}>{o}</option>)}
-                    </select>
+
+              {/* Right — interactive steps */}
+              <div style={{ display:'flex', flexDirection:'column', gap:'var(--s6)' }}>
+
+                {/* Step 1: Make tiles */}
+                <div>
+                  <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:'var(--s3)', display:'flex', alignItems:'center', gap:8 }}>
+                    <span style={{ width:18, height:18, borderRadius:'50%', background: make ? 'var(--green)' : 'rgba(255,255,255,.15)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700 }}>1</span>
+                    Select make
                   </div>
-                ))}
-                <button type="submit" className="btn btn-primary" style={{ height:50 }}>Find match →</button>
-              </form>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))', gap:'var(--s2)' }}>
+                    {MAKES.map(m => (
+                      <button key={m} onClick={() => { setMake(m); setModel(''); setYear('') }}
+                        style={{
+                          padding:'10px 8px', borderRadius:'var(--r)', fontSize:13, fontWeight:600,
+                          fontFamily:'var(--sans)', cursor:'pointer', transition:'all .15s',
+                          background: make===m ? 'var(--green)' : 'rgba(255,255,255,.06)',
+                          border: `1.5px solid ${make===m ? 'var(--green)' : 'rgba(255,255,255,.12)'}`,
+                          color: make===m ? '#fff' : 'rgba(255,255,255,.7)',
+                          transform: make===m ? 'translateY(-2px)' : 'none',
+                          boxShadow: make===m ? '0 4px 16px rgba(15,122,61,.4)' : 'none',
+                        }}
+                      >{m}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Step 2: Model pills — appears after make selected */}
+                {make && (
+                  <div style={{ animation:'page-fade-in .25s ease both' }}>
+                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:'var(--s3)', display:'flex', alignItems:'center', gap:8 }}>
+                      <span style={{ width:18, height:18, borderRadius:'50%', background: model ? 'var(--green)' : 'rgba(255,255,255,.15)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700 }}>2</span>
+                      Select {make} model
+                    </div>
+                    <div style={{ display:'flex', flexWrap:'wrap', gap:'var(--s2)' }}>
+                      {(MODELS[make] || []).map(m => (
+                        <button key={m} onClick={() => setModel(m)}
+                          style={{
+                            padding:'8px 14px', borderRadius:'var(--r-pill)', fontSize:13, fontWeight:500,
+                            fontFamily:'var(--sans)', cursor:'pointer', transition:'all .15s', whiteSpace:'nowrap',
+                            background: model===m ? 'var(--green)' : 'rgba(255,255,255,.06)',
+                            border: `1.5px solid ${model===m ? 'var(--green)' : 'rgba(255,255,255,.12)'}`,
+                            color: model===m ? '#fff' : 'rgba(255,255,255,.7)',
+                          }}
+                        >{m}</button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Year + submit — appears after model selected */}
+                {make && model && (
+                  <div style={{ animation:'page-fade-in .25s ease both' }}>
+                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:'var(--s3)', display:'flex', alignItems:'center', gap:8 }}>
+                      <span style={{ width:18, height:18, borderRadius:'50%', background:'rgba(255,255,255,.15)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700 }}>3</span>
+                      Year <span style={{ color:'rgba(255,255,255,.25)', marginLeft:4 }}>(optional — improves EFB detection)</span>
+                    </div>
+                    <div style={{ display:'flex', gap:'var(--s3)', alignItems:'center', flexWrap:'wrap' }}>
+                      <select value={year} onChange={e => setYear(e.target.value)}
+                        style={{ background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.2)', color: year ? '#fff' : 'rgba(255,255,255,.45)', padding:'12px 36px 12px 14px', borderRadius:'var(--r)', fontFamily:'var(--sans)', fontSize:14, appearance:'none', backgroundImage:'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'><path fill=\'%2333d930\' d=\'M5 6L0 0h10z\'/></svg>")', backgroundRepeat:'no-repeat', backgroundPosition:'right 12px center', minWidth:140 }}
+                      >
+                        <option value="" style={{ background:'#1a1a1a' }}>Select year</option>
+                        {YEARS.map(y => <option key={y} value={y} style={{ background:'#1a1a1a' }}>{y}</option>)}
+                      </select>
+                      <button
+                        onClick={handleFinder}
+                        disabled={finderLoading}
+                        className="btn btn-primary"
+                        style={{ height:46, minWidth:160, opacity: finderLoading ? .7 : 1 }}
+                      >
+                        {finderLoading ? 'Searching…' : 'Find my battery →'}
+                      </button>
+                      {!year && (
+                        <button onClick={handleFinder} disabled={finderLoading}
+                          style={{ fontSize:12, color:'rgba(255,255,255,.35)', background:'none', border:'none', cursor:'pointer', fontFamily:'var(--mono)', letterSpacing:'.06em', textDecoration:'underline' }}
+                        >Skip year</button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+              </div>
             </div>
           ) : (
             /* ── Results ── */
             <div>
-              {/* Header row */}
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'var(--s6)', flexWrap:'wrap', gap:'var(--s3)' }}>
                 <div>
                   <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · results</span>
@@ -288,7 +481,7 @@ export default function Home() {
                     Best matches for your <em style={{ fontStyle:'italic', color:'var(--green-bright)' }}>{finderResult.carLabel}</em>
                   </h3>
                   <p style={{ color:'rgba(255,255,255,.5)', fontSize:13, marginTop:'var(--s2)', fontFamily:'var(--mono)', letterSpacing:'.06em', textTransform:'uppercase' }}>
-                    Category · {finderResult.category}
+                    Category · {finderResult.category} &nbsp;·&nbsp; {CATEGORY_LABELS[finderResult.category]?.desc}
                   </p>
                 </div>
                 <button onClick={resetFinder} style={{ background:'transparent', border:'1px solid rgba(255,255,255,.2)', color:'rgba(255,255,255,.7)', padding:'10px 18px', borderRadius:'var(--r)', fontSize:13, cursor:'pointer', whiteSpace:'nowrap' }}>
@@ -298,12 +491,11 @@ export default function Home() {
 
               {finderResult.picks.length > 0 ? (
                 <>
-                  {/* Product cards */}
                   <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'var(--s4)', marginBottom:'var(--s6)' }}>
                     {finderResult.picks.map((p, i) => (
                       <div key={p.id} style={{ background: i === 0 ? 'rgba(15,122,61,.18)' : 'rgba(255,255,255,.05)', border: i === 0 ? '1px solid rgba(15,122,61,.5)' : '1px solid rgba(255,255,255,.1)', borderRadius:'var(--r)', padding:'var(--s5)', display:'flex', flexDirection:'column', gap:'var(--s3)' }}>
                         {i === 0 && (
-                          <span style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--green-bright)', marginBottom:'var(--s1)' }}>● Best match</span>
+                          <span style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'var(--green-bright)' }}>● Best match</span>
                         )}
                         <div>
                           <h4 style={{ color:'#fff', fontSize:16, fontFamily:'var(--serif)', lineHeight:1.2 }}>{p.name}</h4>
@@ -322,19 +514,13 @@ export default function Home() {
                             href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi! I'd like to order the ${p.name} (${p.price_label}) for my ${finderResult.carLabel}. Please confirm availability.`)}`}
                             target="_blank" rel="noopener noreferrer"
                             style={{ padding:'10px 14px', background:'#25d366', color:'#fff', borderRadius:'var(--r-sm)', fontSize:13, fontWeight:600, textDecoration:'none', whiteSpace:'nowrap' }}
-                          >
-                            Order
-                          </a>
+                          >Order via WhatsApp</a>
                         </div>
                       </div>
                     ))}
                   </div>
-
-                  {/* WhatsApp consultation strip */}
                   <div style={{ borderTop:'1px solid rgba(255,255,255,.1)', paddingTop:'var(--s5)', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'var(--s4)' }}>
-                    <div>
-                      <p style={{ color:'rgba(255,255,255,.7)', fontSize:14 }}>Not sure which one is right? Our team can confirm the exact fit.</p>
-                    </div>
+                    <p style={{ color:'rgba(255,255,255,.6)', fontSize:14 }}>Not sure which one fits? Our team confirms the exact spec in minutes.</p>
                     <button onClick={waConsult} style={{ display:'flex', alignItems:'center', gap:10, background:'#25d366', color:'#fff', border:'none', padding:'12px 22px', borderRadius:'var(--r)', fontSize:14, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' }}>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                       Talk to an expert
@@ -342,10 +528,9 @@ export default function Home() {
                   </div>
                 </>
               ) : (
-                /* No match — straight to WhatsApp */
                 <div style={{ textAlign:'center', padding:'var(--s7) 0' }}>
                   <p style={{ color:'rgba(255,255,255,.6)', fontSize:15, marginBottom:'var(--s5)' }}>
-                    We don't have an automatic match for that vehicle yet — but our team can find the right battery for you in minutes.
+                    No automatic match for that vehicle yet — our team will find the right battery in minutes.
                   </p>
                   <button onClick={waConsult} style={{ display:'inline-flex', alignItems:'center', gap:10, background:'#25d366', color:'#fff', border:'none', padding:'14px 28px', borderRadius:'var(--r)', fontSize:15, fontWeight:600, cursor:'pointer' }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
@@ -535,10 +720,12 @@ export default function Home() {
           </div>
           <div className="grid-3 reveal reveal-delay-1">
             {[
-              { name:'Thika Road',  hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', image:'/branches/thika-road.webp' },
-              { name:'Kiambu Road', hours:'Mon–Sat · 7:30am – 7:00pm', phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', image:'/branches/kiambu-road.webp' },
-              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image:'/branches/mombasa.webp' },
-            ].map(loc=>(
+              { name:'Thika Road',  hours:'Mon–Sat · 7:30am – 7:00pm', openH:7,  openM:30, closeH:19, closeM:0,  phone:'+254 791 899 602', tel:'254791899602', maps:'https://maps.app.goo.gl/uikDAKHvtGHbiFcw9', image:'/branches/thika-road.webp' },
+              { name:'Kiambu Road', hours:'Mon–Sat · 7:30am – 7:00pm', openH:7,  openM:30, closeH:19, closeM:0,  phone:'+254 700 777 698', tel:'254700777698', maps:'https://maps.app.goo.gl/P87JbPsayc2Kxr7JA', image:'/branches/kiambu-road.webp' },
+              { name:'Mombasa',     hours:'Mon–Sat · 8:00am – 6:30pm', openH:8,  openM:0,  closeH:18, closeM:30, phone:'+254 701 880 955', tel:'254701880955', maps:'https://maps.app.goo.gl/4axNTbqZjkyrkYLcA', image:'/branches/mombasa.webp' },
+            ].map(loc=>{
+              const open = isBranchOpen(loc.openH, loc.openM, loc.closeH, loc.closeM)
+              return (
               <div key={loc.name} style={{ border:'1px solid var(--line)', borderRadius:'var(--r)', overflow:'hidden', display:'flex', flexDirection:'column', transition:'border-color .2s, box-shadow .2s', cursor:'default' }}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--ink)';e.currentTarget.style.boxShadow='var(--shadow-2)'}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.boxShadow='none'}}
@@ -561,8 +748,8 @@ export default function Home() {
                       </svg>
                     </div>
                   )}
-                  <span style={{ position:'absolute', top:10, left:10, background:'var(--green)', color:'#fff', fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 10px', borderRadius:'var(--r-pill)', display:'flex', alignItems:'center', gap:5 }}>
-                    <span style={{ width:5, height:5, borderRadius:'50%', background:'#fff' }} />Open now
+                  <span style={{ position:'absolute', top:10, left:10, background: open ? 'var(--green)' : 'rgba(0,0,0,.55)', color:'#fff', fontFamily:'var(--mono)', fontSize:9, letterSpacing:'.1em', textTransform:'uppercase', padding:'4px 10px', borderRadius:'var(--r-pill)', display:'flex', alignItems:'center', gap:5 }}>
+                    <span style={{ width:5, height:5, borderRadius:'50%', background: open ? '#fff' : 'rgba(255,255,255,.5)' }} />{open ? 'Open now' : 'Closed'}
                   </span>
                 </div>
                 <div style={{ padding:'var(--s5)', display:'flex', flexDirection:'column', gap:'var(--s3)' }}>
@@ -582,7 +769,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -592,13 +780,7 @@ export default function Home() {
         <div className="container">
 
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', marginBottom:'var(--s8)' }}
-          >
+          <div className="reveal" style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', marginBottom:'var(--s8)' }}>
             <div style={{ display:'inline-flex', alignItems:'center', gap:6, border:'1px solid rgba(15,122,61,.5)', borderRadius:'var(--r-pill)', padding:'5px 16px', marginBottom:'var(--s4)' }}>
               <div style={{ display:'flex', gap:2 }}>
                 {[1,2,3,4,5].map(s=>(
@@ -613,7 +795,7 @@ export default function Home() {
             <p style={{ color:'rgba(255,255,255,.55)', fontSize:16, maxWidth:480, lineHeight:1.65 }}>
               Real reviews from real customers — from Nairobi's city roads to the Mombasa highway.
             </p>
-          </motion.div>
+          </div>
 
           {/* Scrolling columns — fade top & bottom */}
           <div style={{
