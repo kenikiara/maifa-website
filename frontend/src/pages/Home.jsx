@@ -256,6 +256,7 @@ export default function Home() {
 
   const [make, setMake]               = useState('')
   const [model, setModel]             = useState('')
+  const [modelSearch, setModelSearch] = useState('')
   const [year, setYear]               = useState('')
   const [finderResult, setFinderResult] = useState(null)
   const [finderLoading, setFinderLoading] = useState(false)
@@ -278,7 +279,7 @@ export default function Home() {
 
   function resetFinder() {
     setFinderResult(null)
-    setMake(''); setModel(''); setYear('')
+    setMake(''); setModel(''); setYear(''); setModelSearch('')
   }
 
   function waConsult() {
@@ -373,7 +374,7 @@ export default function Home() {
                   </div>
                   <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))', gap:'var(--s2)' }}>
                     {MAKES.map(m => (
-                      <button key={m} onClick={() => { setMake(m); setModel(''); setYear('') }}
+                      <button key={m} onClick={() => { setMake(m); setModel(''); setYear(''); setModelSearch('') }}
                         style={{
                           padding:'11px 8px', borderRadius:'var(--r)', fontSize:13, fontWeight:600,
                           fontFamily:'var(--sans)', cursor:'pointer', transition:'background .12s, border-color .12s, color .12s, transform .12s',
@@ -388,34 +389,91 @@ export default function Home() {
                 </div>
 
                 {/* Step 2 — Model (appears once make selected) */}
-                {make && (
-                  <div style={{ padding:'var(--s5) var(--s6)', borderBottom:'1px solid rgba(255,255,255,.08)', animation:'page-fade-in .2s ease both' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'var(--s4)' }}>
-                      <span style={{ width:24, height:24, borderRadius:'50%', background: model ? 'var(--green)' : 'rgba(255,255,255,.12)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>
-                        {model ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg> : '2'}
-                      </span>
-                      <span style={{ fontFamily:'var(--mono)', fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', color: model ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.45)' }}>
-                        Model {model && <strong style={{ color:'var(--green-bright)', marginLeft:6 }}>· {model}</strong>}
-                      </span>
-                    </div>
-                    <div style={{
-                      display:'flex', flexWrap:'wrap', gap:'var(--s2)',
-                      maxHeight:160, overflowY:'auto', paddingBottom:4,
-                    }}>
-                      {(MODELS[make] || []).map(m => (
-                        <button key={m} onClick={() => setModel(m)}
+                {make && (() => {
+                  const allModels   = MODELS[make] || []
+                  const q           = modelSearch.trim().toLowerCase()
+                  const filtered    = q ? allModels.filter(m => m.toLowerCase().includes(q)) : allModels
+                  const exactExists = allModels.some(m => m.toLowerCase() === q)
+                  const customLabel = modelSearch.trim()
+                  return (
+                    <div style={{ padding:'var(--s5) var(--s6)', borderBottom:'1px solid rgba(255,255,255,.08)', animation:'page-fade-in .2s ease both' }}>
+                      {/* Step label */}
+                      <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'var(--s4)' }}>
+                        <span style={{ width:24, height:24, borderRadius:'50%', background: model ? 'var(--green)' : 'rgba(255,255,255,.12)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>
+                          {model ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg> : '2'}
+                        </span>
+                        <span style={{ fontFamily:'var(--mono)', fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', color: model ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.45)' }}>
+                          Model {model && <strong style={{ color:'var(--green-bright)', marginLeft:6 }}>· {model}</strong>}
+                        </span>
+                      </div>
+
+                      {/* Search input */}
+                      <div style={{ position:'relative', marginBottom:'var(--s3)' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.35)" strokeWidth="2" style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', pointerEvents:'none', flexShrink:0 }}>
+                          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input
+                          type="text"
+                          placeholder={`Search ${make} models… e.g. Probox, Prado`}
+                          value={modelSearch}
+                          onChange={e => setModelSearch(e.target.value)}
                           style={{
-                            padding:'8px 15px', borderRadius:'var(--r-pill)', fontSize:13, fontWeight:500,
-                            fontFamily:'var(--sans)', cursor:'pointer', transition:'background .12s, border-color .12s, color .12s', whiteSpace:'nowrap',
-                            background: model===m ? 'var(--green)' : 'rgba(255,255,255,.07)',
-                            border: `1.5px solid ${model===m ? 'var(--green)' : 'rgba(255,255,255,.1)'}`,
-                            color: model===m ? '#fff' : 'rgba(255,255,255,.65)',
+                            width:'100%', paddingLeft:34, paddingRight:model ? 36 : 12,
+                            paddingTop:10, paddingBottom:10,
+                            background:'rgba(255,255,255,.07)', border:'1px solid rgba(255,255,255,.15)',
+                            borderRadius:'var(--r)', color:'#fff', fontSize:14, fontFamily:'var(--sans)',
+                            outline:'none',
                           }}
-                        >{m}</button>
-                      ))}
+                        />
+                        {model && (
+                          <button onClick={() => { setModel(''); setModelSearch('') }}
+                            style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'rgba(255,255,255,.4)', cursor:'pointer', fontSize:16, lineHeight:1 }}
+                            aria-label="Clear model"
+                          >✕</button>
+                        )}
+                      </div>
+
+                      {/* Filtered pills */}
+                      {filtered.length > 0 && (
+                        <div style={{ display:'flex', flexWrap:'wrap', gap:'var(--s2)', maxHeight:156, overflowY:'auto', paddingBottom:4 }}>
+                          {filtered.map(m => (
+                            <button key={m} onClick={() => { setModel(m); setModelSearch('') }}
+                              style={{
+                                padding:'8px 15px', borderRadius:'var(--r-pill)', fontSize:13, fontWeight:500,
+                                fontFamily:'var(--sans)', cursor:'pointer', transition:'background .12s, border-color .12s, color .12s', whiteSpace:'nowrap',
+                                background: model===m ? 'var(--green)' : 'rgba(255,255,255,.07)',
+                                border: `1.5px solid ${model===m ? 'var(--green)' : 'rgba(255,255,255,.1)'}`,
+                                color: model===m ? '#fff' : 'rgba(255,255,255,.65)',
+                              }}
+                            >{m}</button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* No results — offer to use typed text as custom model */}
+                      {q && filtered.length === 0 && !exactExists && (
+                        <div style={{ display:'flex', alignItems:'center', gap:'var(--s3)', padding:'var(--s3) var(--s4)', background:'rgba(255,255,255,.05)', border:'1px dashed rgba(255,255,255,.15)', borderRadius:'var(--r)', marginTop:'var(--s2)' }}>
+                          <span style={{ fontSize:13, color:'rgba(255,255,255,.55)' }}>
+                            Can't find <strong style={{ color:'#fff' }}>"{customLabel}"</strong> in our list.
+                          </span>
+                          <button
+                            onClick={() => { setModel(customLabel); setModelSearch('') }}
+                            style={{ marginLeft:'auto', padding:'7px 14px', background:'var(--green)', color:'#fff', border:'none', borderRadius:'var(--r-sm)', fontSize:12, fontWeight:600, fontFamily:'var(--sans)', cursor:'pointer', whiteSpace:'nowrap', flexShrink:0 }}
+                          >
+                            Use "{customLabel}" →
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Hint when no search typed yet */}
+                      {!q && !model && (
+                        <p style={{ fontSize:11, color:'rgba(255,255,255,.3)', fontFamily:'var(--mono)', marginTop:'var(--s2)', letterSpacing:'.04em' }}>
+                          Can't see your model? Type it above — we'll do our best to match it.
+                        </p>
+                      )}
                     </div>
-                  </div>
-                )}
+                  )
+                })()}
 
                 {/* Step 3 — Year + submit (appears once model selected) */}
                 {make && model && (() => {
