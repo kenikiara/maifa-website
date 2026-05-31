@@ -341,96 +341,75 @@ export default function Home() {
       </section>
 
       {/* Battery Finder */}
-      <section id="finder" style={{ background:'rgb(13,40,8)', padding:'var(--s8) 0' }}>
+      <section id="finder" style={{ background:'rgb(10,30,6)', padding:'var(--s8) 0' }}>
         <div className="container">
 
           {!finderResult ? (
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 2fr', gap:'var(--s7)', alignItems:'start' }} className="finder-grid">
-              {/* Left — label + live feedback */}
-              <div style={{ position:'sticky', top:'calc(var(--nav-h) + var(--s4))' }}>
-                <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder</span>
-                <h3 style={{ color:'#fff', marginTop:'var(--s3)', lineHeight:1.15 }}>Tell us your car.<br/>We'll find the right battery.</h3>
-                <p style={{ color:'rgba(255,255,255,.5)', fontSize:13, marginTop:'var(--s3)', lineHeight:1.65 }}>
-                  Select your make, then model. The year helps us detect idle-stop (EFB) systems — common on 2013+ Japanese vans.
+            <div style={{ maxWidth:800, margin:'0 auto' }}>
+
+              {/* Header */}
+              <div style={{ marginBottom:'var(--s7)' }}>
+                <span className="eyebrow no-rule" style={{ color:'var(--green-bright)' }}>Battery finder · 60 seconds</span>
+                <h2 style={{ color:'#fff', marginTop:'var(--s3)', fontSize:'clamp(28px,4vw,48px)' }}>
+                  Find the right battery for your car.
+                </h2>
+                <p style={{ color:'rgba(255,255,255,.5)', fontSize:15, marginTop:'var(--s3)', maxWidth:500 }}>
+                  Select make, then model. Year is optional — it helps us detect EFB (idle-stop) batteries used in newer Japanese vans.
                 </p>
-
-                {/* Live category feedback */}
-                {(make || model) && (() => {
-                  const cat = matchCategory(make, model, year)
-                  const meta = CATEGORY_LABELS[cat]
-                  return (
-                    <div style={{ marginTop:'var(--s5)', padding:'var(--s4) var(--s5)', background:'rgba(255,255,255,.06)', border:'1px solid rgba(255,255,255,.12)', borderRadius:'var(--r)', borderLeft:`3px solid ${meta.color}` }}>
-                      <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:6 }}>Recommended type</div>
-                      <div style={{ fontFamily:'var(--serif)', fontSize:22, color:'#fff', marginBottom:4 }}>{cat}</div>
-                      <div style={{ fontSize:12, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)' }}>{meta.desc}</div>
-                    </div>
-                  )
-                })()}
-
-                {/* Progress indicator */}
-                <div style={{ marginTop:'var(--s5)', display:'flex', flexDirection:'column', gap:6 }}>
-                  {[
-                    { step:1, label:'Make', done:!!make, value:make },
-                    { step:2, label:'Model', done:!!model, value:model },
-                    { step:3, label:'Year', done:!!year, value:year, optional:true },
-                  ].map(s => (
-                    <div key={s.step} style={{ display:'flex', alignItems:'center', gap:10, opacity: (!make && s.step > 1) ? .3 : (!model && s.step > 2) ? .3 : 1 }}>
-                      <div style={{ width:22, height:22, borderRadius:'50%', border:`1.5px solid ${s.done ? 'var(--green-bright)' : 'rgba(255,255,255,.2)'}`, background: s.done ? 'var(--green)' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                        {s.done
-                          ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-                          : <span style={{ fontSize:9, color:'rgba(255,255,255,.5)', fontFamily:'var(--mono)' }}>{s.step}</span>
-                        }
-                      </div>
-                      <span style={{ fontSize:12, fontFamily:'var(--mono)', letterSpacing:'.08em', textTransform:'uppercase', color: s.done ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.4)' }}>
-                        {s.done ? s.value : `${s.label}${s.optional ? ' (optional)' : ''}`}
-                      </span>
-                    </div>
-                  ))}
-                </div>
               </div>
 
-              {/* Right — interactive steps */}
-              <div style={{ display:'flex', flexDirection:'column', gap:'var(--s6)' }}>
+              {/* Steps card */}
+              <div style={{ background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.1)', borderRadius:'var(--r-lg)', overflow:'hidden' }}>
 
-                {/* Step 1: Make tiles */}
-                <div>
-                  <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:'var(--s3)', display:'flex', alignItems:'center', gap:8 }}>
-                    <span style={{ width:18, height:18, borderRadius:'50%', background: make ? 'var(--green)' : 'rgba(255,255,255,.15)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700 }}>1</span>
-                    Select make
+                {/* Step 1 — Make */}
+                <div style={{ padding:'var(--s5) var(--s6)', borderBottom:'1px solid rgba(255,255,255,.08)' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'var(--s4)' }}>
+                    <span style={{ width:24, height:24, borderRadius:'50%', background: make ? 'var(--green)' : 'rgba(255,255,255,.12)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>
+                      {make ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg> : '1'}
+                    </span>
+                    <span style={{ fontFamily:'var(--mono)', fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', color: make ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.45)' }}>
+                      Make {make && <strong style={{ color:'var(--green-bright)', marginLeft:6 }}>· {make}</strong>}
+                    </span>
                   </div>
-                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))', gap:'var(--s2)' }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))', gap:'var(--s2)' }}>
                     {MAKES.map(m => (
                       <button key={m} onClick={() => { setMake(m); setModel(''); setYear('') }}
                         style={{
-                          padding:'10px 8px', borderRadius:'var(--r)', fontSize:13, fontWeight:600,
-                          fontFamily:'var(--sans)', cursor:'pointer', transition:'all .15s',
-                          background: make===m ? 'var(--green)' : 'rgba(255,255,255,.06)',
-                          border: `1.5px solid ${make===m ? 'var(--green)' : 'rgba(255,255,255,.12)'}`,
-                          color: make===m ? '#fff' : 'rgba(255,255,255,.7)',
-                          transform: make===m ? 'translateY(-2px)' : 'none',
-                          boxShadow: make===m ? '0 4px 16px rgba(15,122,61,.4)' : 'none',
+                          padding:'11px 8px', borderRadius:'var(--r)', fontSize:13, fontWeight:600,
+                          fontFamily:'var(--sans)', cursor:'pointer', transition:'background .12s, border-color .12s, color .12s, transform .12s',
+                          background: make===m ? 'var(--green)' : 'rgba(255,255,255,.07)',
+                          border: `1.5px solid ${make===m ? 'var(--green)' : 'rgba(255,255,255,.1)'}`,
+                          color: make===m ? '#fff' : 'rgba(255,255,255,.65)',
+                          transform: make===m ? 'translateY(-1px)' : 'none',
                         }}
                       >{m}</button>
                     ))}
                   </div>
                 </div>
 
-                {/* Step 2: Model pills — appears after make selected */}
+                {/* Step 2 — Model (appears once make selected) */}
                 {make && (
-                  <div style={{ animation:'page-fade-in .25s ease both' }}>
-                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:'var(--s3)', display:'flex', alignItems:'center', gap:8 }}>
-                      <span style={{ width:18, height:18, borderRadius:'50%', background: model ? 'var(--green)' : 'rgba(255,255,255,.15)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700 }}>2</span>
-                      Select {make} model
+                  <div style={{ padding:'var(--s5) var(--s6)', borderBottom:'1px solid rgba(255,255,255,.08)', animation:'page-fade-in .2s ease both' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'var(--s4)' }}>
+                      <span style={{ width:24, height:24, borderRadius:'50%', background: model ? 'var(--green)' : 'rgba(255,255,255,.12)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>
+                        {model ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg> : '2'}
+                      </span>
+                      <span style={{ fontFamily:'var(--mono)', fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', color: model ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.45)' }}>
+                        Model {model && <strong style={{ color:'var(--green-bright)', marginLeft:6 }}>· {model}</strong>}
+                      </span>
                     </div>
-                    <div style={{ display:'flex', flexWrap:'wrap', gap:'var(--s2)' }}>
+                    <div style={{
+                      display:'flex', flexWrap:'wrap', gap:'var(--s2)',
+                      maxHeight:160, overflowY:'auto', paddingBottom:4,
+                    }}>
                       {(MODELS[make] || []).map(m => (
                         <button key={m} onClick={() => setModel(m)}
                           style={{
-                            padding:'8px 14px', borderRadius:'var(--r-pill)', fontSize:13, fontWeight:500,
-                            fontFamily:'var(--sans)', cursor:'pointer', transition:'all .15s', whiteSpace:'nowrap',
-                            background: model===m ? 'var(--green)' : 'rgba(255,255,255,.06)',
-                            border: `1.5px solid ${model===m ? 'var(--green)' : 'rgba(255,255,255,.12)'}`,
-                            color: model===m ? '#fff' : 'rgba(255,255,255,.7)',
+                            padding:'8px 15px', borderRadius:'var(--r-pill)', fontSize:13, fontWeight:500,
+                            fontFamily:'var(--sans)', cursor:'pointer', transition:'background .12s, border-color .12s, color .12s', whiteSpace:'nowrap',
+                            background: model===m ? 'var(--green)' : 'rgba(255,255,255,.07)',
+                            border: `1.5px solid ${model===m ? 'var(--green)' : 'rgba(255,255,255,.1)'}`,
+                            color: model===m ? '#fff' : 'rgba(255,255,255,.65)',
                           }}
                         >{m}</button>
                       ))}
@@ -438,36 +417,38 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Step 3: Year + submit — appears after model selected */}
-                {make && model && (
-                  <div style={{ animation:'page-fade-in .25s ease both' }}>
-                    <div style={{ fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.14em', textTransform:'uppercase', color:'rgba(255,255,255,.4)', marginBottom:'var(--s3)', display:'flex', alignItems:'center', gap:8 }}>
-                      <span style={{ width:18, height:18, borderRadius:'50%', background:'rgba(255,255,255,.15)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700 }}>3</span>
-                      Year <span style={{ color:'rgba(255,255,255,.25)', marginLeft:4 }}>(optional — improves EFB detection)</span>
+                {/* Step 3 — Year + submit (appears once model selected) */}
+                {make && model && (() => {
+                  const previewCat = matchCategory(make, model, year)
+                  const previewMeta = CATEGORY_LABELS[previewCat]
+                  return (
+                    <div style={{ padding:'var(--s5) var(--s6)', animation:'page-fade-in .2s ease both' }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:'var(--s4)' }}>
+                        <span style={{ width:24, height:24, borderRadius:'50%', background:'rgba(255,255,255,.12)', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>3</span>
+                        <span style={{ fontFamily:'var(--mono)', fontSize:11, letterSpacing:'.12em', textTransform:'uppercase', color:'rgba(255,255,255,.45)' }}>
+                          Year <span style={{ color:'rgba(255,255,255,.25)', marginLeft:4 }}>(optional)</span>
+                        </span>
+                        {/* Live category badge */}
+                        <span style={{ marginLeft:'auto', background:'rgba(15,122,61,.3)', border:'1px solid rgba(15,122,61,.6)', color:'var(--green-bright)', padding:'4px 12px', borderRadius:'var(--r-pill)', fontFamily:'var(--mono)', fontSize:10, letterSpacing:'.1em', textTransform:'uppercase', whiteSpace:'nowrap' }}>
+                          {previewCat} · {previewMeta.desc}
+                        </span>
+                      </div>
+                      <div style={{ display:'flex', gap:'var(--s3)', flexWrap:'wrap', alignItems:'center' }}>
+                        <select value={year} onChange={e => setYear(e.target.value)}
+                          style={{ background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.18)', color: year ? '#fff' : 'rgba(255,255,255,.4)', padding:'12px 36px 12px 14px', borderRadius:'var(--r)', fontFamily:'var(--sans)', fontSize:14, appearance:'none', backgroundImage:'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'><path fill=\'%2333d930\' d=\'M5 6L0 0h10z\'/></svg>")', backgroundRepeat:'no-repeat', backgroundPosition:'right 12px center', minWidth:130, flex:'0 0 auto' }}
+                        >
+                          <option value="" style={{ background:'#1a1a1a' }}>Select year</option>
+                          {YEARS.map(y => <option key={y} value={y} style={{ background:'#1a1a1a' }}>{y}</option>)}
+                        </select>
+                        <button onClick={handleFinder} disabled={finderLoading} className="btn btn-primary"
+                          style={{ flex:1, minWidth:180, height:46, opacity: finderLoading ? .7 : 1 }}
+                        >
+                          {finderLoading ? 'Searching…' : 'Find my battery →'}
+                        </button>
+                      </div>
                     </div>
-                    <div style={{ display:'flex', gap:'var(--s3)', alignItems:'center', flexWrap:'wrap' }}>
-                      <select value={year} onChange={e => setYear(e.target.value)}
-                        style={{ background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.2)', color: year ? '#fff' : 'rgba(255,255,255,.45)', padding:'12px 36px 12px 14px', borderRadius:'var(--r)', fontFamily:'var(--sans)', fontSize:14, appearance:'none', backgroundImage:'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'><path fill=\'%2333d930\' d=\'M5 6L0 0h10z\'/></svg>")', backgroundRepeat:'no-repeat', backgroundPosition:'right 12px center', minWidth:140 }}
-                      >
-                        <option value="" style={{ background:'#1a1a1a' }}>Select year</option>
-                        {YEARS.map(y => <option key={y} value={y} style={{ background:'#1a1a1a' }}>{y}</option>)}
-                      </select>
-                      <button
-                        onClick={handleFinder}
-                        disabled={finderLoading}
-                        className="btn btn-primary"
-                        style={{ height:46, minWidth:160, opacity: finderLoading ? .7 : 1 }}
-                      >
-                        {finderLoading ? 'Searching…' : 'Find my battery →'}
-                      </button>
-                      {!year && (
-                        <button onClick={handleFinder} disabled={finderLoading}
-                          style={{ fontSize:12, color:'rgba(255,255,255,.35)', background:'none', border:'none', cursor:'pointer', fontFamily:'var(--mono)', letterSpacing:'.06em', textDecoration:'underline' }}
-                        >Skip year</button>
-                      )}
-                    </div>
-                  </div>
-                )}
+                  )
+                })()}
 
               </div>
             </div>

@@ -39,10 +39,9 @@ export default function Footer() {
 
   return (
     <footer className="site-footer" ref={footerRef}>
-      {/* CSS aurora — replaces Three.js, zero bundle cost */}
-      <div className="aurora-layer" style={{ position:'absolute', inset:0, overflow:'hidden', pointerEvents:'none', zIndex:0,
-        backgroundImage: 'repeating-linear-gradient(100deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.03) 7%,transparent 10%,transparent 12%,rgba(255,255,255,.03) 16%),repeating-linear-gradient(100deg,rgba(15,122,61,.18) 10%,rgba(34,197,94,.14) 15%,rgba(134,239,172,.08) 20%,rgba(187,247,208,.06) 25%,rgba(74,222,128,.12) 30%)',
-        backgroundSize: '200%,100%', backgroundAttachment: 'fixed', animation: 'aurora 60s linear infinite',
+      {/* Subtle green glow — purely decorative */}
+      <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:0,
+        background:'radial-gradient(ellipse 60% 50% at 0% 100%, rgba(15,122,61,.22) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 100% 0%, rgba(15,122,61,.12) 0%, transparent 55%)',
       }} />
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="footer-grid">

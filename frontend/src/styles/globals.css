@@ -1486,19 +1486,10 @@ section.tight { padding: var(--s7) 0; }
   padding-bottom: var(--s9);
 }
 
-/* Home — battery finder */
-.finder-grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--s7);
-  align-items: center;
-}
-.finder-form {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--s3);
-  align-items: end;
-}
+/* Battery finder — model scroll box */
+.finder-models-scroll::-webkit-scrollbar { width: 4px; }
+.finder-models-scroll::-webkit-scrollbar-track { background: transparent; }
+.finder-models-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
 
 /* Home — 5-column categories */
 .cat-grid {
@@ -1532,7 +1523,6 @@ section.tight { padding: var(--s7) 0; }
   .grid-4            { grid-template-columns: repeat(2, 1fr); }
   .related-grid      { grid-template-columns: repeat(2, 1fr); }
   .product-grid-shop { grid-template-columns: repeat(2, 1fr); }
-  .finder-form       { grid-template-columns: 1fr 1fr 1fr 1fr; }
 }
 
 @media (max-width: 880px) {
@@ -1553,9 +1543,6 @@ section.tight { padding: var(--s7) 0; }
   /* Hero */
   .hero-copy { min-height: 70vh; padding-bottom: var(--s6); }
 
-  /* Finder */
-  .finder-grid { grid-template-columns: 1fr; }
-  .finder-form { grid-template-columns: 1fr 1fr; }
 
   /* Categories */
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1627,7 +1614,6 @@ section.tight { padding: var(--s7) 0; }
 }
 
 @media (max-width: 640px) {
-  .finder-form { grid-template-columns: 1fr; }
   .cat-grid    { grid-template-columns: 1fr 1fr; }
 }
 
