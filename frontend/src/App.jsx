@@ -1,10 +1,11 @@
-import { useEffect, lazy, Suspense } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 
 import Navbar         from './components/layout/Navbar'
 import Footer         from './components/layout/Footer'
 import PageTransition from './components/ui/PageTransition'
+import SplashScreen   from './components/ui/SplashScreen'
 import ChatBot        from './components/ui/ChatBot'
 
 // ── Eagerly load Home (first paint) ──
@@ -62,8 +63,16 @@ function AppInner() {
 }
 
 export default function App() {
+  // Show once per session — cleared when the tab is closed
+  const [splash, setSplash] = useState(() => {
+    if (sessionStorage.getItem('splashSeen')) return false
+    sessionStorage.setItem('splashSeen', '1')
+    return true
+  })
+
   return (
     <HelmetProvider>
+      {splash && <SplashScreen onDone={() => setSplash(false)} />}
       <BrowserRouter>
         <AppInner />
       </BrowserRouter>
